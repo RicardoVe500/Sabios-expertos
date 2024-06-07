@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
     //Se captura el dato del campo partidaId que se mando desde Partidas
-
+   
     $('#selectcomprobante').select2({
         ajax: {
             url: "../../backend/Cuerpo/listardatos/selectComprobante.php",
@@ -74,6 +74,7 @@ function cargadatospartida() {
             $("#cuerpodebe").val(task.debe);
             $("#cuerpohaber").val(task.haber);
             $("#cuerpodiferencia").val(task.diferencia);
+            
         },
         error: function () {
             Swal.fire({
@@ -113,7 +114,7 @@ function cargadatospartida() {
 
 function guardarCuerpoPartida() {
 
-
+    
     var url = "../../backend/Cuerpo/Add/addCuerpoPartida.php";
     $.ajax({
         type: "POST",
@@ -189,20 +190,32 @@ $('#tablaCuerpo').on('click', '.btn-editarcuerpo', function () {
         success: function (response) {
             const task = JSON.parse(response)
             $("#partidaDetalleId").val(task.partidaDetalleId)
-            $("#selectcomprobante").val(task.nombreComprobante)
             $("#numeroComprobante").val(task.numeroComprobante)
             $("#fechaComprobante").val(task.fechaComprobante)
-            $("#selectcuentas").val(task.cuenta)
             $("#conceptoespecifico").val(task.concepto)
             $("#debeCuerpo").val(task.cargo)
             $("#haberCuerpo").val(task.abono)
 
-            var newOption = new Option(task.nombreComprobante, task.tipoComprobanteId, true, true);
-            $('#selectcomprobante').append(newOption).trigger('change');
+             // Asegúrate de que select2 reconozca la opción cargada correctamente
+        var newOption = {
+            id: task.tipoComprobanteId,
+            text: task.nombreComprobante,
+            selected: true,
+            title: task.nombreComprobante
+        };
+        $("#selectcomprobante").empty().append(new Option(newOption.text, newOption.id, true, true)).trigger('change');
 
-            var newOption2 = new Option(task.cuenta, task.cuentaId, true, true);
-            $('#selectcuentas').append(newOption2).trigger('change');
+        var newOption2 = {
+            id: task.cuentaId,
+            text: task.cuenta,
+            selected: true,
+            title: task.cuenta
+        };
+        $("#selectcuentas").empty().append(new Option(newOption2.text, newOption2.id, true, true)).trigger('change');
 
+            $('#dato').data('mode', 'edit');
+
+            $('#dato').text('Actualizar');
         },
     })
 });
@@ -232,6 +245,44 @@ $('#tablaCuerpo').on('click', 'button.btn-deletecuerpo', function () {
 })
 
 function editardatos() {
-
-
+    const pData = {
+        partidaDetalleId: $("#partidaDetalleId").val(),
+        partidaId: $("#partidaId").val(),
+        cuentaId: $("#selectcuentas").val(),
+        tipoComprobanteId: $("#selectcomprobante").val(),
+        numeroComprobante: $("#numeroComprobante").val(),
+        fechaComprobante: $("#fechaComprobante").val(),
+        concepto: $("#conceptoespecifico").val(),
+        cargo: $("#debeCuerpo").val()|| '0',
+        abono: $("#haberCuerpo").val()|| '0',
+    }
+    $.ajax({
+        url: "../../backend/Cuerpo/edit/editCuerpoPartida.php",
+        data: pData,
+        type: "POST",
+        success: function(response){
+            Swal.fire({
+                icon: 'success',
+                title: '¡SubCuenta agregada!',
+                text: 'Los cambios se han guardado correctamente.',
+            });
+                    $('#frmcuerpo')[0].reset(); // Resetear el formulario
+                    $('#selectcomprobante').val('').trigger('change');
+                    $('#selectcuentas').val('').trigger('change');
+                    cargadatospartida();
+                    $('#tablaPartida').DataTable().ajax.reload();
+                    $('#dato').data('mode', 'add');
+                    $('#dato').text('Agregar');
+                
+        },
+        error: function (xhr, status, error) {
+            console.log(error)
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al Modificar',
+                text: 'No se pudo modificar la partida. Por favor, intenta de nuevo.',
+                confirmButtonText: 'Aceptar'
+            });
+        }
+    })
 }

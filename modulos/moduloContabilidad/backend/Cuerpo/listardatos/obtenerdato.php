@@ -6,7 +6,8 @@ $partidaId = $_POST["partidaId"];
 
 $query = "SELECT 
         p.partidaId, 
-        tp.nombrePartida, 
+        tp.nombrePartida,
+        p.estadoId,
         e.estado, 
         p.codigoPartida, 
         p.fechacontable, 

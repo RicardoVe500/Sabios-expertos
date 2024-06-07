@@ -1,5 +1,6 @@
 $(document).ready(function(){
     
+    //al nomas cargar los datos se manda el ajax para que se listen los datos y se muestren en la tabla
     var tipoPartidaId = $('#tipoPartidaId').val();
     $.ajax({
         url: "../../backend/Partidas/listardatos/listardatos.php",
@@ -7,8 +8,7 @@ $(document).ready(function(){
         data: { tipoPartidaId },
         dataType: "json",
         success: function(response) {
-            
-            // Destruir la tabla existente antes de volver a crearla
+            // Se destruye la tabla existente y se crea de nuevo, por si se llama multiples veces
             var table = $('#tablaPartida').DataTable();
             table.clear();
             table.rows.add(response.data);
@@ -24,6 +24,7 @@ $(document).ready(function(){
         }
     });
 
+//boton para ejecutar la funcion de guardar la partida
     $("#crearpartida").click(function(){
         guardarPartidas();
     });
@@ -31,6 +32,7 @@ $(document).ready(function(){
 
 })
 
+//Se crea una funcion para la estructura de la tabla
 function imprimirtablapartidas(){
     $('#tablaPartida').DataTable({
         columns: [
@@ -42,7 +44,7 @@ function imprimirtablapartidas(){
             {"data": null,
                 "defaultContent": `
                     <button class='btn btn-primary btn-sm btn-frmcuerpo' title='Agregar' id='frmcuerpo'><i class="fas fa-folder-open"></i></button>
-                    <button class='btn btn-danger btn-sm btn-deletesub' title='Eliminar'><i class='fa fa-trash'></i></button>
+                    <button class='btn btn-danger btn-sm btn-deletepatidas' title='Eliminar'><i class='fa fa-trash'></i></button>
                 `
             }
         ],
@@ -107,7 +109,6 @@ function guardarPartidas(){
             url: url,
             data: $("#frmAddPartida").serialize(),
             success: function(data){
-                console.log(data)
                 Swal.fire({
                     icon: 'success',
                     title: '¡Tipo Partida Agregada!',
@@ -120,9 +121,51 @@ function guardarPartidas(){
                     title: 'Error al crear',
                     text: 'No se pudo crear el tipo partida. Por favor, intenta de nuevo.',
                     confirmButtonText: 'Aceptar'
-                });
+                }); 
             }
         });
     }  
 }
+
+$('#tablaPartida').on('click', 'button.btn-deletepatidas', function () {
+    var data = $('#tablaPartida').DataTable().row($(this).parents('tr')).data();
+    var id = data.partidaId;
+    Swal.fire({
+        title: '¿Quieres eliminar este elemento?',
+        text: 'Esta acción no se puede deshacer.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminarlo'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.post("../../backend/Partidas/delete/deletepartida.php", { id }, function(response) {
+                if (response.success) {
+                    var tipoPartidaId = $('#tipoPartidaId').val();
+                    $.ajax({
+                        url: "../../backend/Partidas/listardatos/listardatos.php",
+                        type: "POST",
+                        data: { tipoPartidaId },
+                        dataType: "json",
+                        success: function(response) {
+                            // Destruir la tabla existente antes de volver a crearla
+                            var table = $('#tablaPartida').DataTable();
+                            table.clear();
+                            table.rows.add(response.data);
+                            table.draw();
+                        },
+                    });
+                    $('#tablaPartida').DataTable().row($(this).parents('tr')).remove().draw();
+                    Swal.fire('Eliminado!', response.message, 'success');
+                } else {
+                    Swal.fire('Error!', response.message, 'error');
+                }
+            }, "json").fail(function(jqXHR, textStatus, errorThrown) {
+                Swal.fire('Error en la conexión o el servidor', 'No se pudo procesar la solicitud: ' + textStatus, 'error');
+            });
+        }
+    });
+});
+
 

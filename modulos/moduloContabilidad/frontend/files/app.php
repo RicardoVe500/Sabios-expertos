@@ -60,11 +60,11 @@
        
     </div>
     
-    
+
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>    
-
+ 
    
 <!-- jQuery -->
 <script src="../../../../lib/vendor/jquery/jquery.min.js"></script>
