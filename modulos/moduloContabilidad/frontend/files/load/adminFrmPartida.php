@@ -1,12 +1,19 @@
 <?php
     $codigoPartida = $_REQUEST['codigoPartida'] ?? 'defaultCodigo';
     echo "<input type='hidden' id='codigoPartida' name='codigoPartida' value='$codigoPartida'>";
+    $tipoPartidaId = $_REQUEST['tipoPartidaId'] ?? 'defaultTipopartida';
+    echo "<input type='hidden' id='tipoPartidaId' name='tipoPartidaId' value='$tipoPartidaId'>";
 ?>
 <div class="card shadow mb-4">
-    <div class="card-header py-3" id="cabezaboton">
+    <div class="card-header py-3 card-header py-3 d-flex justify-content-between align-items-center"  id="cabezaboton">
         <h6 class="m-0 font-weight-bold text-primary">Movimientos de partidas</h6>
+        <button class="btn btn-warning float-right "  id="regresarpartidas">
+                <i class="fa fa-arrow-left"></i> Regresar
+            </button>
     </div>
     <div class="card-body">
+    
+        
 
         <div class="row">
             <div class="col-sm-2">
@@ -145,6 +152,30 @@
                 editardatos();
             }
         });
+
+        $("#regresarpartidas").click(function() {
+        var tipoPartidaId = $("#tipoPartidaId").val();
+    $.ajax({
+        url: "load/adminPartidas.php", 
+        type: "POST",
+        data: {
+            tipoPartidaId: tipoPartidaId 
+        },
+        success: function(response) {
+            $("#render").html(response);
+
+        },
+        error: function(xhr, status, error) {
+            Swal.fire({
+                    icon: 'error',
+                    title: 'Error al mostrar',
+                    text: 'No se pudo cargar el contenido Por favor, intenta de nuevo.',
+                    confirmButtonText: 'Aceptar'
+                });
+        }
+    });
+        
+    })
 
         
 

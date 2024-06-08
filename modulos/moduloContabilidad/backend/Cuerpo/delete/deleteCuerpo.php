@@ -30,9 +30,18 @@ if (isset($_POST['id'])) {
             } else {
                 echo "Partida y totales actualizados correctamente después de la eliminación.";
 
-                // Si la diferencia es 0, actualizar el estado a 2
+                // Si la diferencia es 0, actualizar el estado a 2 o si es diferente a 0 el estado es 1
                 if ($diferencia == 0) {
                     $updateEstadoQuery = "UPDATE Partidas SET estadoId = 2 WHERE partidaId = '$partidaId'";
+                    $updateEstadoResult = mysqli_query($con, $updateEstadoQuery);
+
+                    if (!$updateEstadoResult) {
+                        echo "Error al actualizar el estado de la Partida: " . mysqli_error($con);
+                    } else {
+                        echo "Estado de la Partida actualizado a cerrado.";
+                    }
+                }else{
+                    $updateEstadoQuery = "UPDATE Partidas SET estadoId = 1 WHERE partidaId = '$partidaId'";
                     $updateEstadoResult = mysqli_query($con, $updateEstadoQuery);
 
                     if (!$updateEstadoResult) {

@@ -5,7 +5,9 @@ $tipoPartidaId = $_POST["tipoPartidaId"];
 
 $query = "SELECT 
 p.partidaId, 
-tp.nombrePartida, 
+p.tipoPartidaId,
+tp.nombrePartida,
+p.estadoId,
 e.estado, 
 p.codigoPartida, 
 p.fechacontable, 
@@ -38,7 +40,9 @@ $result = mysqli_query($con, $query);
         $data[] = array(
             
             "partidaId"=>$row["partidaId"],
+            "tipoPartidaId"=>$row["tipoPartidaId"],
             "nombrePartida"=>$row["nombrePartida"],
+            "estadoId"=>$row["estadoId"],
             "estado"=>$row["estado"],
             "codigoPartida"=>$row["codigoPartida"],
             "fechacontable"=>$row["fechacontable"],

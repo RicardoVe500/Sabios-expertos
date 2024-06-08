@@ -31,8 +31,8 @@ echo "<input type='hidden' id='tipoPartidaId' value='$tipoPartidaId'>";
                     <th scope="col">codigo Partida</th>
                     <th scope="col">fechaActual</th>
                     <th scope="col">fechacontable</th>
-                    <th scope="col">estado </th>
                     <th scope="col">concepto </th>
+                    <th scope="col">estado </th>
                     <th scope="col">accion</th>
 
                 </tr>

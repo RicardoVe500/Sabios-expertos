@@ -44,7 +44,17 @@ if (!$resultInsert) {
                     echo "Error al actualizar el estado de la Partida: " . mysqli_error($con);
                 } else {
                     echo "Estado de la Partida actualizado a cerrado.";
-                }
+                } 
+            }else{
+                $queryEstado = "UPDATE Partidas SET estadoId = 1 WHERE partidaId = '$partidaId'";
+                $resultEstado = mysqli_query($con, $queryEstado);
+
+                if (!$resultEstado) {
+                    echo "Error al actualizar el estado de la Partida: " . mysqli_error($con);
+                } else {
+                    echo "Estado de la Partida actualizado a cerrado.";
+                } 
+
             }
         }
     } else {

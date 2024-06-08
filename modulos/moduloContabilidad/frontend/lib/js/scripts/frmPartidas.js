@@ -39,25 +39,39 @@ function imprimirtablapartidas(){
             {"data": "codigoPartida"},
             {"data": "fechaActual"},
             {"data": "fechacontable"},
-            {"data": "estado"},
             {"data": "concepto"},
-            {"data": null,
-                "defaultContent": `
-                    <button class='btn btn-primary btn-sm btn-frmcuerpo' title='Agregar' id='frmcuerpo'><i class="fas fa-folder-open"></i></button>
-                    <button class='btn btn-danger btn-sm btn-deletepatidas' title='Eliminar'><i class='fa fa-trash'></i></button>
-                `
-            }
+            {"data": "estado"},
+            {
+                "data": null,
+                "render": function(data, type, row) {
+                    // Verifica el estadoId para decidir qué botones mostrar
+                    
+                    if (row.estadoId != 2) {
+                        return `<button class='btn btn-primary btn-sm btn-frmcuerpo' title='Agregar' id='frmcuerpo'><i class="fas fa-folder-open"></i></button>
+                                <button class='btn btn-danger btn-sm btn-deletepatidas' title='Eliminar'><i class='fa fa-trash'></i></button>`;
+                    } else {
+                        return `<button class='btn btn-primary btn-sm btn-imprimir' title='imprimir'><i class="fas fa-print"></i></button>
+                                <button class='btn btn-danger btn-sm btn-deletepatidas' title='Eliminar'><i class='fa fa-trash'></i></button>`;
+                    }
+                }
+            },
         ],
         columnDefs: [{ "targets": -1, "orderable": false, "className": "dt-center" }],
-        order: [[1, 'asc']]
+        order: [[1, 'asc']],
+        createdRow: function (row, data, dataIndex) {
+            if (data.estadoId == 2) {
+                $(row).css('background-color', '#e2e2e2'); 
+            }
+        }
     });
 }
 
 $('#tablaPartida').on('click', '.btn-frmcuerpo', function() {
     var data = $('#tablaPartida').DataTable().row($(this).parents('tr')).data();
     var num = data.partidaId
+    var num2 = data.tipoPartidaId
     var codigo = data.codigoPartida
-    $("#render").load("./load/adminFrmPartida.php", { partidaId: num, codigoPartida: codigo }, function() {
+    $("#render").load("./load/adminFrmPartida.php", { partidaId: num, codigoPartida: codigo, tipoPartidaId:num2 }, function() {
     });
 });
 
