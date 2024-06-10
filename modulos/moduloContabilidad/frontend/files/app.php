@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="shortcut icon" href="./../../../../lib/img/cropped-Asset-5.ico"/>
+    <link rel="shortcut icon" href="./../../../../lib/img/cropped-Asset-5.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -17,8 +17,9 @@
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="../../../../lib/css/datatablescss.css">
     <link rel="stylesheet" href="../../../../lib/css/datatablesbuttons.css">
-    <link rel="stylesheet" href="./../../../../lib/css/datatableselectcss.css">
-    
+    <link rel="stylesheet" href="../../../../lib/css/datatableselectcss.css">
+    <link rel="stylesheet" href="../../../../lib/css/datepickercss.css">
+
     <!-- FontAwesome Icons -->
     <link href="../../../../lib/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 
@@ -32,40 +33,59 @@
 
 </head>
 
-<body id="page-top">    
-    <div id="wrapper">       
-        <?php include("../contenido/menu.php");?>     
-        <div id="content-wrapper" class="d-flex flex-column">
-                       
-            <div id="content">               
-                <?php include("../contenido/header.php");?>             
-                <div class="container-fluid">                   
-                    <div class="copyright my-auto" id="render">                        
-                        <!-- Este div es el que renderiza todos los formularios -->
-                    </div>
-                </div>            
-            </div>           
-
-            
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2024</span>
-                    </div>
-                </div>
-            </footer>
-           
-
+<div class="modal fade" id="selectMonthModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Selecciona el Mes de Trabajo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="monthYearPicker" class="form-control" placeholder="Selecciona mes y año">
+            </div>
+            <div class="modal-footer">
+                <button id="confirmSelection" type="button" class="btn btn-primary" onclick="setWorkMonth()">Aceptar</button>
+            </div>
         </div>
-       
     </div>
-    
+</div>
 
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>    
- 
-   
+<div id="wrapper">
+    <?php include("../contenido/menu.php");?>
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <div id="content">
+            <?php include("../contenido/header.php");?>
+            <div class="container-fluid">
+                <div class="copyright my-auto" id="render">
+                    <!-- Este div es el que renderiza todos los formularios -->
+                </div>
+            </div>
+        </div>
+
+
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright &copy; Your Website 2024</span>
+                </div>
+            </div>
+        </footer>
+
+
+    </div>
+
+</div>
+
+
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+
 <!-- jQuery -->
 <script src="../../../../lib/vendor/jquery/jquery.min.js"></script>
 <script src="../../../../lib/js/Jquery.js"></script>
@@ -85,14 +105,70 @@
 <script src="../../../../lib/js/sweetalert2.js"></script>
 
 <!-- Select2 -->
-<script src="./../../../../lib/js/select2.js"></script>
+<script src="../../../../lib/js/select2.js"></script>
+<script src="../../../../lib/js/datepickerjs.js"></script>
+<script src="../../../../lib/js/datepickerespanol.js"></script>
+
 
 <!-- Scripts Personalizados -->
 <script src="../../../../lib/js/sb-admin-2.min.js"></script>
 <script src="../lib/js/menu.js"></script>
+<script src="../lib/js/periodo.js"></script>
 
 
 
+
+<script>
+$(document).ready(function() {
+    // Mostrar el modal
+    $('#selectMonthModal').modal({
+        backdrop: 'static', // No cierra al hacer clic fuera
+        keyboard: false, // No cierra con tecla ESC
+        show: true // Muestra el modal
+    });
+
+    // Inicialización del DatePicker
+    $('#monthYearPicker').datepicker({
+        format: "mm/yyyy",
+        language: 'es',
+        startView: "months",
+        minViewMode: "months",
+        autoclose: true
+    });
+
+    // Función para manejar la selección
+    function handleSelection() {
+        var selectedMonthYear = $('#monthYearPicker').val(); // Obtener el valor seleccionado
+        if (selectedMonthYear) {
+            sessionStorage.setItem('selectedMonthYear', selectedMonthYear); // Guardar en sessionStorage
+            return true; // Indica que hay una selección válida
+        } else {
+            Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Seleccione un periodo'
+                    }); // Mostrar alerta si no hay selección
+            return false; // Indica que no hay selección válida
+        }
+    }
+
+    // Evento clic del botón de confirmación
+    $('#confirmSelection').click(function() {
+        if (handleSelection()) {
+            $('#selectMonthModal').modal('hide'); // Solo cierra el modal si la selección es válida
+        }
+    });
+
+    // Evitar el cierre del modal a menos que la selección sea válida
+    $('#selectMonthModal').on('hide.bs.modal', function (e) {
+        if (!handleSelection()) {
+            e.preventDefault(); // Prevenir el cierre del modal
+        }
+    });
+});
+
+
+</script>
 </body>
 
 </html>

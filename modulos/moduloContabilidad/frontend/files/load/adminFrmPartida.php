@@ -16,39 +16,39 @@
         
 
         <div class="row">
-            <div class="col-sm-2">
+            <div class="col-12 col-md-2">
                 <label>Fecha Actual:</label>
                 <input type="date" id="cuerpofechaActual" name="cuerpofechaActual" class="form-control" readonly
                     style="pointer-events: none; background-color: #e9ecef;">
             </div>
-            <div class="col-sm-2">
+            <div class="col-12 col-md-2">
                 <label>Fecha Contable:</label>
                 <input type="date" id="cuerpofechacontable" name="cuerpofechacontable" class="form-control" readonly
                     style="pointer-events: none; background-color: #e9ecef;">
             </div>
-            <div class="col-sm-3">
+            <div class="col-12 col-md-3">
                 <label>Debe:</label>
                 <input type="text" id="cuerpodebe" name="cuerpodebe" class="form-control" readonly
                     style="pointer-events: none; background-color: #e9ecef;">
             </div>
-            <div class="col-sm-3">
+            <div class="col-12 col-md-3">
                 <label>Haber:</label>
                 <input type="text" id="cuerpohaber" name="cuerpohaber" class="form-control" readonly
                     style="pointer-events: none; background-color: #e9ecef;">
             </div>
-            <div class="col-sm-2">
+            <div class="col-12 col-md-2">
                 <label>Diferencia:</label>
                 <input type="text" id="cuerpodiferencia" name="cuerpodiferencia" class="form-control mb-3" readonly
                     style="pointer-events: none; background-color: #e9ecef;">
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-7">
+            <div class="col-12 col-md-7">
                 <label>Concepto:</label>
                 <input type="text" id="cuerpoconcepto" name="cuerpoconcepto" class="form-control" readonly
                     style="pointer-events: none; background-color: #e9ecef;">
             </div>
-            <div class="col-sm-3">
+            <div class="col-12 col-md-3">
                 <label>Estado:</label>
                 <input type="text" id="cuerpoestado" name="cuerpoestado" class="form-control mb-3" readonly
                     style="pointer-events: none; background-color: #e9ecef;">
@@ -78,6 +78,7 @@
                 <div class="col-sm-3">
                     <label>Fecha Comprobante:</label>
                     <input type="date" id="fechaComprobante" name="fechaComprobante" class="form-control">
+                   
                 </div>
             </div>
             <div class="row">
@@ -129,9 +130,11 @@
 
     <script src="../lib/js/scripts/frmPartidaCuerpo.js"></script>
     <script src="../lib/js/scripts/enter.js"></script>
-    <script>
-    $(document).ready(function() {
 
+    <script>
+        
+    $(document).ready(function() {
+        
         var fechaContable = document.getElementById('fechaComprobante');
         var fechaHoy = new Date();
         var dia = ('0' + fechaHoy.getDate()).slice(-2);
@@ -176,9 +179,8 @@
     });
         
     })
-
-        
-
        
     })
+
+
     </script>

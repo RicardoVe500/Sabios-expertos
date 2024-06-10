@@ -48,15 +48,7 @@
 
 $(document).ready(function() {
 
-    var fechaContable = document.getElementById('fechacontable');
-    var fechaHoy = new Date();
-    var dia = ('0' + fechaHoy.getDate()).slice(-2);
-    var mes = ('0' + (fechaHoy.getMonth() + 1)).slice(-2);
-    var ano = fechaHoy.getFullYear();
-    var fechaMaxima = ano + '-' + mes + '-' + dia;
-
-    fechaContable.setAttribute('max', fechaMaxima);
-    console.log('Fecha máxima establecida:', fechaMaxima);
+    updateComprobanteDateField()
 
     //enableEnterKeySubmission("#frmAddTipoPartida", guardarTipoPartida);
 

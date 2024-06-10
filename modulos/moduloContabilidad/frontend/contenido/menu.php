@@ -36,9 +36,23 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Mantenimientos</h6>
                         <a class="collapse-item" href="#" id="usuarios">Usuarios</a>
+                        <a class="collapse-item" href="#" id="periodo">Periodos</a>
+
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsetree"
+                    aria-expanded="true" aria-controls="collapsetree">
+                    <i class="fas fa-landmark"></i>
+                    <span>Contabilidad</span>
+                </a>
+                <div id="collapsetree" class="collapse" aria-labelledby="headingtree" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Contabilidad</h6>
                         <a class="collapse-item" href="#" id="catalogo">Catalogo</a>
                         <a class="collapse-item" href="#" id="tipopartida">Tipo Partida</a>
-
+                        <a class="collapse-item" href="#" id="catalogo">Reportes</a>
                     </div>
                 </div>
             </li>

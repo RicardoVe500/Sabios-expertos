@@ -18,6 +18,10 @@ $(document).ready(function(){
         $("#render").load("load/adminTipoPartidas.php");
     });
     
+    $("#periodo").click(function(){
+        $("#render").load("load/adminPeriodo.php");
+    });
+    
 
 
 })
