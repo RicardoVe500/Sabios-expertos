@@ -50,7 +50,7 @@ function imprimirtablapartidas(){
                         return `<button class='btn btn-primary btn-sm btn-frmcuerpo' title='Agregar' id='frmcuerpo'><i class="fas fa-folder-open"></i></button>
                                 <button class='btn btn-danger btn-sm btn-deletepatidas' title='Eliminar'><i class='fa fa-trash'></i></button>`;
                     } else {
-                        return `<button class='btn btn-primary btn-sm btn-imprimir' title='imprimir'><i class="fas fa-print"></i></button>
+                        return `<button class='btn btn-primary btn-sm btn-imprimirpartida' title='imprimir'><i class="fas fa-print"></i></button>
                                 <button class='btn btn-danger btn-sm btn-deletepatidas' title='Eliminar'><i class='fa fa-trash'></i></button>`;
                     }
                 }
@@ -74,6 +74,16 @@ $('#tablaPartida').on('click', '.btn-frmcuerpo', function() {
     $("#render").load("./load/adminFrmPartida.php", { partidaId: num, codigoPartida: codigo, tipoPartidaId:num2 }, function() {
     });
 });
+
+$('#tablaPartida').on('click', '.btn-imprimirpartida', function() {
+    var data = $('#tablaPartida').DataTable().row($(this).parents('tr')).data();
+    var partidaId = data.partidaId
+    var codigoPartida = data.codigoPartida
+    var reportUrl = `../../backend/Partidas/reportes/partidasDetalle.php?partidaId=${partidaId}&codigoPartida=${codigoPartida}`;
+
+    // Abrir el reporte en una nueva pestaña
+    window.open(reportUrl, '_blank');
+})
 
 
 /*

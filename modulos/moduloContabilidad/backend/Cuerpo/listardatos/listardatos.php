@@ -1,6 +1,7 @@
 <?php
 include("../../../../../lib/config/conect.php");
 
+
 $partidaId = $_POST["partidaId"];
 $codigoPartida = $_POST["codigoPartida"];
 
@@ -51,8 +52,6 @@ $result = mysqli_query($con, $query);
             "numeroComprobante"=>$row["numeroComprobante"],
             "fechaComprobante"=>$row["fechaComprobante"],
             "concepto"=>$row["concepto"],
-
-        
         );
     }
 
