@@ -50,8 +50,7 @@ function imprimirtablapartidas(){
                         return `<button class='btn btn-primary btn-sm btn-frmcuerpo' title='Agregar' id='frmcuerpo'><i class="fas fa-folder-open"></i></button>
                                 <button class='btn btn-danger btn-sm btn-deletepatidas' title='Eliminar'><i class='fa fa-trash'></i></button>`;
                     } else {
-                        return `<button class='btn btn-primary btn-sm btn-imprimirpartida' title='imprimir'><i class="fas fa-print"></i></button>
-                                <button class='btn btn-danger btn-sm btn-deletepatidas' title='Eliminar'><i class='fa fa-trash'></i></button>`;
+                        return `<button class='btn btn-primary btn-sm btn-imprimirpartida' title='Reporte'><i class="fas fa-print"></i></button>`;
                     }
                 }
             },

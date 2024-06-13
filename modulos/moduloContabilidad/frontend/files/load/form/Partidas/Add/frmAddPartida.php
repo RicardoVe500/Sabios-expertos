@@ -1,4 +1,15 @@
-
+<?php
+session_start();
+if (isset($_SESSION['periodo'])) {
+    $mes = $_SESSION['periodo']['mes'];
+    $anio = $_SESSION['periodo']['anio'];
+    echo "<script>
+            var mesInicio = $mes - 1; // Ajuste porque JavaScript cuenta los meses desde 0
+            var anioInicio = $anio;
+          </script>";
+         
+}
+?>
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Agregar Partidas</h6>
@@ -23,6 +34,8 @@
                             <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                         </div>
                         <input type="date" id="fechacontable" name="fechacontable" class="form-control">
+                        
+
                     </div>
 
                     <label for="Numero">Concepto:</label>
@@ -47,9 +60,26 @@
 <script>
 
 $(document).ready(function() {
+ 
+    //validacion para poder restringir las fechas contables y no pasen de la fecha de trabajo establecida 
+    if (typeof mesInicio !== 'undefined' && typeof anioInicio !== 'undefined') {
+        var firstDay = new Date(anioInicio, mesInicio, 1);
+        var lastDay = new Date(anioInicio, mesInicio + 1, 0);
 
-    updateComprobanteDateField()
+        console.log('First Day:', firstDay.toISOString().split('T')[0]);
+        console.log('Last Day:', lastDay.toISOString().split('T')[0]); 
 
+        var firstDayStr = firstDay.toISOString().split('T')[0];
+        var lastDayStr = lastDay.toISOString().split('T')[0];
+
+        var fechaContable = document.getElementById('fechacontable');
+            fechaContable.min = firstDayStr;
+            fechaContable.max = lastDayStr;
+    } else {
+            console.log("Variables de sesión no definidas.");
+        }
+    
+     
     //enableEnterKeySubmission("#frmAddTipoPartida", guardarTipoPartida);
 
     $("#regresarpartida").click(function() {
@@ -76,6 +106,7 @@ $(document).ready(function() {
         
     })
 })
-    
+
+
 
 </script>

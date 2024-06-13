@@ -57,5 +57,4 @@ $result = mysqli_query($con, $query);
 
     echo json_encode(array("data" => $data));
 
-
 ?>

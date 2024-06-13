@@ -6,7 +6,7 @@
 
         <button class="btn btn-success mb-3" id="frmAddPeriodo">
             <i class="fa fa-plus"></i> Agregar Tipo Partida
-        </button>
+        </button> 
 
         <div class="input-group mb-3">
             <div class="input-group-prepend">
@@ -16,7 +16,7 @@
                 aria-describedby="basic-addon1">
         </div>
 
-        <table id="tablaTipoPartida" class="table" style="width:100%">
+        <table id="tablaperiodo" class="table" style="width:100%">
             <thead>
                 <tr> 
                     <th scope="col">Mes</th>
@@ -27,12 +27,13 @@
         </table>
     </div>
 </div> 
-<script src="../lib/js/scripts/frmTipopartida.js"></script>
+
 
 <script>
     
 $(document).ready(function() {
 
+   
     $("#frmAddPeriodo").click(function() {
         $("#render").load("load/form/Periodo/Add/frmAddPeriodo.php");
     })

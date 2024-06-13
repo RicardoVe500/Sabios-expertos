@@ -41,13 +41,14 @@ if (!$result) {
     die("Error en la consulta: " . mysqli_error($con));
 }
 
-
+//se inicializa el PDF
 $pdf = new FPDF();
 $pdf->AddPage();
+//se establece la fuente de la letra y que sea negrita en tamaño 10
 $pdf->SetFont('Arial', 'B', 10);
 
-$pdf->Image('../../../../../lib/img/images.png', 10, 3, 30); // X, Y, width
-
+$pdf->Image('../../../../../lib/img/images.png', 10, 3, 30);
+//titulo de el reporte
 $pdf->SetY(10); 
 $pdf->Cell(190, 5, 'SABIOS Y EXPERTOS', 0, 1, 'C');
 $pdf->Cell(190, 5, 'Unidad de Contabilidad', 0, 1, 'C');
@@ -60,14 +61,14 @@ $pdf->Cell(190, 5, 'Fecha de Impresion: ' . date('d-m-Y H:i:s'), 0, 1, 'C');
 $pdf->Line(10, $pdf->GetY(), 200, $pdf->GetY());
 $pdf->Ln(2); // 
 
-// Añadir cabeceras para cada columna
+// Se especifican las columnas que tendra nuestro reporte
 $pdf->Cell(60, 8, 'numeroCuenta', 0);
 $pdf->Cell(95, 8, 'nombreCuenta', 0);
 $pdf->Cell(20, 8, 'Cargo', 0, 0, 'C');
 $pdf->Cell(20, 8, 'Abono', 0, 0, 'C');
 
 $pdf->Ln();
-
+//se establecen que las variables de debe y haber solo se tomaran una sola vez
 $debe = 0;
 $haber = 0;
 $debeHaberSet = false;
@@ -76,12 +77,13 @@ while ($row = mysqli_fetch_assoc($result)) {
     if (!$debeHaberSet) {
         $debe = $row['debe'];
         $haber = $row['haber'];
-        $debeHaberSet = true;  // Asegura que solo se tomen una vez
+        $debeHaberSet = true;  
     }
 
+    // Imprime la cuenta el numero de la cuenta
     $pdf->Cell(60, 6, $row['numeroCuenta'], 0); 
-    $pdf->Cell(95, 6, $row['nombreCuenta'], 0);  // Imprime la cuenta
-     // Imprime la cuenta
+    $pdf->Cell(95, 6, $row['nombreCuenta'], 0);
+     
 
     // Verifica si cargo es igual a 0.00 para imprimir "-"
     if (floatval($row['cargo']) == 0.00) {
@@ -97,11 +99,11 @@ while ($row = mysqli_fetch_assoc($result)) {
         $pdf->Cell(20, 6, $row['abono'], 0, 0, 'C');
     }
 
-    $pdf->Ln(); // Salto de línea para la siguiente fila
+    $pdf->Ln(); 
 }
 
 $pdf->Line(10, $pdf->GetY(), 200, $pdf->GetY());
-// Imprimir los totales al final como si fueran sumas
+// se establece el final para mostrar las sumas de los datos y ver que estan balanceados
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->SetX(165); 
 $pdf->Cell(20, 6, $debe, 0, 0, 'C');
@@ -111,23 +113,24 @@ $pdf->Ln(40);  // Salto de línea
 
 $pdf->SetFont('Arial', '', 10);
 
+//footer del reporte para poder mostrar las firmas de las personas que revisan el reporte
 // Calcular el ancho para las celdas de firma para que se ajusten correctamente
-$anchoFirma = 195 / 3;  // Si el ancho total de tu tabla es 195 mm
-$offsetFirma = 5;  // Reducir 5 mm de cada lado de la línea
+$anchoFirma = 195 / 3;
+$offsetFirma = 5;
 
 // Agregar espacios para firmas en la misma fila con línea en cada uno
 $pdf->SetX(10 + $offsetFirma);
-$pdf->Cell($anchoFirma - 2 * $offsetFirma, 6, '', 'B', 0, 'C');  // Espacio vacío con borde inferior para firma
+$pdf->Cell($anchoFirma - 2 * $offsetFirma, 6, '', 'B', 0, 'C');  
 $pdf->SetX(10 + $anchoFirma + $offsetFirma);
-$pdf->Cell($anchoFirma - 2 * $offsetFirma, 6, '', 'B', 0, 'C');  // Segunda firma
+$pdf->Cell($anchoFirma - 2 * $offsetFirma, 6, '', 'B', 0, 'C');  
 $pdf->SetX(10 + 2 * $anchoFirma + $offsetFirma);
-$pdf->Cell($anchoFirma - 2 * $offsetFirma, 6, '', 'B', 0, 'C');  // Tercera firma
+$pdf->Cell($anchoFirma - 2 * $offsetFirma, 6, '', 'B', 0, 'C');  
 $pdf->Ln();  // Salto de línea después de las firmas
 
 // Añadir etiquetas bajo cada línea de firma
 $pdf->SetX(10);
-$pdf->Cell($anchoFirma, 6, 'Firma Contador', 0, 0, 'C');  // Texto bajo la línea de la primera firma
-$pdf->Cell($anchoFirma, 6, 'Firma Supervisor', 0, 0, 'C');  // Texto bajo la línea de la segunda firma
+$pdf->Cell($anchoFirma, 6, 'Firma Contador', 0, 0, 'C'); 
+$pdf->Cell($anchoFirma, 6, 'Firma Supervisor', 0, 0, 'C');  
 $pdf->Cell($anchoFirma, 6, 'Firma Director', 0, 1, 'C');
 
 $pdf->Output('I', 'ReportePartida.pdf'); // Enviar el PDF al navegador

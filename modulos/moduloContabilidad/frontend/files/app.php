@@ -33,32 +33,13 @@
 
 </head>
 
-<div class="modal fade" id="selectMonthModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel">Selecciona el Mes de Trabajo</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <input type="text" id="monthYearPicker" class="form-control" placeholder="Selecciona mes y año">
-            </div>
-            <div class="modal-footer">
-                <button id="confirmSelection" type="button" class="btn btn-primary" onclick="setWorkMonth()">Aceptar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div id="wrapper">
     <?php include("../contenido/menu.php");?>
     <div id="content-wrapper" class="d-flex flex-column">
 
         <div id="content">
             <?php include("../contenido/header.php");?>
+            <?php include("modalperiodo.php");?>
             <div class="container-fluid">
                 <div class="copyright my-auto" id="render">
                     <!-- Este div es el que renderiza todos los formularios -->
@@ -116,59 +97,6 @@
 <script src="../lib/js/periodo.js"></script>
 
 
-
-
-<script>
-$(document).ready(function() {
-    // Mostrar el modal
-    $('#selectMonthModal').modal({
-        backdrop: 'static', // No cierra al hacer clic fuera
-        keyboard: false, // No cierra con tecla ESC
-        show: true // Muestra el modal
-    });
-
-    // Inicialización del DatePicker
-    $('#monthYearPicker').datepicker({
-        format: "mm/yyyy",
-        language: 'es',
-        startView: "months",
-        minViewMode: "months",
-        autoclose: true
-    });
-
-    // Función para manejar la selección
-    function handleSelection() {
-        var selectedMonthYear = $('#monthYearPicker').val(); // Obtener el valor seleccionado
-        if (selectedMonthYear) {
-            sessionStorage.setItem('selectedMonthYear', selectedMonthYear); // Guardar en sessionStorage
-            return true; // Indica que hay una selección válida
-        } else {
-            Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Seleccione un periodo'
-                    }); // Mostrar alerta si no hay selección
-            return false; // Indica que no hay selección válida
-        }
-    }
-
-    // Evento clic del botón de confirmación
-    $('#confirmSelection').click(function() {
-        if (handleSelection()) {
-            $('#selectMonthModal').modal('hide'); // Solo cierra el modal si la selección es válida
-        }
-    });
-
-    // Evitar el cierre del modal a menos que la selección sea válida
-    $('#selectMonthModal').on('hide.bs.modal', function (e) {
-        if (!handleSelection()) {
-            e.preventDefault(); // Prevenir el cierre del modal
-        }
-    });
-});
-
-
-</script>
 </body>
 
 </html>

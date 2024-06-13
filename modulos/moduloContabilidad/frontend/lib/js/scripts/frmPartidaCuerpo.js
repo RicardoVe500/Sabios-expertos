@@ -238,7 +238,6 @@ $('#tablaCuerpo').on('click', 'button.btn-deletecuerpo', function () {
             $.post("../../backend/Cuerpo/delete/deleteCuerpo.php", { id, partidaId }, () => {
                 cargadatospartida()
                 $('#tablacatalogo').DataTable().ajax.reload();
-
             });
         }
     });

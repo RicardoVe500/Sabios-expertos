@@ -1,4 +1,12 @@
 <?php
+
+session_start();
+if (isset($_SESSION['periodo'])) {
+    $mes = $_SESSION['periodo']['mes'];
+    $anio = $_SESSION['periodo']['anio'];
+  
+}
+
 include("../../../../../lib/config/conect.php");
 
 $tipoPartidaId = $_POST["tipoPartidaId"];
@@ -24,8 +32,9 @@ tipoPartida tp ON p.tipoPartidaId = tp.tipoPartidaId
 LEFT JOIN 
 estado e ON p.estadoId = e.estadoId
 WHERE 
-p.tipoPartidaId LIKE '$tipoPartidaId%'";
-
+p.tipoPartidaId LIKE '$tipoPartidaId%' 
+AND DATE_FORMAT(p.fechacontable, '%Y-%m') = '$anio-$mes'";
+    
 $result = mysqli_query($con, $query);
 
 
