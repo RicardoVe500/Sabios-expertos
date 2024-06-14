@@ -51,8 +51,10 @@
 <script>
 $(document).ready(function() {
 
+    $("#EditTipoPartida").click(function() {
+    editartipopartida()
+    })
     
-
     $("#regresarTipopartida").click(function() {
         $("#render").load("./load/adminTipoPartidas.php");
         

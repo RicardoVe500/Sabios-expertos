@@ -9,12 +9,12 @@ $(document).ready(function () {
   });
 
   $('#addPeriodo').click(function () {
-    $('#selectMonthModal').modal('hide'); // Cierra el modal actual
-    $('#secondaryModal').modal('show'); // Abre el modal secundario
+    $('#selectMonthModal').modal('hide'); // cerramos el modal al precionar el boton de agregar
+    $('#secondaryModal').modal('show'); // Habre el modal de crear 
   });
 
   $('#secondaryModal').on('hidden.bs.modal', function () {
-    $('#selectMonthModal').modal('show'); // Opcional: Reabre el modal principal si es necesario
+    $('#selectMonthModal').modal('show'); 
   });
 
   $('#monthYearPicker').datepicker({

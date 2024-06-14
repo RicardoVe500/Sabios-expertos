@@ -5,6 +5,10 @@ header('Content-Type: application/json');
 if (isset($_POST['id'])) {
     $tipoPartidaId = $_POST['id'];
 
+    $fetchQuery = "SELECT * FROM tipoPartida WHERE tipoPartidaId = $tipoPartidaId";
+    $fetchResult = mysqli_query($con, $fetchQuery);
+    $datosEliminados = mysqli_fetch_assoc($fetchResult);
+
     // Primero verificar si hay registros hijos asociados
     $checkQuery = "SELECT COUNT(*) AS num_hijos FROM partidas WHERE tipoPartidaId = $tipoPartidaId";
     $checkResult = mysqli_query($con, $checkQuery);
@@ -19,10 +23,36 @@ if (isset($_POST['id'])) {
         $result = mysqli_query($con, $query);
 
         if ($result) {
+            // Preparar datos para la bitácora incluyendo todos los detalles del registro eliminado
+            $datos = [
+                "tipoPartidaId" => $tipoPartidaId,
+                "accion" => "Eliminacion",
+                "datosEliminados" => $datosEliminados
+            ];
+            $jsonDatos = json_encode($datos);
+            $fechajson = date("Y-m-d"); 
+
+            // Insertar o actualizar la bitácora
+            $queryBitacora = "SELECT bitacoraId, detalle FROM bitacora WHERE fecha = '$fechajson'";
+            $resultBitacora = mysqli_query($con, $queryBitacora);
+            if ($row = mysqli_fetch_assoc($resultBitacora)) {
+                // Actualiza el registro existente
+                $datosExistentes = json_decode($row["detalle"], true);
+                $datosExistentes[] = $datos;
+                $jsonDatos = json_encode($datosExistentes);
+                $updateQuery = "UPDATE bitacora SET detalle = '$jsonDatos' WHERE bitacoraId = {$row['bitacoraId']}";
+                mysqli_query($con, $updateQuery);
+            } else {
+                // Crea un nuevo registro en la bitácora
+                $insertQuery = "INSERT INTO bitacora(fecha, detalle) VALUES ('$fechajson', '$jsonDatos')";
+                mysqli_query($con, $insertQuery);
+            }
+
             echo json_encode(['success' => true, 'message' => 'Tipo de partida eliminado exitosamente.']);
         } else {
             die("Error en la consulta: " . mysqli_error($con));
         }
+        
     }
 }
 ?>
