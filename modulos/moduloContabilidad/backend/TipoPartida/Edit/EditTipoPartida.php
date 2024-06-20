@@ -24,7 +24,7 @@ if (isset($_POST["tipoPartidaId"])) {
     } else {
         // Preparar datos para la bitácora
         $datosBitacora = [
-            "accion" => "Modificado",
+            "accion" => "Modificado_tipo_partida",
             "datosAntiguos" => $datosAntiguos,
             "datosNuevos" => [
                 "nombrePartida" => $nombrePartida,

@@ -20,7 +20,7 @@ include("../../../../../lib/config/conect.php");
     $fechajson = date("Y-m-d");
     // Preparar datos para la bitácora
     $datos = [
-      "accion" => "ADD",
+      "accion" => "Agrego_Tipo_Partida",
       "datosIngresados" => [
           "nombrePartida" => $nombrePartida,
           "abreviacion" => $abreviacion,

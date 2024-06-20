@@ -51,6 +51,39 @@ if (isset($_POST['numeroCuenta']) || isset($_POST['nombreCuenta'])) {
        $resultInsert = mysqli_query($con, $queryInsert);
 
         if (!$resultInsert) {
+            $fechajson = date("Y-m-d");
+  // Preparar datos para la bitácora
+        $datos = [
+            "accion" => "Agrego_SubCuenta",
+            "datosIngresados" => [
+                "nuevoNumeroCuenta" => $nuevoNumeroCuenta,
+                "nivelcuenta" => $nivelcuenta,
+                "nombrecuenta" => $nombrecuenta,
+                "dependiente" => $dependiente,
+                "movimientos" => $movimientos,
+                "fechaHoraActual" => $fechaHoraActual,
+
+            ]
+        ];
+
+        $jsonDatos = json_encode($datos);
+
+        // Verificar si ya existe un registro para el día actual
+        $queryBitacora = "SELECT bitacoraId, detalle FROM bitacora WHERE fecha = '$fechajson'";
+        $resultBitacora = mysqli_query($con, $queryBitacora);
+        if ($row = mysqli_fetch_assoc($resultBitacora)) {
+            // Actualiza el registro existente
+            $datosExistentes = json_decode($row["detalle"], true);
+            $datosExistentes[] = $datos;
+            $jsonDatos = json_encode($datosExistentes);
+            $updateQuery = "UPDATE bitacora SET detalle = '$jsonDatos' WHERE bitacoraId = {$row['bitacoraId']}";
+            mysqli_query($con, $updateQuery);
+        } else {
+            // Crea un nuevo registro en la bitácora
+            $insertQuery = "INSERT INTO bitacora(fecha, detalle) VALUES ('$fechajson', '$jsonDatos')";
+            mysqli_query($con, $insertQuery);
+        }
+
             echo "Todo bien";
         }
    } else {

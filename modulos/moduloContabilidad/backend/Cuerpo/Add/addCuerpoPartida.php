@@ -23,6 +23,39 @@ if (!$resultInsert) {
     $querySum = "SELECT SUM(cargo) AS totalCargo, SUM(abono) AS totalAbono FROM partidaDetalle WHERE partidaId = '$partidaId'";
     $resultSum = mysqli_query($con, $querySum);
 
+        $fechajson = date("Y-m-d");
+        // Preparar datos para la bitácora
+        $datos = [
+          "accion" => "Agrego_Movimiento_Partida",
+          "datosIngresados" => [
+              "partidaId" => $partidaId,
+              "cuentaId" => $cuentaId,
+              "cargo" => $cargo,
+              "abono" => $abono,
+              "fechaComprobante" => $fechaComprobante,
+              "concepto" => $concepto,
+          ]
+      ];
+      $jsonDatos = json_encode($datos);
+    
+      // Verificar si ya existe un registro para el día actual
+      $queryBitacora = "SELECT bitacoraId, detalle FROM bitacora WHERE fecha = '$fechajson'";
+      $resultBitacora = mysqli_query($con, $queryBitacora);
+      if ($row = mysqli_fetch_assoc($resultBitacora)) {
+          // Actualiza el registro existente
+          $datosExistentes = json_decode($row["detalle"], true);
+          $datosExistentes[] = $datos;
+          $jsonDatos = json_encode($datosExistentes);
+          $updateQuery = "UPDATE bitacora SET detalle = '$jsonDatos' WHERE bitacoraId = {$row['bitacoraId']}";
+          mysqli_query($con, $updateQuery);
+      } else {
+          // Crea un nuevo registro en la bitácora
+          $insertQuery = "INSERT INTO bitacora(fecha, detalle) VALUES ('$fechajson', '$jsonDatos')";
+          mysqli_query($con, $insertQuery);
+      }
+      
+    
+
     if ($row = mysqli_fetch_assoc($resultSum)) {
         $totalCargo = $row['totalCargo'];
         $totalAbono = $row['totalAbono'];

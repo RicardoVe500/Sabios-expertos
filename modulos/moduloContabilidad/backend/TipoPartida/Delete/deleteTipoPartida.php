@@ -26,7 +26,7 @@ if (isset($_POST['id'])) {
             // Preparar datos para la bitácora incluyendo todos los detalles del registro eliminado
             $datos = [
                 "tipoPartidaId" => $tipoPartidaId,
-                "accion" => "Eliminacion",
+                "accion" => "Eliminacion_tipo_partida",
                 "datosEliminados" => $datosEliminados
             ];
             $jsonDatos = json_encode($datos);
