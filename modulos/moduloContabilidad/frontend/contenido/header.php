@@ -46,7 +46,10 @@
                             </div>
                         </li>
 
-                        
+                        <div>
+                        <button type="button" class="btn btn-warning mt-3" id="resetPeriodo"><i class="fa fa-plus"></i> Cambiar periodo</button>
+
+                        </div>
 
                         <div class="topbar-divider d-none d-sm-block"></div>
 

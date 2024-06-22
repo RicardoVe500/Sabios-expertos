@@ -1,6 +1,24 @@
 $(document).ready(function(){
+
+    datosprincipales()
     
-    //al nomas cargar los datos se manda el ajax para que se listen los datos y se muestren en la tabla
+   
+//boton para ejecutar la funcion de guardar la partida
+    $("#crearpartida").click(function(){
+        guardarPartidas();
+    });
+
+   
+
+})
+
+$('.btn-selectperiodo').on('click', function() {
+    datosprincipales()
+   
+});
+
+
+function datosprincipales(){
     var tipoPartidaId = $('#tipoPartidaId').val();
     $.ajax({
         url: "../../backend/Partidas/listardatos/listardatos.php",
@@ -23,14 +41,9 @@ $(document).ready(function(){
             });
         }
     });
-
-//boton para ejecutar la funcion de guardar la partida
-    $("#crearpartida").click(function(){
-        guardarPartidas();
-    });
+}
 
 
-})
 
 //Se crea una funcion para la estructura de la tabla
 function imprimirtablapartidas(){
@@ -45,7 +58,7 @@ function imprimirtablapartidas(){
                 "data": null,
                 "render": function(data, type, row) {
                     // Verifica el estadoId para decidir qué botones mostrar
-                    
+                   
                     if (row.estadoId != 2) {
                         return `<button class='btn btn-primary btn-sm btn-frmcuerpo' title='Agregar' id='frmcuerpo'><i class="fas fa-folder-open"></i></button>
                                 <button class='btn btn-danger btn-sm btn-deletepatidas' title='Eliminar'><i class='fa fa-trash'></i></button>`;
@@ -64,6 +77,8 @@ function imprimirtablapartidas(){
         }
     });
 }
+
+
 
 $('#tablaPartida').on('click', '.btn-frmcuerpo', function() {
     var data = $('#tablaPartida').DataTable().row($(this).parents('tr')).data();
@@ -84,37 +99,6 @@ $('#tablaPartida').on('click', '.btn-imprimirpartida', function() {
     window.open(reportUrl, '_blank');
 })
 
-
-/*
-$('#tablaPartida').off('click').on('click', 'button.btn-frmcuerpo', function () {
-    var data = $('#tablaPartida').DataTable().row($(this).parents('tr')).data();
-    var id = data.partidaId;
-    if (!id) {
-        console.error("ID no está definido o es vacío");
-        return; 
-    }
-    let url = "../../backend/Partidas/listardatos/obtenerdato.php";
-    $("#render").load("./load/adminFrmPartida.php", function() {
-        $.ajax({
-            url: url,
-            data: { id: id },
-            type: "POST",
-            success: function(response){
-                const task = JSON.parse(response);
-                $("#partidaId").val(task.partidaId);
-                $("#cuerponombrePartida").val(task.nombrePartida);
-                $("#cuerpoestado").val(task.estado);
-                $("#cuerpofechacontable").val(task.fechacontable);
-                $("#cuerpofechaActual").val(task.fechaActual);
-                $("#cuerpoconcepto").val(task.concepto);
-                $("#cuerpodebe").val(task.debe);
-                $("#cuerpohaber").val(task.haber);
-                $("#cuerpodiferencia").val(task.diferencia);
-            },
-        });
-    });
-});
-*/
 
 function guardarPartidas(){
 

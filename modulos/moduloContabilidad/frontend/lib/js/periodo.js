@@ -36,6 +36,25 @@ $(document).ready(function () {
     seleccionarPeriodo(data.periodoId, data.mes, data.anio);
   });
 
+  $('#resetPeriodo').click(function() {
+    $.ajax({
+        url: '../../backend/Periodo/session/cambioPeriodo.php', // Este es el archivo PHP que crearemos para manejar la petición
+        type: 'POST',
+        data: {},
+        dataType: 'json',
+        success: function(response) {
+            if(response.status === 'success') {
+                alert(response.message);
+                // Aquí pondrías el código para mostrar tu modal de selección de período
+                $('#selectMonthModal').modal('show'); // Esto depende de cómo tienes implementado tu modal (Bootstrap, etc.)
+            } else {
+                alert(response.message);
+            }
+        }
+    });
+});
+
+
 
 });
 
@@ -107,57 +126,6 @@ function datostabla() {
 
 }
 
-
-/*
-$(document).ready(function() {
-//Se inicializa el modal y se establece que no se pueda cerrar de ningun modo
-$('#selectMonthModal').modal({
-    backdrop: 'static', 
-    keyboard: false, 
-    show: true 
-});
-
-//se inicializa la libreria de datepicker para poder solo escojer los meses
-$('#monthYearPicker').datepicker({
-    format: "mm/yyyy",
-    language: 'es',
-    startView: "months",
-    minViewMode: "months",
-    autoclose: true
-});
-
-//Se hace la validacion si a seleccionado un mes de lo contrario no se cierra el modal y landa un mensaje
-function handleSelection() {
-    var selectedMonthYear = $('#monthYearPicker').val(); 
-    if (selectedMonthYear) {
-        sessionStorage.setItem('selectedMonthYear', selectedMonthYear);
-        return true; 
-    } else {
-        Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Seleccione un periodo'
-                }); 
-        return false; 
-    }
-}
-
-//se cierra el modal cuando se llena el campo y le damos al boton
-$('#confirmSelection').click(function() {
-    if (handleSelection()) {
-        $('#selectMonthModal').modal('hide'); 
-    }
-});
-
-
-$('#selectMonthModal').on('hide.bs.modal', function (e) {
-    if (!handleSelection()) {
-        e.preventDefault(); 
-    }
-});
-});
-*/
-
 function seleccionarPeriodo(periodoId, mes, anio) {
   $.ajax({
     type: "POST",
@@ -171,6 +139,7 @@ function seleccionarPeriodo(periodoId, mes, anio) {
         text: `Se trabajara el periodo de: ${nombreMes} ${anio}.`,
       });
       $('#selectMonthModal').modal('hide');
+      console.log(response)
       // Recargar datos o realizar otras acciones necesarias
     },
     error: function (xhr, status, error) {
@@ -192,27 +161,4 @@ function obtenerNombreMes(mes) {
   return meses[mes - 1]; // Restar 1 porque los meses en JavaScript empiezan desde 0
 }
 
-/*
-//funcion para establecer el mes en el que se trabajara
-function setWorkMonth() {
-  var selectedMonthYear = $('#monthYearPicker').val(); // Formato mm/yyyy
-  sessionStorage.setItem('selectedMonthYear', selectedMonthYear); // Guarda el mes y año seleccionado
-  $('#selectMonthModal').modal('hide'); // Cierra el modal
-}
 
-function updateComprobanteDateField() {
-  var monthYear = sessionStorage.getItem('selectedMonthYear');
-  if (monthYear) {
-      var parts = monthYear.split('/'); // Dividir el string en mes y año
-      var year = parts[1];
-      var month = parts[0];
-
-      // Establecer las fechas mínima y máxima para limitar el selector de fecha
-      var firstDay = `${year}-${month}-01`;
-      var lastDay = new Date(year, month, 0).toISOString().split('T')[0]; // Obtener el último día del mes
-
-      $('#fechacontable').attr('min', firstDay);
-      $('#fechacontable').attr('max', lastDay);
-  }
-}
-  */

@@ -33,7 +33,6 @@
     
 $(document).ready(function() {
 
-   
     $("#frmAddPeriodo").click(function() {
         $("#render").load("load/form/Periodo/Add/frmAddPeriodo.php");
     })

@@ -1,6 +1,7 @@
 <?php
+session_start();
 $tipoPartidaId = $_REQUEST['tipoPartidaId'] ?? 'defaultID';
-echo "<input type='hidden' id='tipoPartidaId' value='$tipoPartidaId'>";
+echo "<input type='text' id='tipoPartidaId' value='$tipoPartidaId'>";
 ?>
  
 <div class="card shadow mb-4">

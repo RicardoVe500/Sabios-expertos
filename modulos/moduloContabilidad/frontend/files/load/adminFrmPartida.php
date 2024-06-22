@@ -5,14 +5,14 @@
     echo "<input type='hidden' id='tipoPartidaId' name='tipoPartidaId' value='$tipoPartidaId'>";
 ?>
 <div class="card shadow mb-4">
-    <div class="card-header py-3 card-header py-3 d-flex justify-content-between align-items-center"  id="cabezaboton">
+    <div class="card-header py-3 card-header py-3 d-flex justify-content-between align-items-center" id="cabezaboton">
         <h6 class="m-0 font-weight-bold text-primary">Movimientos de partidas</h6>
-        <button class="btn btn-warning float-right "  id="regresarpartidas">
-                <i class="fa fa-arrow-left"></i> Regresar
-            </button>
+        <button class="btn btn-warning float-right " id="regresarpartidas">
+            <i class="fa fa-arrow-left"></i> Regresar
+        </button>
     </div>
     <div class="card-body">
-    
+
         <div class="row">
             <div class="col-12 col-md-2">
                 <label>Fecha Actual:</label>
@@ -76,7 +76,7 @@
                 <div class="col-sm-3">
                     <label>Fecha Comprobante:</label>
                     <input type="date" id="fechaComprobante" name="fechaComprobante" class="form-control">
-                   
+
                 </div>
             </div>
             <div class="row">
@@ -130,9 +130,8 @@
     <script src="../lib/js/scripts/enter.js"></script>
 
     <script>
-        
     $(document).ready(function() {
-        
+
         var fechaContable = document.getElementById('fechaComprobante');
         var fechaHoy = new Date();
         var dia = ('0' + fechaHoy.getDate()).slice(-2);
@@ -155,30 +154,54 @@
         });
 
         $("#regresarpartidas").click(function() {
-        var tipoPartidaId = $("#tipoPartidaId").val();
-    $.ajax({
-        url: "load/adminPartidas.php", 
-        type: "POST",
-        data: {
-            tipoPartidaId: tipoPartidaId 
-        },
-        success: function(response) {
-            $("#render").html(response);
+            var tipoPartidaId = $("#tipoPartidaId").val();
+            $.ajax({
+                url: "load/adminPartidas.php",
+                type: "POST",
+                data: {
+                    tipoPartidaId: tipoPartidaId
+                },
+                success: function(response) {
+                    $("#render").html(response);
 
-        },
-        error: function(xhr, status, error) {
-            Swal.fire({
-                    icon: 'error',
-                    title: 'Error al mostrar',
-                    text: 'No se pudo cargar el contenido Por favor, intenta de nuevo.',
-                    confirmButtonText: 'Aceptar'
-                });
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error al mostrar',
+                        text: 'No se pudo cargar el contenido Por favor, intenta de nuevo.',
+                        confirmButtonText: 'Aceptar'
+                    });
+                }
+            });
+
+        })
+
+
+        // Función para limpiar el valor por defecto si es 0
+        function limpiarCero(event) {
+            if (event.target.value === '0') {
+                event.target.value = '';
+            }
         }
-    });
-        
-    })
-       
-    })
+
+        // Función para reestablecer a 0 si el campo está vacío
+        function reestablecerCero(event) {
+            if (event.target.value === '') {
+                event.target.value = '0';
+            }
+        }
+
+        // Añadir listeners a los campos de entrada
+        document.getElementById('debeCuerpo').addEventListener('focus', limpiarCero);
+        document.getElementById('debeCuerpo').addEventListener('blur', reestablecerCero);
+        document.getElementById('haberCuerpo').addEventListener('focus', limpiarCero);
+        document.getElementById('haberCuerpo').addEventListener('blur', reestablecerCero);
 
 
+        validarCampos()
+        document.getElementById('debeCuerpo').addEventListener('input', validarCampos);
+        document.getElementById('haberCuerpo').addEventListener('input', validarCampos);
+
+    })
     </script>

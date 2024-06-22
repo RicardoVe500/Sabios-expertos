@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
     //Se captura el dato del campo partidaId que se mando desde Partidas
-   
+
     $('#selectcomprobante').select2({
         ajax: {
             url: "../../backend/Cuerpo/listardatos/selectComprobante.php",
@@ -48,7 +48,8 @@ $(document).ready(function () {
         },
         theme: "bootstrap",
         placeholder: 'Buscar cuenta...',
-        allowClear: true  // se establece el limpiado del select 
+        allowClear: true,  // se establece el limpiado del select
+        minimumInputLength: 2
     });
 
 
@@ -74,7 +75,7 @@ function cargadatospartida() {
             $("#cuerpodebe").val(task.debe);
             $("#cuerpohaber").val(task.haber);
             $("#cuerpodiferencia").val(task.diferencia);
-            
+
         },
         error: function () {
             Swal.fire({
@@ -113,8 +114,6 @@ function cargadatospartida() {
 
 
 function guardarCuerpoPartida() {
-
-    
     var url = "../../backend/Cuerpo/Add/addCuerpoPartida.php";
     $.ajax({
         type: "POST",
@@ -146,8 +145,29 @@ function guardarCuerpoPartida() {
             });
         }
     });
-
 }
+
+
+function validarCampos() {
+    var debe = parseFloat(document.getElementById('debeCuerpo').value);
+    var haber = parseFloat(document.getElementById('haberCuerpo').value);
+
+    // Comprueba si ambos campos tienen valores mayores que 0
+    if (debe > 0 && haber > 0) {
+        Swal.fire({
+            title: 'Error',
+            text: 'No puedes ingresar saldos en debe y haber ha la vez',
+            icon: 'warning',
+            confirmButtonText: 'Aceptar'
+        });
+        document.getElementById('debeCuerpo').value = 0;
+        document.getElementById('haberCuerpo').value = 0;
+    }
+}
+
+
+
+
 
 function Imprimirtablacuerpo() {
     if ($.fn.DataTable.isDataTable('#tablaCuerpo')) {
@@ -156,9 +176,9 @@ function Imprimirtablacuerpo() {
     $('#tablaCuerpo').DataTable({
         columns: [
             {
-            "data": null,
+                "data": null,
                 "title": "#", // Título de la columna de conteo
-                "render": function(data, type, row, meta){
+                "render": function (data, type, row, meta) {
                     return meta.row + 1;
                 }
             },
@@ -196,22 +216,22 @@ $('#tablaCuerpo').on('click', '.btn-editarcuerpo', function () {
             $("#debeCuerpo").val(task.cargo)
             $("#haberCuerpo").val(task.abono)
 
-             // Asegúrate de que select2 reconozca la opción cargada correctamente
-        var newOption = {
-            id: task.tipoComprobanteId,
-            text: task.nombreComprobante,
-            selected: true,
-            title: task.nombreComprobante
-        };
-        $("#selectcomprobante").empty().append(new Option(newOption.text, newOption.id, true, true)).trigger('change');
+            // Asegúrate de que select2 reconozca la opción cargada correctamente
+            var newOption = {
+                id: task.tipoComprobanteId,
+                text: task.nombreComprobante,
+                selected: true,
+                title: task.nombreComprobante
+            };
+            $("#selectcomprobante").empty().append(new Option(newOption.text, newOption.id, true, true)).trigger('change');
 
-        var newOption2 = {
-            id: task.cuentaId,
-            text: task.cuenta,
-            selected: true,
-            title: task.cuenta
-        };
-        $("#selectcuentas").empty().append(new Option(newOption2.text, newOption2.id, true, true)).trigger('change');
+            var newOption2 = {
+                id: task.cuentaId,
+                text: task.cuenta,
+                selected: true,
+                title: task.cuenta
+            };
+            $("#selectcuentas").empty().append(new Option(newOption2.text, newOption2.id, true, true)).trigger('change');
 
             $('#dato').data('mode', 'edit');
 
@@ -252,27 +272,27 @@ function editardatos() {
         numeroComprobante: $("#numeroComprobante").val(),
         fechaComprobante: $("#fechaComprobante").val(),
         concepto: $("#conceptoespecifico").val(),
-        cargo: $("#debeCuerpo").val()|| '0',
-        abono: $("#haberCuerpo").val()|| '0',
+        cargo: $("#debeCuerpo").val() || '0',
+        abono: $("#haberCuerpo").val() || '0',
     }
     $.ajax({
         url: "../../backend/Cuerpo/edit/editCuerpoPartida.php",
         data: pData,
         type: "POST",
-        success: function(response){
+        success: function (response) {
             Swal.fire({
                 icon: 'success',
                 title: '¡SubCuenta agregada!',
                 text: 'Los cambios se han guardado correctamente.',
             });
-                    $('#frmcuerpo')[0].reset(); // Resetear el formulario
-                    $('#selectcomprobante').val('').trigger('change');
-                    $('#selectcuentas').val('').trigger('change');
-                    cargadatospartida();
-                    $('#tablaPartida').DataTable().ajax.reload();
-                    $('#dato').data('mode', 'add');
-                    $('#dato').text('Agregar');
-                
+            $('#frmcuerpo')[0].reset(); // Resetear el formulario
+            $('#selectcomprobante').val('').trigger('change');
+            $('#selectcuentas').val('').trigger('change');
+            cargadatospartida();
+            $('#tablaPartida').DataTable().ajax.reload();
+            $('#dato').data('mode', 'add');
+            $('#dato').text('Agregar');
+
         },
         error: function (xhr, status, error) {
             console.log(error)
