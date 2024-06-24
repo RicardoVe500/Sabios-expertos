@@ -12,7 +12,6 @@
         </button>
     </div>
     <div class="card-body">
-
         <div class="row">
             <div class="col-12 col-md-2">
                 <label>Fecha Actual:</label>
@@ -50,11 +49,11 @@
                 <label>Estado:</label>
                 <input type="text" id="cuerpoestado" name="cuerpoestado" class="form-control mb-3" readonly
                     style="pointer-events: none; background-color: #e9ecef;">
+                    
             </div>
             <input type="hidden" id="partidaDetalleId" name="partidaDetalleId" class="form-control">
-
-
         </div>
+
 
         <form name="frmcuerpo" id="frmcuerpo">
             <hr>
@@ -65,8 +64,9 @@
             ?>
             <div class="row mb-3">
                 <div class="col-sm-2">
-                    <label style="margin-top: 10px;">Comprobante:</label>
-                    <select class="form-control" id="selectcomprobante" name="selectcomprobante">
+                    <label style="margin-top: 5px;">Comprobante:</label>
+                    <select class="form-control" id="selectcomprobante" name="selectcomprobante"
+                        style="margin-top: 5px;">
                     </select>
                 </div>
                 <div class="col-sm-4">
@@ -76,14 +76,13 @@
                 <div class="col-sm-3">
                     <label>Fecha Comprobante:</label>
                     <input type="date" id="fechaComprobante" name="fechaComprobante" class="form-control">
-
                 </div>
             </div>
             <div class="row">
 
                 <div class="col-sm-3">
-                    <label style="margin-top: 10px;">Cuenta Contable:</label>
-                    <select class="form-control" id="selectcuentas" name="selectcuentas">
+                    <label style="margin-top: 5px;">Cuenta Contable:</label>
+                    <select class="form-control" id="selectcuentas" name="selectcuentas" style="margin-top: 5px;">
                     </select>
                 </div>
                 <div class="col-sm-4">
@@ -96,20 +95,24 @@
                 </div>
                 <div class="col-sm-2">
                     <label>haber:</label>
-                    <input type="text" id="haberCuerpo" name="haberCuerpo" class="form-control mb-3" value="0">
-                </div>
-                <div class="col-sm-2">
-                    <div>
-
-                    </div>
+                    <input type="text" id="haberCuerpo" name="haberCuerpo" class="form-control" value="0">
                 </div>
             </div>
         </form>
-        <div>
-            <button class="btn btn-primary mb-3" id="dato" data-mode="add">
-                Ingresar
-            </button>
+
+        <div class="row mb-3">
+            <div class="col">
+                <div>
+                    <button class="btn btn-danger mt-3" id="cerrarCuenta" style="display: none;">
+                        <i class="fas fa-lock"></i> Cerrar Cuenta
+                    </button>
+
+                    <button class="btn btn-primary float-right mt-3" id="dato" data-mode="add">
+                        <i class="fas fa-arrow-down"></i> Ingresar </button>
+                </div>
+            </div>
         </div>
+
 
         <table id="tablaCuerpo" class="table" style="width:100%">
             <thead>
@@ -123,8 +126,8 @@
                 </tr>
             </thead>
         </table>
-
     </div>
+
 
     <script src="../lib/js/scripts/frmPartidaCuerpo.js"></script>
     <script src="../lib/js/scripts/enter.js"></script>
@@ -143,6 +146,8 @@
 
         cargadatospartida()
         Imprimirtablacuerpo()
+       
+   
 
         $("#dato").click(function() {
             var mode = $(this).data("mode");
@@ -203,5 +208,12 @@
         document.getElementById('debeCuerpo').addEventListener('input', validarCampos);
         document.getElementById('haberCuerpo').addEventListener('input', validarCampos);
 
+
+
     })
+
+
+
+  
+
     </script>

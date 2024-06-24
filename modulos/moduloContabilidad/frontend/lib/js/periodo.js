@@ -14,7 +14,7 @@ $(document).ready(function () {
   });
 
   $('#secondaryModal').on('hidden.bs.modal', function () {
-    $('#selectMonthModal').modal('show'); 
+    $('#selectMonthModal').modal('show');
   });
 
   $('#monthYearPicker').datepicker({
@@ -36,23 +36,40 @@ $(document).ready(function () {
     seleccionarPeriodo(data.periodoId, data.mes, data.anio);
   });
 
-  $('#resetPeriodo').click(function() {
-    $.ajax({
-        url: '../../backend/Periodo/session/cambioPeriodo.php', // Este es el archivo PHP que crearemos para manejar la petición
-        type: 'POST',
-        data: {},
-        dataType: 'json',
-        success: function(response) {
-            if(response.status === 'success') {
-                alert(response.message);
-                // Aquí pondrías el código para mostrar tu modal de selección de período
-                $('#selectMonthModal').modal('show'); // Esto depende de cómo tienes implementado tu modal (Bootstrap, etc.)
+  $('#resetPeriodo').click(function () {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: "¿Quieres cambiar el período de trabajo?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, cambiar!',
+      cancelButtonText: 'No, cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: '../../backend/Periodo/session/cambioPeriodo.php',
+          type: 'POST',
+          dataType: 'json',
+          success: function (response) {
+            if (response.status === 'success') {
+              $('#selectMonthModal').modal('show');
             } else {
-                alert(response.message);
+              Swal.fire(
+                'Error!',
+                response.message,
+                'error'
+              );
             }
-        }
+          }
+        });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+
+      }
     });
-});
+  });
+
 
 
 
@@ -74,7 +91,7 @@ function guardarperiodo() {
       url: url,
       data: $("#frmperiodo").serialize(),
       success: function (data) {
-        
+
         if (response.status === 'success') {
           Swal.fire({
             icon: 'success',

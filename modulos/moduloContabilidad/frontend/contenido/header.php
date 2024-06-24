@@ -47,7 +47,8 @@
                         </li>
 
                         <div>
-                        <button type="button" class="btn btn-warning mt-3" id="resetPeriodo"><i class="fa fa-plus"></i> Cambiar periodo</button>
+                        <!-- BOton de  -->
+                        <button type="button" class="btn btn-warning mt-3" id="resetPeriodo"><i class="far fa-calendar-alt"></i> Cambiar periodo</button>
 
                         </div>
 

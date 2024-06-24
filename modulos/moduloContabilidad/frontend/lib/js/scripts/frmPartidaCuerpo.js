@@ -1,5 +1,6 @@
 $(document).ready(function () {
 
+  
     //Se captura el dato del campo partidaId que se mando desde Partidas
 
     $('#selectcomprobante').select2({
@@ -68,6 +69,7 @@ function cargadatospartida() {
             //llenamos los campos de nuestro formulario del archivo JSON que recibimos
             $("#partidaId").val(task.partidaId);
             $("#cuerponombrePartida").val(task.nombrePartida);
+            $("#estadoId").val(task.estadoId);
             $("#cuerpoestado").val(task.estado);
             $("#cuerpofechacontable").val(task.fechacontable);
             $("#cuerpofechaActual").val(task.fechaActual);
@@ -75,6 +77,12 @@ function cargadatospartida() {
             $("#cuerpodebe").val(task.debe);
             $("#cuerpohaber").val(task.haber);
             $("#cuerpodiferencia").val(task.diferencia);
+
+            if (task.estadoId == '2') {
+                $('#cerrarCuenta').show();
+            } else {
+                $('#cerrarCuenta').hide();
+            }
 
         },
         error: function () {
@@ -86,8 +94,7 @@ function cargadatospartida() {
             });
         }
     });
-
-
+    
     $.ajax({
         url: "../../backend/Cuerpo/listardatos/listardatos.php",
         type: "POST",
@@ -111,6 +118,8 @@ function cargadatospartida() {
     });
 
 }
+
+
 
 
 function guardarCuerpoPartida() {
@@ -305,3 +314,10 @@ function editardatos() {
         }
     })
 }
+
+
+
+
+
+
+

@@ -45,6 +45,7 @@ $result = mysqli_query($con, $query);
             
             "partidaId"=>$row["partidaId"],
             "nombrePartida"=>$row["nombrePartida"],
+            "estadoId"=>$row["estadoId"],
             "estado"=>$row["estado"],
             "codigoPartida"=>$row["codigoPartida"],
             "fechacontable"=>$row["fechacontable"],

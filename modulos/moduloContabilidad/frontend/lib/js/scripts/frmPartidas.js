@@ -1,38 +1,38 @@
-$(document).ready(function(){
+$(document).ready(function () {
 
     datosprincipales()
-    
-   
-//boton para ejecutar la funcion de guardar la partida
-    $("#crearpartida").click(function(){
+
+    //boton para ejecutar la funcion de guardar la partida
+    $("#crearpartida").click(function () {
         guardarPartidas();
     });
 
-   
-
 })
 
-$('.btn-selectperiodo').on('click', function() {
-    datosprincipales()
-   
+$('.btn-selectperiodo').on('click', function () {
+    $(document).ready(function () {
+        datosprincipales();
+        imprimirtablapartidas();
+
+    })
 });
 
 
-function datosprincipales(){
+function datosprincipales() {
     var tipoPartidaId = $('#tipoPartidaId').val();
     $.ajax({
         url: "../../backend/Partidas/listardatos/listardatos.php",
         type: "POST",
         data: { tipoPartidaId },
         dataType: "json",
-        success: function(response) {
+        success: function (response) {
             // Se destruye la tabla existente y se crea de nuevo, por si se llama multiples veces
             var table = $('#tablaPartida').DataTable();
             table.clear();
             table.rows.add(response.data);
             table.draw();
         },
-        error: function() {
+        error: function () {
             Swal.fire({
                 title: 'Error',
                 text: 'Hubo un problema',
@@ -46,24 +46,27 @@ function datosprincipales(){
 
 
 //Se crea una funcion para la estructura de la tabla
-function imprimirtablapartidas(){
+function imprimirtablapartidas() {
+    if ($.fn.DataTable.isDataTable('#tablaPartida')) { // comprueba si hay una instancia anterior
+        $('#tablaPartida').DataTable().destroy(); // Se destruye la instancia anterior
+    }
     $('#tablaPartida').DataTable({
         columns: [
-            {"data": "codigoPartida"},
-            {"data": "fechaActual"},
-            {"data": "fechacontable"},
-            {"data": "concepto"},
-            {"data": "estado"},
+            { "data": "codigoPartida" },
+            { "data": "fechaActual" },
+            { "data": "fechacontable" },
+            { "data": "concepto" },
+            { "data": "estado" },
             {
                 "data": null,
-                "render": function(data, type, row) {
+                "render": function (data, type, row) {
                     // Verifica el estadoId para decidir qué botones mostrar
-                   
                     if (row.estadoId != 2) {
                         return `<button class='btn btn-primary btn-sm btn-frmcuerpo' title='Agregar' id='frmcuerpo'><i class="fas fa-folder-open"></i></button>
                                 <button class='btn btn-danger btn-sm btn-deletepatidas' title='Eliminar'><i class='fa fa-trash'></i></button>`;
                     } else {
-                        return `<button class='btn btn-primary btn-sm btn-imprimirpartida' title='Reporte'><i class="fas fa-print"></i></button>`;
+                        return `<button class='btn btn-primary btn-sm btn-frmcuerpo' title='Agregar' id='frmcuerpo'><i class="fas fa-folder-open"></i></button>
+                        <button class='btn btn-primary btn-sm btn-imprimirpartida' title='Reporte'><i class="fas fa-print"></i></button>`;
                     }
                 }
             },
@@ -72,15 +75,16 @@ function imprimirtablapartidas(){
         order: [[1, 'asc']],
         createdRow: function (row, data, dataIndex) {
             if (data.estadoId == 2) {
-                $(row).css('background-color', '#e2e2e2'); 
+                $(row).css('background-color', '#e2e2e2');
             }
         }
     });
 }
 
 
-
-$('#tablaPartida').on('click', '.btn-frmcuerpo', function() {
+//mandamos la informacion del ID, tipo partida y tambien el codigo para poder hacer el filtrado mas adetalle
+//en el otro campo a renderizar.
+$('#tablaPartida').on('click', '.btn-frmcuerpo', function () {
     var data = $('#tablaPartida').DataTable().row($(this).parents('tr')).data();
     var num = data.partidaId
     var num2 = data.tipoPartidaId
@@ -89,7 +93,8 @@ $('#tablaPartida').on('click', '.btn-frmcuerpo', function() {
     });
 });
 
-$('#tablaPartida').on('click', '.btn-imprimirpartida', function() {
+//Se establece un boton para imprimir el reporte de la partida.
+$('#tablaPartida').on('click', '.btn-imprimirpartida', function () {
     var data = $('#tablaPartida').DataTable().row($(this).parents('tr')).data();
     var partidaId = data.partidaId
     var codigoPartida = data.codigoPartida
@@ -100,9 +105,10 @@ $('#tablaPartida').on('click', '.btn-imprimirpartida', function() {
 })
 
 
-function guardarPartidas(){
+//Funcion para guardar las partidas contables
+function guardarPartidas() {
 
-    if($("#fechacontable").val()==""|| $("#concepto").val() == ""){
+    if ($("#fechacontable").val() == "" || $("#concepto").val() == "") {
         Swal.fire({
             title: 'Error',
             text: 'NO deben de haber datos sin llenar',
@@ -115,25 +121,26 @@ function guardarPartidas(){
             type: "POST",
             url: url,
             data: $("#frmAddPartida").serialize(),
-            success: function(data){
+            success: function (data) {
                 Swal.fire({
                     icon: 'success',
                     title: '¡Tipo Partida Agregada!',
                     text: 'El Tipo de partida se agrego exitosamente.',
-                }); 
+                });
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error al crear',
                     text: 'No se pudo crear el tipo partida. Por favor, intenta de nuevo.',
                     confirmButtonText: 'Aceptar'
-                }); 
+                });
             }
         });
-    }  
+    }
 }
 
+//Funcion para eliminar las partidas contables
 $('#tablaPartida').on('click', 'button.btn-deletepatidas', function () {
     var data = $('#tablaPartida').DataTable().row($(this).parents('tr')).data();
     var id = data.partidaId;
@@ -147,7 +154,7 @@ $('#tablaPartida').on('click', 'button.btn-deletepatidas', function () {
         confirmButtonText: 'Sí, eliminarlo'
     }).then((result) => {
         if (result.isConfirmed) {
-            $.post("../../backend/Partidas/delete/deletepartida.php", { id }, function(response) {
+            $.post("../../backend/Partidas/delete/deletepartida.php", { id }, function (response) {
                 if (response.success) {
                     var tipoPartidaId = $('#tipoPartidaId').val();
                     $.ajax({
@@ -155,7 +162,7 @@ $('#tablaPartida').on('click', 'button.btn-deletepatidas', function () {
                         type: "POST",
                         data: { tipoPartidaId },
                         dataType: "json",
-                        success: function(response) {
+                        success: function (response) {
                             // Destruir la tabla existente antes de volver a crearla
                             var table = $('#tablaPartida').DataTable();
                             table.clear();
@@ -168,7 +175,7 @@ $('#tablaPartida').on('click', 'button.btn-deletepatidas', function () {
                 } else {
                     Swal.fire('Error!', response.message, 'error');
                 }
-            }, "json").fail(function(jqXHR, textStatus, errorThrown) {
+            }, "json").fail(function (jqXHR, textStatus, errorThrown) {
                 Swal.fire('Error en la conexión o el servidor', 'No se pudo procesar la solicitud: ' + textStatus, 'error');
             });
         }
