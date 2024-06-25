@@ -64,13 +64,17 @@ $(document).ready(function() {
         $("#render").load("./load/form/Catalogo/Add/frmAddCatalogo.php");
     })
 
-    $('.custom-file-input').on('change', function() { 
-        let fileName = $(this).val().split('\\').pop();  // Extrae el nombre del archivo
+    $('.custom-file-input').on('change', function() {
+        let fileName = $(this).val().split('\\').pop(); // Extrae el nombre del archivo
         $(this).next('.custom-file-label').addClass("selected").html(fileName);
     });
-   
+
+    $("#reportecatalogo").click(function() {
+    var reportUrl = '../../backend/Catalogo/reportes/catalogoreporte.php';
+        window.open(reportUrl, '_blank');
+    })
+
 })
 
-
-
+/Proyecto/modulos/moduloContabilidad/backend/Catalogo/reportes/catalogoreporte.php
 </script>
