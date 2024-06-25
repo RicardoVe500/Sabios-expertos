@@ -11,6 +11,28 @@ $(document).ready(function(){
 
 });
 
+$('#inputGroupFileAddon03').click(function() {
+    var fileData = $('#archivoex').prop('files')[0];
+    var formData = new FormData();
+    formData.append('file', fileData);
+
+    $.ajax({
+        url: '../../backend/Catalogo/excel/importar.php',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function(response) {
+            alert('Archivo subido y procesado');
+            console.log(response); // Puedes quitar esto después de las pruebas
+        },
+        error: function(xhr, status, error) {
+            alert('Error al subir el archivo');
+            console.error(error);
+        }
+    });
+});
+
 function guardarDatos(){
 
     if($("#numeroCuenta").val()==""|| $("#nombreCuenta").val() == ""){
