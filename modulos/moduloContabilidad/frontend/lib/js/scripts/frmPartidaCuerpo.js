@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-  
+
     //Se captura el dato del campo partidaId que se mando desde Partidas
 
     $('#selectcomprobante').select2({
@@ -94,7 +94,7 @@ function cargadatospartida() {
             });
         }
     });
-    
+
     $.ajax({
         url: "../../backend/Cuerpo/listardatos/listardatos.php",
         type: "POST",
@@ -314,10 +314,78 @@ function editardatos() {
         }
     })
 }
-
-
-
-
-
-
+$('#cerrarCuenta').click(function () {
+    // Usamos SweetAlert para confirmar la acción
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "¿Quieres cerrar esta cuenta? Esta acción no se puede deshacer.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, cerrarla!',
+        cancelButtonText: 'No, cancelar!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Usuario confirma que quiere cerrar la cuenta
+            var partidaId = $('#partidaId').val();  // Asegúrate de que este es el modo correcto de obtener el ID
+            $.ajax({
+                url: "../../backend/Cuerpo/edit/updateestado.php",
+                type: "POST",
+                data: {
+                    partidaId: partidaId,
+                },
+                dataType: "json", // Asegúrate de especificar que esperas un JSON
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Se ha cerrado la partida!',
+                            text: 'NO se podrán hacer modificaciones en esta partida.',
+                            confirmButtonText: 'Aceptar'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Redirección como el botón "regresarpartidas"
+                                var tipoPartidaId = $("#tipoPartidaId").val();
+                                $.ajax({
+                                    url: "load/adminPartidas.php",
+                                    type: "POST",
+                                    data: {
+                                        tipoPartidaId: tipoPartidaId
+                                    },
+                                    success: function(response) {
+                                        $("#render").html(response);
+                                    },
+                                    error: function(xhr, status, error) {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Error al mostrar',
+                                            text: 'No se pudo cargar el contenido. Por favor, intenta de nuevo.',
+                                            confirmButtonText: 'Aceptar'
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error al cerrar',
+                            text: response.message, // Muestra el mensaje de error del servidor
+                            confirmButtonText: 'Aceptar'
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error en la conexión',
+                        text: 'Hubo un problema con la conexión al servidor. Por favor, verifica tu red o intenta más tarde.',
+                        confirmButtonText: 'Aceptar'
+                    });
+                }
+            });
+        }
+    });
+});
 

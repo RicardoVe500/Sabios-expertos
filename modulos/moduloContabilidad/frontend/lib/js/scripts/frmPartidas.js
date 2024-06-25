@@ -61,20 +61,20 @@ function imprimirtablapartidas() {
                 "data": null,
                 "render": function (data, type, row) {
                     // Verifica el estadoId para decidir qué botones mostrar
-                    if (row.estadoId != 2) {
+                    if (row.estadoId == 1 || row.estadoId == 2 ) {
                         return `<button class='btn btn-primary btn-sm btn-frmcuerpo' title='Agregar' id='frmcuerpo'><i class="fas fa-folder-open"></i></button>
                                 <button class='btn btn-danger btn-sm btn-deletepatidas' title='Eliminar'><i class='fa fa-trash'></i></button>`;
                     } else {
-                        return `<button class='btn btn-primary btn-sm btn-frmcuerpo' title='Agregar' id='frmcuerpo'><i class="fas fa-folder-open"></i></button>
-                        <button class='btn btn-primary btn-sm btn-imprimirpartida' title='Reporte'><i class="fas fa-print"></i></button>`;
-                    }
+                        return `<button class='btn btn-primary btn-sm btn-imprimirpartida' title='Reporte'><i class="fas fa-print"></i></button>`;
+                    }  
+                    
                 }
             },
         ],
         columnDefs: [{ "targets": -1, "orderable": false, "className": "dt-center" }],
         order: [[1, 'asc']],
         createdRow: function (row, data, dataIndex) {
-            if (data.estadoId == 2) {
+            if (data.estadoId == 3) {
                 $(row).css('background-color', '#e2e2e2');
             }
         }
