@@ -19,7 +19,10 @@
     <link rel="stylesheet" href="../../../../lib/css/datatablescss.css">
     <link rel="stylesheet" href="../../../../lib/css/datatablesbuttons.css">
     <link rel="stylesheet" href="../../../../lib/css/datatableselectcss.css">
+     <!-- Datepicker CSS -->
     <link rel="stylesheet" href="../../../../lib/css/datepickercss.css">
+    <link rel="stylesheet" href="../../../../lib/css/estilodate.css">
+
 
 
 
@@ -54,7 +57,7 @@
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
                 <div class="copyright text-center my-auto">
-                    <span>Copyright &copy; Your Website 2024</span>
+                    <span>Copyright &copy; Sabios & Expertos 2024</span>
                 </div>
             </div>
         </footer>
@@ -74,6 +77,8 @@
 <script src="../../../../lib/vendor/jquery/jquery.min.js"></script>
 <script src="../../../../lib/js/Jquery.js"></script>
 
+
+
 <!-- Bootstrap JS Bundle (Incluye Popper) -->
 <script src="../../../../lib/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
@@ -90,6 +95,7 @@
 
 <!-- Select2 -->
 <script src="../../../../lib/js/select2.js"></script>
+<!-- Datepicker -->
 <script src="../../../../lib/js/datepickerjs.js"></script>
 <script src="../../../../lib/js/datepickerespanol.js"></script>
 

@@ -52,7 +52,19 @@
                         <h6 class="collapse-header">Contabilidad</h6>
                         <a class="collapse-item" href="#" id="catalogo">Catalogo</a>
                         <a class="collapse-item" href="#" id="tipopartida">Tipo Partida</a>
-                        <a class="collapse-item" href="#" id="catalogo">Reportes</a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsefour"
+                    aria-expanded="true" aria-controls="collapsefour">
+                    <i class="fas fa-print"></i>
+                    <span>Reporteria</span>
+                </a>
+                <div id="collapsefour" class="collapse" aria-labelledby="headingtree" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Reportes</h6>
+                        <a class="collapse-item" href="#" id="bitacora">Bitacora</a>
                     </div>
                 </div>
             </li>

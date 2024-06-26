@@ -33,9 +33,7 @@ if (isset($_SESSION['periodo'])) {
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                         </div>
-                        <input type="date" id="fechacontable" name="fechacontable" class="form-control">
-
-
+                        <input type="text" id="fechacontable" name="fechacontable" class="datepicker form-control">
                     </div>
 
                     <label for="Numero">Concepto:</label>
@@ -59,11 +57,18 @@ if (isset($_SESSION['periodo'])) {
 <script src="../lib/js/scripts/frmPartidas.js"></script>
 <script>
 $(document).ready(function() {
+ // Inicializar el datepicker
+ $('.datepicker').datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        language: 'es',
+        todayHighlight: true
+    });
 
-    //validacion para poder restringir las fechas contables y no pasen de la fecha de trabajo establecida 
+    // Validación para restringir las fechas contables
     if (typeof mesInicio !== 'undefined' && typeof anioInicio !== 'undefined') {
-        var firstDay = new Date(anioInicio, mesInicio, 1);
-        var lastDay = new Date(anioInicio, mesInicio + 1, 0);
+        var firstDay = new Date(anioInicio, mesInicio - 1, 1); // Ajuste de mes (0-indexed)
+        var lastDay = new Date(anioInicio, mesInicio, 0); // Ajuste de mes (0-indexed)
 
         console.log('First Day:', firstDay.toISOString().split('T')[0]);
         console.log('Last Day:', lastDay.toISOString().split('T')[0]);
@@ -71,13 +76,11 @@ $(document).ready(function() {
         var firstDayStr = firstDay.toISOString().split('T')[0];
         var lastDayStr = lastDay.toISOString().split('T')[0];
 
-        var fechaContable = document.getElementById('fechacontable');
-        fechaContable.min = firstDayStr;
-        fechaContable.max = lastDayStr;
+        $('.datepicker').datepicker('setStartDate', firstDayStr);
+        $('.datepicker').datepicker('setEndDate', lastDayStr);
     } else {
         console.log("Variables de sesión no definidas.");
     }
-
 
     //enableEnterKeySubmission("#frmAddTipoPartida", guardarTipoPartida);
 

@@ -22,6 +22,9 @@ $(document).ready(function(){
         $("#render").load("load/adminPeriodo.php");
     });
     
+    $("#bitacora").click(function(){
+        $("#render").load("load/adminbitacora.php");
+    });
 
 
 })

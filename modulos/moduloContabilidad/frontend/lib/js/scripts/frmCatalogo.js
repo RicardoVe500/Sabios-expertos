@@ -1,5 +1,4 @@
 $(document).ready(function(){
-    
 
     $("#regresar").click(function(){
         regresar();
@@ -13,9 +12,17 @@ $(document).ready(function(){
 
 $('#inputGroupFileAddon03').click(function() {
     var fileData = $('#archivoex').prop('files')[0];
+    if (!fileData) {
+        Swal.fire({
+            title: 'Error!',
+            text: 'No has seleccionado ningún archivo.',
+            icon: 'error',
+            confirmButtonText: 'Ok'
+        });
+        return;
+    }
     var formData = new FormData();
     formData.append('file', fileData);
-
     $.ajax({
         url: '../../backend/Catalogo/excel/importar.php',
         type: 'POST',
@@ -23,12 +30,19 @@ $('#inputGroupFileAddon03').click(function() {
         contentType: false,
         processData: false,
         success: function(response) {
-            alert('Archivo subido y procesado');
-            console.log(response); // Puedes quitar esto después de las pruebas
+            Swal.fire(
+                '¡Éxito!',
+                'Archivo subido y procesado correctamente.',
+                'success'
+            );
         },
         error: function(xhr, status, error) {
-            alert('Error al subir el archivo');
-            console.error(error);
+            Swal.fire({
+                title: 'Error al subir el archivo!',
+                text: 'Por favor, inténtalo de nuevo.',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+            });
         }
     });
 });
@@ -182,7 +196,6 @@ function editarDatos(){
        }) 
     
 }
-
 
 function regresar(){
     $("#render").load("./load/adminCatalogo.php");
