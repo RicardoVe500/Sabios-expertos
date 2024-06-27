@@ -26,5 +26,10 @@ $(document).ready(function(){
         $("#render").load("load/adminbitacora.php");
     });
 
+    $("#empresas").click(function(){
+        $("#render").load("load/adminEmpresas.php");
+    });
+
 
 })
+

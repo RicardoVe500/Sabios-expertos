@@ -9,12 +9,13 @@
         </button>
 
         <form name="frmEditCatalogoSub" id="frmEditCatalogoSub">
+        <input type="hidden" class="form-control" placeholder="id" id="cuentaId" name="cuentaId">
+                    <input type="hidden" class="form-control" placeholder="numero Cuenta" id="numeroCuenta"
+                        name="numeroCuenta">
 
             <div class="row">
                 <div class="col-md-6">
-                    <input type="hidden" class="form-control" placeholder="Nombre Cuenta" id="cuentaId" name="cuentaId">
-                    <input type="hidden" class="form-control" placeholder="Nombre Cuenta" id="numeroCuenta"
-                        name="numeroCuenta">
+                    <input type="hidden" class="form-control" placeholder="empresaId" id="empresaId" name="empresaId">
 
                     <label for="Numero">Nombre de la cuenta:</label>
                     <div class="input-group mb-3">
@@ -48,6 +49,8 @@
 <script src="../lib/js/scripts/frmSubcuentas.js"></script>
 <script>
 $("#regresarSub").click(function() {
+
+    
     // Obtener el valor de cuentaId
     var numeroCuenta = $("#numeroCuenta").val().charAt(0);
     // Realizar la petición AJAX

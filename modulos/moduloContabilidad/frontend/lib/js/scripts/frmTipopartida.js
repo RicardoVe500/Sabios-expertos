@@ -67,14 +67,12 @@ $(document).ready(function() {
             }]
         });
         
-    }
+    } 
 
     $('#tablaTipoPartida').on('click', '.btn-partidas', function() {
         var data = $('#tablaTipoPartida').DataTable().row($(this).parents('tr')).data();
         var num = data.tipoPartidaId
         $("#render").load("./load/adminPartidas.php", { tipoPartidaId: num }, function() {
-            // Este callback se ejecuta después de que la carga esté completa.
-            // Aquí puedes realizar alguna inicialización si es necesario.
         });
     });
 

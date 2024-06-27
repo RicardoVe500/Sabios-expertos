@@ -76,5 +76,5 @@ $(document).ready(function() {
 
 })
 
-/Proyecto/modulos/moduloContabilidad/backend/Catalogo/reportes/catalogoreporte.php
+
 </script>

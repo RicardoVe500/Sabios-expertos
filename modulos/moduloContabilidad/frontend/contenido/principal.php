@@ -6,7 +6,8 @@
 
                                 <div class="card-deck">
                                     <div class="card">
-                                        <img src="..." class="card-img-top" alt="...">
+                                        <img 
+                                        class="card-img-top" >
                                         <div class="card-body">
                                             <h5 class="card-title">Card title</h5>
                                             <p class="card-text">This is a longer card with supporting text below as a
@@ -17,7 +18,7 @@
                                         </div>
                                     </div>
                                     <div class="card">
-                                        <img src="..." class="card-img-top" alt="...">
+                                        <img  class="card-img-top" >
                                         <div class="card-body">
                                             <h5 class="card-title">Card title</h5>
                                             <p class="card-text">This card has supporting text below as a natural
@@ -27,7 +28,7 @@
                                         </div>
                                     </div>
                                     <div class="card">
-                                        <img src="..." class="card-img-top" alt="...">
+                                        <img class="card-img-top" >
                                         <div class="card-body">
                                             <h5 class="card-title">Card title</h5>
                                             <p class="card-text">This is a wider card with supporting text below as a
