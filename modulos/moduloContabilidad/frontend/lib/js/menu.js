@@ -10,6 +10,10 @@ $(document).ready(function(){
         $("#render").load("load/adminUsuarios.php");
     });
 
+    $("#roles").click(function(){
+        $("#render").load("load/adminRoles.php");
+    });
+
     $("#catalogo").click(function(){
         $("#render").load("load/adminCatalogo.php");
     });
@@ -29,6 +33,8 @@ $(document).ready(function(){
     $("#empresas").click(function(){
         $("#render").load("load/adminEmpresas.php");
     });
+
+
 
 
 })

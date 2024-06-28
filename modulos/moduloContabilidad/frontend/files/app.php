@@ -1,4 +1,4 @@
-<?php  #include("../../../../lib/config/verificarSesion.php");?>
+<?php  include ("../../../../lib/config/verificarSesion.php");?>
 
 <!DOCTYPE html>
 <html lang="en">
