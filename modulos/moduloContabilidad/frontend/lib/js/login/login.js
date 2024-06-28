@@ -60,7 +60,7 @@ $(function() {
                         text: response.message
                     }).then(() => {
                         // Redirigir a la página principal después del inicio de sesión exitoso
-                        window.location.href = 'modulos/modContabilidad/fronted/files/app.php';
+                        window.location.href = 'modulos/moduloContabilidad/frontend/files/app.php';
                     });
                 } else {
                     Swal.fire({
