@@ -1,11 +1,14 @@
 <?php
 include("../../../../../lib/config/conect.php");
+require_once '../../../../../lib/config/verificarSesion.php';
+$usuario_sesion = $_SESSION['usuario'];
+
 
 if (isset($_POST['id'])) {
 
     $cuentaId = $_POST['id'];
 
-    $fetchQuery = "SELECT * FROM catalogoCuentas WHERE cuentaId = $cuentaId";
+    $fetchQuery = "SELECT numeroCuenta, cuentaDependiente, nivelCuenta, nombreCuenta FROM catalogoCuentas WHERE cuentaId = $cuentaId";
     $fetchResult = mysqli_query($con, $fetchQuery);
     $datosEliminados = mysqli_fetch_assoc($fetchResult);
 
@@ -20,6 +23,7 @@ if (isset($_POST['id'])) {
       // Preparar datos para la bitácora
       $datos = [
         "cuentaId" => $cuentaId,
+        "Usuario que elimino" => $usuario_sesion,
                 "accion" => "Eliminacion_Catalogo",
                 "datosEliminados" => $datosEliminados
       ];

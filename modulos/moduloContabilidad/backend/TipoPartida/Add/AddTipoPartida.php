@@ -1,5 +1,8 @@
 <?php
 include("../../../../../lib/config/conect.php");
+require_once '../../../../../lib/config/verificarSesion.php';
+$usuario_sesion = $_SESSION['usuario'];
+
 
 
   $nombrePartida = $_POST["nombrePartida"];
@@ -9,7 +12,7 @@ include("../../../../../lib/config/conect.php");
 
   
   $query = "INSERT INTO tipoPartida(nombrePartida, abreviacion, descripcion, usuarioAgrega , fechaAgrega, usuarioModifica, fechaModifica) 
-  VALUES ('$nombrePartida','$abreviacion','$descripcion','','$fechaHoraActual','','$fechaHoraActual')";
+  VALUES ('$nombrePartida','$abreviacion','$descripcion','$usuario_sesion','$fechaHoraActual','$usuario_sesion','$fechaHoraActual')";
 
   $result = mysqli_query($con, $query);
 
@@ -20,6 +23,7 @@ include("../../../../../lib/config/conect.php");
     $fechajson = date("Y-m-d");
     // Preparar datos para la bitácora
     $datos = [
+      "Usuario que agrego" => $usuario_sesion,
       "accion" => "Agrego_Tipo_Partida",
       "datosIngresados" => [
           "nombrePartida" => $nombrePartida,

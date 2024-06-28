@@ -1,5 +1,7 @@
 <?php
 include("../../../../../lib/config/conect.php");
+require_once '../../../../../lib/config/verificarSesion.php';
+$usuario_sesion = $_SESSION['usuario'];
 
 $partidaId = $_POST["partidaId"];
 $cuentaId = $_POST["selectcuentas"];
@@ -13,7 +15,7 @@ $concepto = $_POST["conceptoespecifico"];
 $fechaHoraActual = date("Y-m-d H:i:s"); 
 
 $queryInsert = "INSERT INTO partidaDetalle (partidaId, cuentaId, tipoComprobanteId, cargo, abono, saldo, numeroComprobante, fechaComprobante, concepto, usuarioAgrega, fechaAgrega, usuarioModifica, fechaModifica) 
-VALUES ('$partidaId','$cuentaId','$tipoComprobanteId','$cargo','$abono','$saldo','$numeroComprobante','$fechaComprobante','$concepto','','$fechaHoraActual','','$fechaHoraActual')";
+VALUES ('$partidaId','$cuentaId','$tipoComprobanteId','$cargo','$abono','$saldo','$numeroComprobante','$fechaComprobante','$concepto','$usuario_sesion','$fechaHoraActual','$usuario_sesion','$fechaHoraActual')";
 
 $resultInsert = mysqli_query($con, $queryInsert);
 
@@ -27,6 +29,7 @@ if (!$resultInsert) {
         // Preparar datos para la bitácora
         $datos = [
           "accion" => "Agrego_Movimiento_Partida",
+          "Usuario agrego" => $usuario_sesion,
           "datosIngresados" => [
               "partidaId" => $partidaId,
               "cuentaId" => $cuentaId,

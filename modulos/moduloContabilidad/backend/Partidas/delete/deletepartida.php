@@ -1,5 +1,7 @@
 <?php
 include("../../../../../lib/config/conect.php");
+require_once '../../../../../lib/config/verificarSesion.php';
+$usuario_sesion = $_SESSION['usuario'];
 
 if (isset($_POST['id'])) {
 
@@ -26,6 +28,7 @@ if (isset($_POST['id'])) {
          // Preparar datos para la bitácora incluyendo todos los detalles del registro eliminado
          $datos = [
           "partidaId" => $partidaId,
+          "Usuario elimino" => $usuario_sesion ,
           "accion" => "Eliminacion_Partida",
           "datosEliminados" => $datosEliminados
       ];

@@ -1,11 +1,13 @@
-<?php
+<?php 
 include("../../../../../lib/config/conect.php");
+require_once '../../../../../lib/config/verificarSesion.php';
+$usuario_sesion = $_SESSION['usuario'];
 header('Content-Type: application/json');
 
 if (isset($_POST['id'])) {
     $tipoPartidaId = $_POST['id'];
 
-    $fetchQuery = "SELECT * FROM tipoPartida WHERE tipoPartidaId = $tipoPartidaId";
+    $fetchQuery = "SELECT nombrePartida, abreviacion, descripcion FROM tipoPartida WHERE tipoPartidaId = $tipoPartidaId";
     $fetchResult = mysqli_query($con, $fetchQuery);
     $datosEliminados = mysqli_fetch_assoc($fetchResult);
 
@@ -26,6 +28,7 @@ if (isset($_POST['id'])) {
             // Preparar datos para la bitácora incluyendo todos los detalles del registro eliminado
             $datos = [
                 "tipoPartidaId" => $tipoPartidaId,
+                "Usuario que elimino" => $usuario_sesion,
                 "accion" => "Eliminacion_tipo_partida",
                 "datosEliminados" => $datosEliminados
             ];

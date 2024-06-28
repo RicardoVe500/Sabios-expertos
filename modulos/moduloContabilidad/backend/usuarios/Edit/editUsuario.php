@@ -2,8 +2,9 @@
 
 //Iniciar Sesion
 session_start();
- // Crear conexión a la BD
- require_once '../../../../../lib/config/conect.php';
+
+// Crear conexión a la BD
+require_once '../../../../../lib/config/conect.php';
 
 // Si hay un error en la conexión mostrar este mensaje
 if (!$con) {
@@ -24,7 +25,7 @@ if (isset($_POST['usuarioId']) && isset($_POST['nombre']) && isset($_POST['apell
     if (preg_match('/[0-9]/', $nombre) || preg_match('/[0-9]/', $apellidos)) {
         echo json_encode(['status' => 'error', 'message' => 'El nombre y los apellidos no deben contener números.']);
         exit;
-    } 
+    }
 
     // Si el campo clave está vacío, ocurre el error.
     if (empty($clave)) {
@@ -34,11 +35,51 @@ if (isset($_POST['usuarioId']) && isset($_POST['nombre']) && isset($_POST['apell
 
     $clave_segura = password_hash($clave, PASSWORD_BCRYPT, ['cost' => 4]);
 
-    // Query que redirige a la base de datos.
+    // Consultar datos existentes para la bitácora
+    $queryDatosExistentes = $con->prepare("SELECT nombre, apellidos, email, tipoUsuarioId FROM usuarios WHERE usuarioId = ?");
+    $queryDatosExistentes->bind_param('i', $usuarioId);
+    $queryDatosExistentes->execute();
+    $resultado = $queryDatosExistentes->get_result();
+    $datosAntiguos = $resultado->fetch_assoc();
+    $queryDatosExistentes->close();
+
+    // Preparar datos para la bitácora
+    $fechaActual = date("Y-m-d");
+    $datosBitacora = [
+        "accion" => "Actualizacion_Usuario",
+        "datosAntiguos" => $datosAntiguos,
+        "datosNuevos" => [
+            "nombre" => $nombre,
+            "apellidos" => $apellidos,
+            "email" => $email,
+            "tipoUsuarioId" => $tipoUsuarioId
+        ],
+        "fechaHora" => $fechaActual
+    ];
+
+    // Verificar si ya existe un registro para el día actual en la bitácora
+    $queryBitacora = "SELECT bitacoraId, detalle FROM bitacora WHERE fecha = '$fechaActual'";
+    $resultBitacora = mysqli_query($con, $queryBitacora);
+    if ($row = mysqli_fetch_assoc($resultBitacora)) {
+        $datosExistentes = json_decode($row["detalle"], true);
+        if (!is_array($datosExistentes)) { // Asegurarse de que es un array
+            $datosExistentes = [];
+        }
+        $datosExistentes[] = $datosBitacora;
+        $jsonDatos = json_encode($datosExistentes);
+        $updateQueryBitacora = "UPDATE bitacora SET detalle = '$jsonDatos' WHERE bitacoraId = {$row['bitacoraId']}";
+        mysqli_query($con, $updateQueryBitacora);
+    } else {
+        $datosArray = [$datosBitacora]; // Asegúrate de que es un array
+        $jsonDatos = json_encode($datosArray);
+        $insertQueryBitacora = "INSERT INTO bitacora(fecha, detalle) VALUES ('$fechaActual', '$jsonDatos')";
+        mysqli_query($con, $insertQueryBitacora);
+    }
+
+    // Actualizar usuario
     $query = $con->prepare("UPDATE usuarios SET nombre = ?, apellidos = ?, email = ?, clave = ?, tipoUsuarioId = ? WHERE usuarioId = ?");
     $query->bind_param('ssssii', $nombre, $apellidos, $email, $clave_segura, $tipoUsuarioId, $usuarioId);
 
-    // Crear un error si el código se repite
     if ($query->execute()) {
         echo json_encode(['status' => 'success', 'message' => 'Usuario actualizado exitosamente.']);
     } else {
@@ -47,61 +88,5 @@ if (isset($_POST['usuarioId']) && isset($_POST['nombre']) && isset($_POST['apell
 
     $query->close();
     $con->close();
-} 
-
-
-
-
-
-
-
-
-
-
-
-
-/* //Si hay un error en la conexion mostrar este mensaje
-if (!$con) {
-    echo json_encode(['status' => 'error', 'message' => 'Error de conexión a la base de datos.']);
-    exit;
 }
-
-//Crea enlace existentes en la base de datos.
-if (isset($_POST['usuarioId']) && isset($_POST['nombre']) && isset($_POST['apellidos']) && isset($_POST['email']) && isset($_POST['clave'])) {
-    $usuarioId = $_POST['usuarioId'];
-    $nombre = $_POST['nombre'];
-    $apellidos = $_POST['apellidos'];
-    $email = $_POST['email'];
-    $clave = $_POST['clave'];
-
-    //Si el campo Nombre o Apellido se inserta un numero, ocurre el error!!.
-    if (preg_match('/[0-9]/', $nombre) || preg_match('/[0-9]/', $apellidos)) {
-        echo json_encode(['status' => 'error', 'message' => 'El nombre y los apellidos no deben contener números.']);
-        exit;
-    } 
-    
-    //Si el campo clave esta vacio, ocurre el error.
-    elseif (empty($clave)){
-        echo json_encode(['status' => 'error', 'message' => 'Debes confirmar tu contaseña']);
-        exit;
-    }
-
-    //Se crea un password hash como en agregar usuario para evitar observar la password del usuario
-    $clave_segura = password_hash($clave, PASSWORD_BCRYPT, ['cost' => 4]);
-
-    //Query que redirige a la base de datos.
-    $query = $con->prepare("UPDATE usuarios SET nombre = ?, apellidos = ?, email = ?, clave = ? WHERE usuarioId = ?");
-    $query->bind_param('ssssi', $nombre, $apellidos, $email, $clave_segura, $usuarioId);
-
-    //Crear un error si el codigo se repite
-
-    if ($query->execute()) {
-        echo json_encode(['status' => 'success', 'message' => 'Usuario actualizado exitosamente.']);
-    } else {
-        echo json_encode(['status' => 'error', 'message' => 'Error al actualizar el usuario: ' . $query->error]);
-    }
-
-    $query->close();
-    $con->close();
-} 
- */
+?>

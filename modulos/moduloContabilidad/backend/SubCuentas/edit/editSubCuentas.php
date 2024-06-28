@@ -1,5 +1,7 @@
 <?php
 include("../../../../../lib/config/conect.php");
+require_once '../../../../../lib/config/verificarSesion.php';
+$usuario_sesion = $_SESSION['usuario'];
 
 if (isset($_POST["cuentaId"])) {
    
@@ -14,7 +16,7 @@ if (isset($_POST["cuentaId"])) {
   $fechaHoraActual = date("Y-m-d H:i:s"); 
   $movimientos = $_POST["movimientos"];
 
-  $query = "UPDATE catalogoCuentas SET movimientoId =  $movimientos, numeroCuenta = $numeroCuenta, nombreCuenta = '$nombreCuenta', fechaModifica = '$fechaHoraActual' 
+  $query = "UPDATE catalogoCuentas SET movimientoId =  $movimientos, numeroCuenta = $numeroCuenta, nombreCuenta = '$nombreCuenta', fechaModifica = '$fechaHoraActual', usuarioModifica = '$usuario_sesion'  
   WHERE cuentaId = $cuentaId ";
 
   $result = mysqli_query($con, $query);
@@ -26,6 +28,7 @@ if (isset($_POST["cuentaId"])) {
     // Preparar datos para la bitácora
     $datosBitacora = [
       "accion" => "Modificado_SubCuentas",
+      "Usuario Modifica" => $usuario_sesion,
       "datosAntiguos" => $datosAntiguos,
       "datosNuevos" => [
           "movimientos" => $movimientos,

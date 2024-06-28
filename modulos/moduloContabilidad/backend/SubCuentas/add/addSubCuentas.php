@@ -1,6 +1,7 @@
 <?php
 include("../../../../../lib/config/conect.php");
-
+require_once '../../../../../lib/config/verificarSesion.php';
+$usuario_sesion = $_SESSION['usuario'];
 
 
 if (isset($_POST['numeroCuenta']) || isset($_POST['nombreCuenta'])) {
@@ -46,7 +47,7 @@ if (isset($_POST['numeroCuenta']) || isset($_POST['nombreCuenta'])) {
     }
 
        $queryInsert = "INSERT INTO catalogoCuentas(movimientoId, n1, n2, n3, n4, n5, n6, n7, n8, numeroCuenta, cuentaDependiente, nivelCuenta, nombreCuenta, usuarioAgrega, fechaAgrega, usuarioModifica, fechaModifica) 
-                       VALUES ('$movimientos','','','','','','','','','$nuevoNumeroCuenta','$dependiente','$nivelcuenta','$nombrecuenta','','$fechaHoraActual','','$fechaHoraActual')";
+                       VALUES ('$movimientos','','','','','','','','','$nuevoNumeroCuenta','$dependiente','$nivelcuenta','$nombrecuenta','$usuario_sesion','$fechaHoraActual','$usuario_sesion','$fechaHoraActual')";
 
        $resultInsert = mysqli_query($con, $queryInsert);
 
@@ -55,6 +56,7 @@ if (isset($_POST['numeroCuenta']) || isset($_POST['nombreCuenta'])) {
   // Preparar datos para la bitácora
         $datos = [
             "accion" => "Agrego_SubCuenta",
+            "Usuario agrega" => $usuario_sesion,
             "datosIngresados" => [
                 "nuevoNumeroCuenta" => $nuevoNumeroCuenta,
                 "nivelcuenta" => $nivelcuenta,

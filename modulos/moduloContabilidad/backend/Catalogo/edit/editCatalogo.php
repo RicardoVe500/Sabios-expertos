@@ -1,5 +1,7 @@
 <?php
 include("../../../../../lib/config/conect.php");
+require_once '../../../../../lib/config/verificarSesion.php';
+$usuario_sesion = $_SESSION['usuario'];
 
 if (isset($_POST["cuentaId"])) {
    
@@ -13,7 +15,7 @@ if (isset($_POST["cuentaId"])) {
   $nombreCuenta = $_POST["nombreCuenta"];
   $fechaHoraActual = date("Y-m-d H:i:s"); 
 
-    $query = "UPDATE catalogoCuentas SET numeroCuenta = $numeroCuenta, nombreCuenta = '$nombreCuenta', fechaModifica = '$fechaHoraActual' 
+    $query = "UPDATE catalogoCuentas SET numeroCuenta = $numeroCuenta, nombreCuenta = '$nombreCuenta', fechaModifica = '$fechaHoraActual', usuarioModifica = '$usuario_sesion'  
       WHERE cuentaId = $cuentaId ";
 
     $result = mysqli_query($con, $query);
@@ -25,6 +27,7 @@ if (isset($_POST["cuentaId"])) {
       
       $datosBitacora = [
           "accion" => "Modificado_Catalogo",
+          "Usuario modifica" => $usuario_sesion,
           "datosAntiguos" => $datosAntiguos,
           "datosNuevos" => [
               "numeroCuenta" => $numeroCuenta,

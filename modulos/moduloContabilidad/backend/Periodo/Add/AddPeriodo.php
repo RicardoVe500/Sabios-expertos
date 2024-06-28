@@ -1,6 +1,7 @@
 <?php
 include("../../../../../lib/config/conect.php");
-
+require_once '../../../../../lib/config/verificarSesion.php';
+$usuario_sesion = $_SESSION['usuario'];
 
 if(isset($_POST['monthYearPicker'])){
 
@@ -22,7 +23,7 @@ if(isset($_POST['monthYearPicker'])){
    } else {
       //Se hace la insercion
        $query = "INSERT INTO periodo(anio, mes, estadoId, usuarioAgrega, fechaAgrega, usuarioModifica, fechaModifica) 
-                 VALUES ('$anio', '$mes', '$estadoId', '', '$fechaHoraActual', '', '$fechaHoraActual')";
+                 VALUES ('$anio', '$mes', '$estadoId', '$usuario_sesion ', '$fechaHoraActual', '$usuario_sesion ', '$fechaHoraActual')";
        $result = mysqli_query($con, $query);
 
        if (!$result) {

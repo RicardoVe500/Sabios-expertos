@@ -1,5 +1,7 @@
 <?php
 include("../../../../../lib/config/conect.php");
+require_once '../../../../../lib/config/verificarSesion.php';
+$usuario_sesion = $_SESSION['usuario'];
 
 if (isset($_POST['id'])) {
 
@@ -18,9 +20,10 @@ if (isset($_POST['id'])) {
       }else{
          // Preparar datos para la bitácora incluyendo todos los detalles del registro eliminado
          $datos = [
-          "cuentaId" => $cuentaId,
-          "accion" => "Eliminacion_SubCuenta",
-          "datosEliminados" => $datosEliminados
+          "CuentaId" => $cuentaId,
+          "Usuario elimina" => $usuario_sesion,
+          "Accion" => "Eliminacion_SubCuenta",
+          "DatosEliminados" => $datosEliminados
       ];
       $jsonDatos = json_encode($datos);
       $fechajson = date("Y-m-d"); 

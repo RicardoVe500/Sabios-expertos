@@ -1,6 +1,8 @@
 <?php
 include("../../../../../lib/config/conect.php");
- 
+require_once '../../../../../lib/config/verificarSesion.php';
+$usuario_sesion = $_SESSION['usuario'];
+
 // Se Capturan los datos 
   $tipoPartidaId = $_POST["tipoPartidaId"];
   $estadoId = 1;
@@ -36,7 +38,7 @@ if ($rowUltimoCodigo['ultimoCodigo'] != null) {
 
   //Se hace la insercion a l abase de datos  
   $query = "INSERT INTO Partidas(tipoPartidaId, estadoId, codigoPartida, concepto , fechacontable, fechaActual, usuarioAgrega, fechaAgrega, usuarioModifica, fechaModifica) 
-  VALUES ('$tipoPartidaId','$estadoId','$codigoPartida','$concepto','$fechacontable','$fechaHoraActual','','$fechaHoraActual','','$fechaHoraActual')";
+  VALUES ('$tipoPartidaId','$estadoId','$codigoPartida','$concepto','$fechacontable','$fechaHoraActual','$usuario_sesion','$fechaHoraActual','$usuario_sesion','$fechaHoraActual')";
 
   
   $result = mysqli_query($con, $query);
@@ -50,6 +52,7 @@ if ($rowUltimoCodigo['ultimoCodigo'] != null) {
     // Preparar datos para la bitácora
     $datos = [
       "accion" => "Agrego_Partida",
+      "Usuario que agrego" => $usuario_sesion,
       "datosIngresados" => [
           "tipoPartidaId" => $tipoPartidaId,
           "estadoId" => $estadoId,

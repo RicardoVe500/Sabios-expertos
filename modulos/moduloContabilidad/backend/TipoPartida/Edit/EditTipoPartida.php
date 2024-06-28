@@ -1,5 +1,7 @@
 <?php
 include("../../../../../lib/config/conect.php");
+require_once '../../../../../lib/config/verificarSesion.php';
+$usuario_sesion = $_SESSION['usuario'];
 
 if (isset($_POST["tipoPartidaId"])) {
     $tipoPartidaId = $_POST["tipoPartidaId"];
@@ -16,7 +18,7 @@ if (isset($_POST["tipoPartidaId"])) {
     $descripcion = $_POST["descripcion"];
 
     // Actualizar los datos
-    $updateQuery = "UPDATE tipoPartida SET nombrePartida = '$nombrePartida', abreviacion = '$abreviacion', descripcion = '$descripcion', fechaModifica = '$fechaHoraActual' WHERE tipoPartidaId = $tipoPartidaId";
+    $updateQuery = "UPDATE tipoPartida SET nombrePartida = '$nombrePartida', abreviacion = '$abreviacion', descripcion = '$descripcion', fechaModifica = '$fechaHoraActual', usuarioModifica = '$usuario_sesion' WHERE tipoPartidaId = $tipoPartidaId";
     $result = mysqli_query($con, $updateQuery);
 
     if (!$result) {
@@ -25,6 +27,7 @@ if (isset($_POST["tipoPartidaId"])) {
         // Preparar datos para la bitácora
         $datosBitacora = [
             "accion" => "Modificado_tipo_partida",
+            "Usuario que modifica" => "$usuario_sesion",
             "datosAntiguos" => $datosAntiguos,
             "datosNuevos" => [
                 "nombrePartida" => $nombrePartida,
