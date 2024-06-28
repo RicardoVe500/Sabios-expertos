@@ -76,6 +76,7 @@ $(document).ready(function() {
         });
     });
 
+
     function obtenerdatostipopartida(){
         $('#tablaTipoPartida').on('click', 'button.btn-modificartipopartidas', function () {
         var data = $('#tablaTipoPartida').DataTable().row($(this).parents('tr')).data();
