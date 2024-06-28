@@ -1,0 +1,10 @@
+.form-section {
+    margin-bottom: 1rem;
+}
+.form-section .form-control {
+    margin-bottom: 0.5rem;
+}
+.btn-block {
+    display: block;
+    width: 100%;
+}
