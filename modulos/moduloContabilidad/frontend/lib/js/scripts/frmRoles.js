@@ -47,15 +47,19 @@ $(document).ready(function() {
                     var rolesList = $('#roles-list');
                     rolesList.empty();
                     response.data.forEach(function(rol) {
+                        var deleteButton = '';
+                        if (rol.nombreTipo !== 'Administrador' && rol.nombreTipo !== 'Contador') {
+                            deleteButton = `
+                                <button type="button" class="deleteRol btn btn-danger btn-sm" data-nombretipo="${rol.nombreTipo}">
+                                    <i class="fa fa-trash"></i> Eliminar
+                                </button>`;
+                        }
+                        
                         var rolRow = `
                             <tr>
                                 <td>${rol.nombreTipo}</td>
                                 <td>${rol.descripcion}</td>
-                                <td>
-                                    <button type="button" class="deleteRol btn btn-danger btn-sm" data-nombretipo="${rol.nombreTipo}">
-                                        <i class="fa fa-trash"></i> Eliminar
-                                    </button>
-                                </td>
+                                <td>${deleteButton}</td>
                             </tr>`;
                         rolesList.append(rolRow);
                     });
@@ -69,6 +73,7 @@ $(document).ready(function() {
             }
         });
     }
+    
 
     // Manejar la eliminación de rol
     $(document).on('click', '.deleteRol', function() {

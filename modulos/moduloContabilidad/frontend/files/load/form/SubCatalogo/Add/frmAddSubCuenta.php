@@ -44,14 +44,15 @@
             </div>
 
         </form>
+
+        
     </div>
 </div>
 
 <script src="../lib/js/scripts/frmSubcuentas.js"></script>
 <script>
-$("#regresarSubCatalogo").click(function() {
-
     
+$("#regresarSubCatalogo").click(function() {
     // Obtener el valor de cuentaId
     var numeroCuenta = $("#numeroCuenta").val().charAt(0);
     // Realizar la petición AJAX

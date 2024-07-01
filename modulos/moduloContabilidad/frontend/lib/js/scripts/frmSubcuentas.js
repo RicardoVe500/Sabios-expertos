@@ -1,7 +1,12 @@
 $(document).ready(function(){
+    
+    $("#regresarcat").click(function(){
+        $("#render").load("./load/adminCatalogo.php");
+    });
 
     ImprimirtablaSub()
-
+  
+});
     function ImprimirtablaSub() {
         var numeroCuenta = $('#numeroCuenta').val();
         $.ajax({
@@ -27,7 +32,7 @@ $(document).ready(function(){
         });
     }
     
-    $(document).ready(function () {
+
         $('#tablasubcuenta').DataTable({
             columns: [
                 {"data": "nombreCuenta"},
@@ -67,9 +72,9 @@ $(document).ready(function(){
                 }
             });
         });
-    });
+  
 
-    $(document).ready(function() {
+
         // Llenar el select con datos de movimientos al cargar la página
         $.ajax({
             url: "../../backend/SubCuentas/listardatos/select.php",
@@ -95,7 +100,7 @@ $(document).ready(function(){
                 console.error("Error al obtener los movimientos:", textStatus, errorThrown);
             }
         });
-    }),
+
 
     $('#tablasubcuenta').on('click', 'button.btn-createsub', function () {
             var data = $('#tablasubcuenta').DataTable().row($(this).parents('tr')).data();
@@ -119,16 +124,14 @@ $(document).ready(function(){
     
     });
 
-    $(document).off("click").on("click", "#guardarDatossub", ()=>{
+    $('#guardarDatossub').off('click').on('click', function() {
         const pData = {
             cuentaId: $("#cuentaId").val(),
             numeroCuenta: $("#numeroCuenta").val(),
             nivelCuenta: $("#nivelCuenta").val(),
             nombreCuenta: $("#nombreCuenta").val(),
             movimientos: $("#selectsubcuentas").val()
-
         }
-        console.log(pData)
         $.ajax({
             url: "../../backend/SubCuentas/add/addSubCuentas.php",
             data: pData,
@@ -144,8 +147,8 @@ $(document).ready(function(){
             },
         })
     });
-    
-       
+
+         
         
     $('#tablasubcuenta').on('click', 'button.btn-modificarsub', function () {
         var data = $('#tablasubcuenta').DataTable().row($(this).parents('tr')).data();
@@ -198,5 +201,3 @@ $(document).ready(function(){
         $("#render").load("./load/form/SubCatalogo/Add/frmAddSubCuenta.php");
     });
         
-  
-});

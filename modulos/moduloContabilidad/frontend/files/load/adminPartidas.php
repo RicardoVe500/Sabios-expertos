@@ -14,6 +14,10 @@ echo "<input type='hidden' id='tipoPartidaId' value='$tipoPartidaId'>";
             <i class="fa fa-plus"></i> Agregar Tipo Partida
         </button>
 
+        <button class="btn btn-success mb-3" id="reporpar">
+            <i class="fa fa-plus"></i> reporte
+        </button>
+
         <button class="btn btn-warning mb-3" id="regresarTipos">
             <i class="fa fa-arrow-left"></i> Regresar
         </button>

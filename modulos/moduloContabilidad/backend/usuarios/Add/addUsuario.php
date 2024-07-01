@@ -33,6 +33,14 @@ if (isset($_POST['nombre'], $_POST['apellidos'], $_POST['email'], $_POST['clave'
         exit;
     }
 
+     // En este apartado se verifica si el email ya esta registrado 
+     $queryEmail = "SELECT * FROM usuarios WHERE email = '$email'";
+     $resultEmail = mysqli_query($con, $queryEmail);
+     if (mysqli_num_rows($resultEmail) > 0) {
+         echo json_encode(['status' => 'error', 'message' => 'El email ya está registrado']);
+         exit;
+     }
+
     $clave_segura = password_hash($clave, PASSWORD_BCRYPT, ['cost' => 4]);
 
     // Insertar los datos en la base de datos

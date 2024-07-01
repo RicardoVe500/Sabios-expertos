@@ -34,8 +34,6 @@ $(document).ready(function(){
         $("#render").load("load/adminEmpresas.php");
     });
 
-
-
-
+    
 })
 

@@ -38,13 +38,3 @@ echo "<input type='hidden' id='numeroCuenta' value='$numeroCuenta'>";
 
 <script src="../lib/js/scripts/frmSubcuentas.js"></script>
 
-<script>
-$(document).ready(function() {
-
-    $("#regresarcat").click(function(){
-        $("#render").load("./load/adminCatalogo.php");
-    });
-    
-});
-
-</script>

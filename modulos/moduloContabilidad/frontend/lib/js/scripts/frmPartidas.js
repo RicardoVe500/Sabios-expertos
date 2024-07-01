@@ -104,6 +104,13 @@ $('#tablaPartida').on('click', '.btn-imprimirpartida', function () {
     window.open(reportUrl, '_blank');
 })
 
+$("#reporpar").click(function () {
+    reportUrl = "../../backend/Partidas/reportes/rep.php";
+    window.open(reportUrl, '_blank');
+});
+
+
+
 
 //Funcion para guardar las partidas contables
 function guardarPartidas() {
