@@ -136,8 +136,6 @@ $('#tablaEmpresas').on('click', 'button.btn-deleteEmpresa', function () {
 
 
 function editarEmpresa() {
-
-    $(document).on("click", "#editarEmpresa", () => {
         const pData = {
             empresaId: $("#empresaId").val(),
             nombre: $("#nombreEmpresa").val(),
@@ -169,5 +167,4 @@ function editarEmpresa() {
             }
         })
 
-    })
 }

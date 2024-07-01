@@ -7,7 +7,7 @@ if (isset($_POST["cuentaId"])) {
    
   $cuentaId = $_POST["cuentaId"];
 
-    $selectQuery = "SELECT * FROM catalogoCuentas WHERE cuentaId = $cuentaId";
+    $selectQuery = "SELECT numeroCuenta, nombreCuenta FROM catalogoCuentas WHERE cuentaId = $cuentaId";
     $selectResult = mysqli_query($con, $selectQuery);
     $datosAntiguos = mysqli_fetch_assoc($selectResult);
 

@@ -53,10 +53,6 @@ echo "<input type='text' id='empresaId' value='$empresaId'>";
 $(document).ready(function() {
 
 
-    $("#frmAddSucursal").click(function() {
-        $("#render").load("./load/form/Empresas/Add/frmAddSucursal.php");
-    })
-
     $("#regresarEmpresas").click(function() {
         $("#render").load("./load/adminEmpresas.php");
     })

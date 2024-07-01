@@ -1,5 +1,4 @@
 <?php
-
 include("../../../../../lib/config/conect.php");
 
 $empresaId = $_POST["empresaId"];

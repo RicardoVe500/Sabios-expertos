@@ -7,12 +7,16 @@
         <button class="btn btn-warning mb-3" id="regresar">
             <i class="fa fa-arrow-left"></i> Regresar
         </button>
+        <input type="hidden" class="form-control" placeholder="empresaId" id="empresaId"
+        name="empresaId">
 
-        <form name="frmAddEmpresa" id="frmAddSucursal">
-        <?php
-            $empresaId = $_REQUEST['empresaId'] ?? 'defaultID';
-            echo "<input type='text' id='empresaId' name='empresaId' value='$empresaId'>";
-        ?>
+        <form name="frmEditSucursal" id="frmEditSucursal">
+
+         <input type="hidden" class="form-control" placeholder="sucursalId" id="sucursalId"
+         name="sucursalId">
+
+       
+
             <div class="row">
                 <div class="col-md-6">
                     <label for="nombreEmpresa">Nombre de la empresa:</label>
@@ -56,8 +60,8 @@
 
         </form>
 
-        <button type="button" class="btn btn-success mb-3" id="guardarSucursal">
-                        <i class="fa fa-plus"></i> Agregar
+        <button type="button" class="btn btn-success mb-3" id="editSucursal">
+                        <i class="fa fa-plus"></i> Modificar
                     </button>
     </div>
 </div>

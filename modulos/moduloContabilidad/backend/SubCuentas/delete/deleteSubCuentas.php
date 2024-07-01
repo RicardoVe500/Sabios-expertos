@@ -7,7 +7,7 @@ if (isset($_POST['id'])) {
 
     $cuentaId = $_POST['id'];
 
-    $fetchQuery = "SELECT * FROM catalogoCuentas WHERE cuentaId = $cuentaId";
+    $fetchQuery = "SELECT numeroCuenta, nombreCuenta FROM catalogoCuentas WHERE cuentaId = $cuentaId";
     $fetchResult = mysqli_query($con, $fetchQuery);
     $datosEliminados = mysqli_fetch_assoc($fetchResult);
 
