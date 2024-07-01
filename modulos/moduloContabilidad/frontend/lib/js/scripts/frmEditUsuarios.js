@@ -27,7 +27,7 @@ $(document).ready(function() {
     }
 
     // Búsqueda de usuario
-    $("#searchUser").click(function() {
+
         var email = $("#searchEmail").val();
         $.ajax({
             type: 'POST',
@@ -36,20 +36,26 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(response) {
                 var tbody = $("#userTableBody");
-                tbody.empty();
+                tbody.empty();  // Limpia el cuerpo de la tabla para nuevos resultados
                 if (response.status === 'success') {
                     response.data.forEach(function(user) {
                         var row = "<tr>" +
                             "<td>" + user.nombre + "</td>" +
                             "<td>" + user.apellidos + "</td>" +
                             "<td>" + user.email + "</td>" +
-                            "<td>" + (user.nombreTipo ? user.nombreTipo : 'Sin rol asignado') + "</td>" + // Mostrar 'Sin rol asignado' si el rol es null o undefined
+                            "<td>" + (user.nombreTipo ? user.nombreTipo : 'Sin rol asignado') + "</td>" +
                             "<td>" +
-                                "<button class='btn btn-warning btn-sm frmEditUsuario' data-usuarioid='" + user.usuarioId + "' data-nombre='" + user.nombre + "' data-apellidos='" + user.apellidos + "' data-email='" + user.email + "' data-nombreTipo='" + user.nombreTipo + "'><i class='fa fa-edit'></i> Editar</button> " +
-                                "<button class='btn btn-danger btn-sm deleteUser' data-usuarioid='" + user.usuarioId + "'><i class='fa fa-trash'></i> Eliminar   </button> " +
+                                "<button class='btn btn-success btn-sm frmEditUsuario' data-usuarioid='" + user.usuarioId + "'><i class='fa fa-edit'></i> Editar</button> " +
+                                "<button class='btn btn-danger btn-sm deleteUser' data-usuarioid='" + user.usuarioId + "'><i class='fa fa-trash'></i> Eliminar</button> " +
                             "</td>" +
                         "</tr>";
                         tbody.append(row);
+                    });
+    
+                    // Inicializa o reinicializa la DataTable
+                    $('#userTable').DataTable({
+                        destroy: true, // Reinicializa la DataTable
+                        responsive: true
                     });
                 } else {
                     Swal.fire({
@@ -68,55 +74,61 @@ $(document).ready(function() {
                 });
             }
         });
-    });
+
+    
 
     // Eliminar usuario
-    $(document).on('click', '.deleteUser', function() {
-        var userId = $(this).data('usuarioid');
-        Swal.fire({
-            title: '¿Estás seguro?',
-            text: "Esta acción no se puede deshacer!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, eliminarlo!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    type: 'POST',
-                    url: '../../backend/usuarios/Delete/deleteUsuario.php',
-                    data: { usuarioId: userId },
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            Swal.fire(
-                                'Eliminado!',
-                                response.message,
-                                'success'
-                            );
-                            // Vuelve a buscar usuarios para actualizar la tabla
-                            $("#searchUser").click();
-                        } else {
-                            Swal.fire(
-                                'Error',
-                                response.message,
-                                'error'
-                            );
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Error en la solicitud AJAX: ", status, error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Ocurrió un error al eliminar el usuario. Por favor, inténtalo de nuevo.'
-                        });
+$(document).on('click', '.deleteUser', function() {
+    var button = $(this); // Guarda referencia al botón pulsado
+    var userId = button.data('usuarioid');
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Esta acción no se puede deshacer!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminarlo!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                type: 'POST',
+                url: '../../backend/usuarios/Delete/deleteUsuario.php',
+                data: { usuarioId: userId },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        Swal.fire(
+                            'Eliminado!',
+                            response.message,
+                            'success'
+                        );
+
+                        // Aquí obtienes la fila del botón pulsado y la eliminas
+                        var table = $('#userTable').DataTable(); // Asegúrate de que ya has inicializado DataTable
+                        table.row(button.parents('tr')).remove().draw();
+
+                    } else {
+                        Swal.fire(
+                            'Error',
+                            response.message,
+                            'error'
+                        );
                     }
-                });
-            }
-        });
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error en la solicitud AJAX: ", status, error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Ocurrió un error al eliminar el usuario. Por favor, inténtalo de nuevo.'
+                    });
+                }
+            });
+        }
     });
+});
+
 
     // Editar usuario
     $(document).on('click', '.frmEditUsuario', function() {

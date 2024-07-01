@@ -58,6 +58,21 @@
     </div>
 </div>
 
-                    
-                        <script src="../lib/js/scripts/frmUsuarios.js"></script>
-                        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script src="../lib/js/scripts/frmUsuarios.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.getElementById('email').addEventListener('blur', function() {
+    var email = this.value;
+    var pattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/; // Patrón básico para email
+
+    if (email.match(pattern)) {
+     
+    } else {
+        // Si el email no es válido, muestra un mensaje de error
+        Swal.fire('Error', 'El email no es valido', 'error');
+        this.value = ''; 
+    }
+});
+</script>

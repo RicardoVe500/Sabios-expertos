@@ -10,18 +10,13 @@
                                         <i class="fa fa-edit"></i> Editar Usuario
                                     </button>  -->
 
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
-                                        </div>
-                                        <input type="email" class="form-control" placeholder="Correo Electrónico" id="searchEmail" aria-label="Username" aria-describedby="basic-addon1">
-                                    </div>
-                                    <button class="btn btn-secondary mb-3" id="searchUser">
-                                        <i class="fa fa-search"></i> Buscar
-                                    </button>
-
+                                   
+                                        
+                                    <input type="hidden"  class="form-control" placeholder="Correo Electrónico" id="searchEmail" aria-label="Username" aria-describedby="basic-addon1">
+                              
+                                   
                                     <div id="searchResults">
-                                        <table class="table table-bordered">
+                                        <table id="userTable" class="table table-bordered">
                                             <thead>
                                                 <tr>
                                                     <th>Nombre</th>
@@ -49,16 +44,11 @@
                                     $("#render").load("./load/form/usuario/Add/frmUsuarios.php");
                                 })
 
-                            })
-                        </script>
-                        <script>
-                             $(document).ready(function(){
-
                                 $("#frmEditUsuario").click(function(){
                                     $("#render").load("./load/form/usuario/Edit/frmEditUsuarios.php");
                                 })
 
                             })
                         </script>
-                        
+     
                           

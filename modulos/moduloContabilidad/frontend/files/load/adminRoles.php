@@ -18,7 +18,7 @@
         <div class="container mt-5">
             <!-- Parte inferior de Roles -->
             <h2>Roles</h2>
-            <table class="table table-bordered">
+            <table id="rolesTable" class="table table-bordered">
                 <thead>
                     <tr>
                         <th>Nombre</th>

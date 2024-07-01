@@ -92,7 +92,7 @@ function guardarperiodo() {
       data: $("#frmperiodo").serialize(),
       success: function (data) {
 
-        if (response.status === 'success') {
+        if (data.status === 'success') {
           Swal.fire({
             icon: 'success',
             title: '¡Periodo agregado!',

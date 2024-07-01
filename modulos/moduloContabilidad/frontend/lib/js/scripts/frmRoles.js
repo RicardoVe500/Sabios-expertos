@@ -43,36 +43,36 @@ $(document).ready(function() {
             url: '../../backend/roles/Get/obtenerRoles.php',
             dataType: 'json',
             success: function(response) {
+                var rolesList = $('#roles-list');
+                rolesList.empty(); // Vaciar lista existente para evitar duplicados
                 if (response.status === 'success') {
-                    var rolesList = $('#roles-list');
-                    rolesList.empty();
                     response.data.forEach(function(rol) {
                         var deleteButton = '';
                         if (rol.nombreTipo !== 'Administrador' && rol.nombreTipo !== 'Contador') {
-                            deleteButton = `
-                                <button type="button" class="deleteRol btn btn-danger btn-sm" data-nombretipo="${rol.nombreTipo}">
-                                    <i class="fa fa-trash"></i> Eliminar
-                                </button>`;
+                            deleteButton = `<button type="button" class="deleteRol btn btn-danger btn-sm" data-nombretipo="${rol.nombreTipo}"><i class="fa fa-trash"></i> Eliminar</button>`;
                         }
-                        
-                        var rolRow = `
-                            <tr>
-                                <td>${rol.nombreTipo}</td>
-                                <td>${rol.descripcion}</td>
-                                <td>${deleteButton}</td>
-                            </tr>`;
-                        rolesList.append(rolRow);
+                        var rolRow = `<tr><td>${rol.nombreTipo}</td><td>${rol.descripcion}</td><td>${deleteButton}</td></tr>`;
+                        rolesList.append(rolRow); // Añadir fila al cuerpo de la tabla
                     });
+    
+                    // Inicializar DataTable después de cargar todos los roles
+                    $('#rolesTable').DataTable({
+                        destroy: true,  // Permite reinicializar si ya está inicializada
+                        responsive: true  // Hace la tabla responsiva
+                    });
+    
                 } else {
-                    Swal.fire('Error', 'No se pudieron cargar los roles', 'error');
+                    Swal.fire('Error', 'No se pudieron cargar los roles', 'error'); // Mostrar error si la respuesta no es 'success'
                 }
             },
             error: function(xhr, status, error) {
-                console.error('Error en la solicitud AJAX: ', status, error);
-                Swal.fire('Error', 'No se pudieron cargar los roles. Error en la solicitud.', 'error');
+                console.error('Error en la solicitud AJAX: ', status, error); // Mostrar detalles del error de AJAX
+                Swal.fire('Error', 'No se pudieron cargar los roles. Error en la solicitud.', 'error'); // Mostrar error de solicitud
             }
         });
     }
+    
+    
     
 
     // Manejar la eliminación de rol

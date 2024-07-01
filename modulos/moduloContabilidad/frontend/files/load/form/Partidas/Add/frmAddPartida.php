@@ -4,7 +4,7 @@ if (isset($_SESSION['periodo'])) {
     $mes = $_SESSION['periodo']['mes'];
     $anio = $_SESSION['periodo']['anio'];
     echo "<script>
-            var mesInicio = $mes - 1; // Ajuste porque JavaScript cuenta los meses desde 0
+            var mesInicio = $mes; // Ajuste porque JavaScript cuenta los meses desde 0
             var anioInicio = $anio;
           </script>";
          
