@@ -2,6 +2,15 @@
 session_start();
 $tipoPartidaId = $_REQUEST['tipoPartidaId'] ?? 'defaultID';
 echo "<input type='hidden' id='tipoPartidaId' value='$tipoPartidaId'>";
+
+if (isset($_SESSION['periodo'])) {
+    $estadoId = $_SESSION['periodo']['estadoId'];
+
+    echo "<script>
+            var estadoId = $estadoId; 
+          </script>";
+         
+}
 ?>
  
 <div class="card shadow mb-4">
@@ -11,7 +20,7 @@ echo "<input type='hidden' id='tipoPartidaId' value='$tipoPartidaId'>";
     <div class="card-body">
 
         <button class="btn btn-success mb-3" id="frmAddPartidas">
-            <i class="fa fa-plus"></i> Agregar Tipo Partida
+            <i class="fa fa-plus"></i> Agregar Partida
         </button>
 
         <button class="btn btn-success mb-3" id="reporpar">
@@ -79,6 +88,9 @@ $(document).ready(function() {
     });
         
     })
+    if (typeof estadoId !== 'undefined' && estadoId === 4) {
+        $('#frmAddPartidas').hide();
+    }
     
 });
 

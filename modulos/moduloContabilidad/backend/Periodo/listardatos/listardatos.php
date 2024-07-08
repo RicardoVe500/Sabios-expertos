@@ -2,7 +2,16 @@
 include("../../../../../lib/config/conect.php");
 
 
-$query = "SELECT * FROM periodo";
+$query = "SELECT 
+    periodo.periodoId, 
+    periodo.anio, 
+    periodo.mes, 
+    periodo.estadoId,
+    estado.estado
+FROM 
+    periodo
+LEFT JOIN 
+    estado ON periodo.estadoId = estado.estadoId;";
 
 $result = mysqli_query($con, $query);
 
@@ -20,6 +29,8 @@ $result = mysqli_query($con, $query);
             "anio"=>$row["anio"],
             "mes"=>$row["mes"],
             "estadoId"=>$row["estadoId"],
+            "estado"=>$row["estado"],
+
         );
     }
 

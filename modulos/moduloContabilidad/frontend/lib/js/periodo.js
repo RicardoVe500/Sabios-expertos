@@ -33,8 +33,9 @@ $(document).ready(function () {
 
   $('#tablaperiodo').on('click', '.btn-selectperiodo', function () {
     var data = $('#tablaperiodo').DataTable().row($(this).parents('tr')).data();
-    seleccionarPeriodo(data.periodoId, data.mes, data.anio);
+    seleccionarPeriodo(data.periodoId, data.mes, data.anio, data.estadoId);
   });
+
 
   $('#resetPeriodo').click(function () {
     Swal.fire({
@@ -75,7 +76,6 @@ $(document).ready(function () {
 
 });
 
-
 function guardarperiodo() {
   if ($("#monthYearPicker").val() == "") {
     Swal.fire({
@@ -90,13 +90,13 @@ function guardarperiodo() {
       type: "POST",
       url: url,
       data: $("#frmperiodo").serialize(),
+      dataType: "json", // Asegúrate de especificar el tipo de datos esperado
       success: function (data) {
-
         if (data.status === 'success') {
           Swal.fire({
             icon: 'success',
             title: '¡Periodo agregado!',
-            text: "Se agrego con exito",
+            text: data.message,
           });
           $('#tablaperiodo').DataTable().ajax.reload();
           $('#secondaryModal').modal('hide');
@@ -105,7 +105,7 @@ function guardarperiodo() {
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: "Este Periodo ya esta registrado",
+            text: data.message,
           });
         }
       },
@@ -121,33 +121,35 @@ function guardarperiodo() {
   }
 }
 
-function datostabla() {
-  $('#tablaperiodo').DataTable({
-    "ajax": "../../backend/Periodo/listardatos/listardatos.php",
-    "columns": [
-      { "data": "mes" },
-      { "data": "anio" },
-      {
-        "data": null,
-        "defaultContent": `
-                <button class='btn btn-primary btn-sm btn-selectperiodo'><i class="fas fa-folder-open"></i> </button>
-            `
-      }
-    ],
-    "columnDefs": [{
-      "targets": -1,
-      "orderable": false,
-      "className": "dt-center"
-    }]
-  });
 
+function datostabla() {
+  if ($.fn.dataTable.isDataTable('#tablaperiodo')) {
+      $('#tablaperiodo').DataTable().destroy();
+  }
+  console.log("Creando nuevo DataTable");
+  $('#tablaperiodo').DataTable({
+      "ajax": "../../backend/Periodo/listardatos/listardatos.php",
+      "columns": [
+          { "data": "mes" },
+          { "data": "anio" },
+          {
+              "data": null,
+              "defaultContent": '<button class="btn btn-primary btn-sm btn-selectperiodo"><i class="fas fa-folder-open"></i> </button>'
+          }
+      ],
+      "columnDefs": [{
+          "targets": -1,
+          "orderable": false,
+          "className": "dt-center"
+      }]
+  });
 }
 
-function seleccionarPeriodo(periodoId, mes, anio) {
+function seleccionarPeriodo(periodoId, mes, anio, estadoId) {
   $.ajax({
     type: "POST",
     url: "../../backend/Periodo/session/periodosession.php",
-    data: { periodoId: periodoId, mes: mes, anio: anio },
+    data: { periodoId: periodoId, mes: mes, anio: anio, estadoId},
     success: function (response) {
       const nombreMes = obtenerNombreMes(mes);
       Swal.fire({
@@ -156,8 +158,10 @@ function seleccionarPeriodo(periodoId, mes, anio) {
         text: `Se trabajara el periodo de: ${nombreMes} ${anio}.`,
       });
       $('#selectMonthModal').modal('hide');
-      console.log(response)
-      // Recargar datos o realizar otras acciones necesarias
+      console.log("Respuesta del servidor:", response);
+  if(response.status === "success") {
+    console.log("Datos del período:", response.data);
+  }
     },
     error: function (xhr, status, error) {
       Swal.fire({

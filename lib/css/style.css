@@ -8413,3 +8413,16 @@
   transform: translateY(-50%);
   cursor: pointer;
 }
+
+#fondo{
+  background-image: url('../img/back.jpg');
+
+  /* Hace que la imagen de fondo cubra completamente el espacio disponible */
+  background-size: cover;
+
+  /* Asegura que la imagen no se repita */
+  background-repeat: no-repeat;
+
+  /* Alinea la imagen de fondo al centro de la página para una mejor visualización */
+  background-position: center;
+}

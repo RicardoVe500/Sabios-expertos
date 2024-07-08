@@ -25,7 +25,7 @@
 
 </head>
 
-<body style="background-image: url('./lib/img/back.jpg');">
+<body id="fondo">
     <section class="ftco-section">
 
         <div class="row justify-content-center">
@@ -68,13 +68,7 @@
             </div>
         </div>
 
-
-
-
     </section>
-
-
-
 
 
     <!-- jQuery -->
