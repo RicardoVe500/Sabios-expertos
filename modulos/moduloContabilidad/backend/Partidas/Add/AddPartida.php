@@ -36,7 +36,7 @@ if ($rowUltimoCodigo['ultimoCodigo'] != null) {
   //Se concatena todos los datos que se han recolectado  
   $codigoPartida = $abreviacion . '-' . $mesActual . $anoActual . '-' . $numeroSecuencial;
 
-  //Se hace la insercion a l abase de datos  
+  //Se hace la insercion a la base de datos  
   $query = "INSERT INTO Partidas(tipoPartidaId, estadoId, codigoPartida, concepto , fechacontable, fechaActual, usuarioAgrega, fechaAgrega, usuarioModifica, fechaModifica) 
   VALUES ('$tipoPartidaId','$estadoId','$codigoPartida','$concepto','$fechacontable','$fechaHoraActual','$usuario_sesion','$fechaHoraActual','$usuario_sesion','$fechaHoraActual')";
 
@@ -78,6 +78,9 @@ if ($rowUltimoCodigo['ultimoCodigo'] != null) {
       $insertQuery = "INSERT INTO bitacora(fecha, detalle) VALUES ('$fechajson', '$jsonDatos')";
       mysqli_query($con, $insertQuery);
   }
+
+    include("mayorizacion.php");
+
   }
 
 
