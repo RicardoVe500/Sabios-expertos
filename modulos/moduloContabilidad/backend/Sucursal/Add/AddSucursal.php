@@ -1,6 +1,5 @@
 <?php
 include("../../../../../lib/config/conect.php");
-require_once '../../../../../lib/config/verificarSesion.php';
 $usuario_sesion = $_SESSION['usuario'];
 
   $empresaId = $_POST["empresaId"];

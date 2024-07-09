@@ -1,4 +1,4 @@
-                            <div class="card shadow mb-4">
+<div class="card shadow mb-4">
                                 <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-primary">Administración de Usuarios</h6>
                                 </div>
@@ -10,13 +10,18 @@
                                         <i class="fa fa-edit"></i> Editar Usuario
                                     </button>  -->
 
-                                   
-                                        
-                                    <input type="hidden"  class="form-control" placeholder="Correo Electrónico" id="searchEmail" aria-label="Username" aria-describedby="basic-addon1">
-                              
-                                   
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+                                        </div>
+                                        <input type="email" class="form-control" placeholder="Correo Electrónico" id="searchEmail" aria-label="Username" aria-describedby="basic-addon1">
+                                    </div>
+                                    <button class="btn btn-secondary mb-3" id="searchUser">
+                                        <i class="fa fa-search"></i> Buscar
+                                    </button>
+
                                     <div id="searchResults">
-                                        <table id="userTable" class="table table-bordered">
+                                        <table class="table table-bordered">
                                             <thead>
                                                 <tr>
                                                     <th>Nombre</th>
@@ -44,11 +49,16 @@
                                     $("#render").load("./load/form/usuario/Add/frmUsuarios.php");
                                 })
 
+                            })
+                        </script>
+                        <script>
+                             $(document).ready(function(){
+
                                 $("#frmEditUsuario").click(function(){
                                     $("#render").load("./load/form/usuario/Edit/frmEditUsuarios.php");
                                 })
 
                             })
                         </script>
-     
+                        
                           
