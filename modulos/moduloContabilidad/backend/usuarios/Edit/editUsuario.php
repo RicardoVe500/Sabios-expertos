@@ -1,7 +1,7 @@
 <?php
 
 //Iniciar Sesion
-session_start();
+//session_start();
 
 // Crear conexión a la BD
 require_once '../../../../../lib/config/conect.php';
