@@ -49,8 +49,7 @@ if (isset($_POST['id'])) {
           $insertQuery = "INSERT INTO bitacora(fecha, detalle) VALUES ('$fechajson', '$jsonDatos')";
           mysqli_query($con, $insertQuery);
       }
-      
-        include("mayorizacion.php");
+  
 
         echo json_encode(['success' => true, 'message' => 'Tipo de partida eliminado exitosamente.']);
     } else {

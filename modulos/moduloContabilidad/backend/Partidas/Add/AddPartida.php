@@ -27,17 +27,11 @@ if ($rowUltimoCodigo['ultimoCodigo'] != null) {
     $numeroSecuencial = "000001";
 }
 
-
-  //Se hace la insercion a la base de datos  
-  $query = "INSERT INTO Partidas(tipoPartidaId, estadoId, codigoPartida, concepto , fechacontable, fechaActual, usuarioAgrega, fechaAgrega, usuarioModifica, fechaModifica) 
-  VALUES ('$tipoPartidaId','$estadoId','$codigoPartida','$concepto','$fechacontable','$fechaHoraActual','$usuario_sesion','$fechaHoraActual','$usuario_sesion','$fechaHoraActual')";
-
 // Se concatena todos los datos que se han recolectado
 $codigoPartida = $mesActual . substr($anoActual, -2) . '-' . $numeroSecuencial;
 
-
+// Se hace la inserción a la base de datos
 $query = "INSERT INTO Partidas(tipoPartidaId, estadoId, codigoPartida, concepto, fechacontable, fechaActual, usuarioAgrega, fechaAgrega, usuarioModifica, fechaModifica) VALUES ('$tipoPartidaId','$estadoId','$codigoPartida','$concepto','$fechacontable','$fechaHoraActual','$usuario_sesion','$fechaHoraActual','$usuario_sesion','$fechaHoraActual')";
-
 
 $result = mysqli_query($con, $query);
 
@@ -48,40 +42,6 @@ if (!$result) {
     $fechajson = date("Y-m-d");
     // Preparar datos para la bitácora
     $datos = [
-
-      "accion" => "Agrego_Partida",
-      "Usuario que agrego" => $usuario_sesion,
-      "datosIngresados" => [
-          "tipoPartidaId" => $tipoPartidaId,
-          "estadoId" => $estadoId,
-          "concepto" => $concepto,
-          "fechacontable" => $fechacontable,
-          "fechaHoraActual" => $fechaHoraActual,
-      ]
-  ];
-  $jsonDatos = json_encode($datos);
-
-  // Verificar si ya existe un registro para el día actual
-  $queryBitacora = "SELECT bitacoraId, detalle FROM bitacora WHERE fecha = '$fechajson'";
-  $resultBitacora = mysqli_query($con, $queryBitacora);
-  if ($row = mysqli_fetch_assoc($resultBitacora)) {
-      // Actualiza el registro existente
-      $datosExistentes = json_decode($row["detalle"], true);
-      $datosExistentes[] = $datos;
-      $jsonDatos = json_encode($datosExistentes);
-      $updateQuery = "UPDATE bitacora SET detalle = '$jsonDatos' WHERE bitacoraId = {$row['bitacoraId']}";
-      mysqli_query($con, $updateQuery);
-  } else {
-      // Crea un nuevo registro en la bitácora
-      $insertQuery = "INSERT INTO bitacora(fecha, detalle) VALUES ('$fechajson', '$jsonDatos')";
-      mysqli_query($con, $insertQuery);
-  }
-
-    include("mayorizacion.php");
-
-  }
-
-
         "accion" => "Agrego_Partida",
         "Usuario que agrego" => $usuario_sesion,
         "datosIngresados" => [
@@ -93,7 +53,6 @@ if (!$result) {
         ]
     ];
     $jsonDatos = json_encode($datos);
-
 
     // Verificar si ya existe un registro para el día actual
     $queryBitacora = "SELECT bitacoraId, detalle FROM bitacora WHERE fecha = '$fechajson'";

@@ -158,86 +158,109 @@
     <script src="../lib/js/scripts/enter.js"></script>
 
     <script>
-        $(document).ready(function() {
-            var fechaContable = document.getElementById('fechaComprobante');
-            var fechaHoy = new Date();
-            var dia = ('0' + fechaHoy.getDate()).slice(-2);
-            var mes = ('0' + (fechaHoy.getMonth() + 1)).slice(-2);
-            var ano = fechaHoy.getFullYear();
-            var fechaMaxima = ano + '-' + mes + '-' + dia;
-            fechaContable.setAttribute('max', fechaMaxima);
+    $(document).ready(function() {
 
-            cargadatospartida()
-            Imprimirtablacuerpo()
-        
-            $("#dato").click(function() {
-                var mode = $(this).data("mode");
-                if (mode === "add") {
-                    guardarCuerpoPartida();
-                } else if (mode === "edit") {
-                    editardatos();
-                }
-            });
+        var fechaContable = document.getElementById('fechaComprobante');
+        var fechaHoy = new Date();
+        var dia = ('0' + fechaHoy.getDate()).slice(-2);
+        var mes = ('0' + (fechaHoy.getMonth() + 1)).slice(-2);
+        var ano = fechaHoy.getFullYear();
+        var fechaMaxima = ano + '-' + mes + '-' + dia;
 
-            $("#regresarpartidas").click(function() {
-                var tipoPartidaId = $("#tipoPartidaId").val();
-                $.ajax({
-                    url: '../lib/partida/v_partida.php',
-                    type: 'GET',
-                    data: {
-                        tipoPartidaId: tipoPartidaId
-                    },
-                    success: function(response) {
-                        $('#page-content-wrapper').html(response);
-                    },
-                    error: function(xhr, status, error) {
-                        alert("Error al cargar la página de partidas: " + error);
-                    }
-                });
-            });
+        fechaContable.setAttribute('max', fechaMaxima);
 
-            $("#generarMayorizacion").click(function() {
-                generarMayorizacion();
-            });
+        cargadatospartida()
+        Imprimirtablacuerpo()
+       
+   
 
-            async function generarMayorizacion() {
-                try {
-                    const response = await fetch('../../backend/Mayorizacion/mayorizacion.php', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ partidaId: $("#partidaId").val() })
-                    });
+        $("#dato").click(function() {
+            var mode = $(this).data("mode");
+            if (mode === "add") {
+                guardarCuerpoPartida();
+            } else if (mode === "edit") {
+                editardatos();
+            }
+        });
 
-                    if (!response.ok) {
-                        throw new Error('Error en la solicitud');
-                    }
+        $("#regresarpartidas").click(function() {
+            var tipoPartidaId = $("#tipoPartidaId").val();
+            $.ajax({
+                url: "load/adminPartidas.php",
+                type: "POST",
+                data: {
+                    tipoPartidaId: tipoPartidaId
+                },
+                success: function(response) {
+                    $("#render").html(response);
 
-                    const data = await response.json();
-                    mostrarMayorizacion(data);
-                } catch (error) {
+                },
+                error: function(xhr, status, error) {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Error',
-                        text: 'Ocurrió un error al generar la mayorización. Por favor, intenta de nuevo.',
+                        title: 'Error al mostrar',
+                        text: 'No se pudo cargar el contenido Por favor, intenta de nuevo.',
                         confirmButtonText: 'Aceptar'
                     });
                 }
-            }
+            });
+        })
 
-            function mostrarMayorizacion(data) {
-                const tbody = $("#tablaMayorizacion tbody");
-                tbody.empty();
-                data.forEach(row => {
-                    tbody.append(`
-                        <tr>
-                            <td>${row.cuenta}</td>
-                            <td>${row.debe}</td>
-                            <td>${row.haber}</td>
-                            <td>${row.saldo}</td>
-                        </tr>
-                    `);
+        $("#generarMayorizacion").click(function() {
+        var partidaId = $("#partidaId").val();
+        $.ajax({
+            url: "../../backend/Mayorizacion/mayorizacion.php", // Reemplaza por la ruta correcta
+            type: "POST",
+            data: {
+                partidaId: partidaId
+            },
+            success: function(response) {
+                // Procesar la respuesta y mostrar los datos en la tabla
+                $("#tablaMayorizacion tbody").html(response);
+            },
+            error: function(xhr, status, error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error al generar la mayorización',
+                    text: 'Hubo un problema al procesar la solicitud. Por favor, intenta de nuevo.',
+                    confirmButtonText: 'Aceptar'
                 });
             }
         });
+    });
+
+        // Función para limpiar el valor por defecto si es 0
+        function limpiarCero(event) {
+            if (event.target.value === '0') {
+                event.target.value = '';
+            }
+        }
+
+        // Función para reestablecer a 0 si el campo está vacío
+        function reestablecerCero(event) {
+            if (event.target.value === '') {
+                event.target.value = '0';
+            }
+        }
+
+        // Añadir listeners a los campos de entrada
+        document.getElementById('debeCuerpo').addEventListener('focus', limpiarCero);
+        document.getElementById('debeCuerpo').addEventListener('blur', reestablecerCero);
+        document.getElementById('haberCuerpo').addEventListener('focus', limpiarCero);
+        document.getElementById('haberCuerpo').addEventListener('blur', reestablecerCero);
+
+
+        validarCampos()
+        document.getElementById('debeCuerpo').addEventListener('input', validarCampos);
+        document.getElementById('haberCuerpo').addEventListener('input', validarCampos);
+
+
+
+    })
+
+
+
+  
+
     </script>
 </div>

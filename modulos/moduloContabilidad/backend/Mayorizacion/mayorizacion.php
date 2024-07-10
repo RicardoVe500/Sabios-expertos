@@ -1,126 +1,70 @@
 <?php
-// MAYORIZACION
 
-// Conectar a la base de datos
-/* include("../../../../../lib/config/conect.php"); */
+//Conexion a la base de datos
 include("../../../../lib/config/conect.php");
 
-// Validar variables requeridas
-if (!isset($periodoId) || !isset($fecha)) {
-    die("Faltan variables requeridas.");
-}
+// Verificación de partidas balanceadas
+$sql = "SELECT partidaId FROM partidas WHERE debe <> haber";
+$result = $con->query($sql);
 
-// Consulta del periodo
-$check_periodo = mysqli_query($con, "SELECT mes, anio FROM periodo WHERE periodoId = $periodoId LIMIT 1")
-    or die("Error en la consulta del periodo: " . mysqli_error($con));
-
-// Validar consulta
-if (!$check_periodo) {
-    die("Error en la consulta del periodo: " . mysqli_error($con));
-}
-
-// Consultar partidas saldadas del día
-$query_saldadas = "
-    SELECT p.partidaId, 
-           SUM(pd.cargo) AS cargo, 
-           SUM(pd.abono) AS abono, 
-           c.cuentaId, 
-           c.numeroCuenta,
-           substring(c.numeroCuenta, 1, 4) AS cuentaMayor
-    FROM partidas p
-    JOIN partidadetalle pd ON p.partidaId = pd.partidaId
-    JOIN catalogocuentas c ON pd.cuentaId = c.cuentaId
-    WHERE substring(c.numeroCuenta, 1, 4) = '{$contableMayores['numeroCuenta']}' 
-          AND fechaAgrega = '$fecha'
-          AND periodoId = $periodoId 
-          AND saldo = 1
-    GROUP BY c.cuentaId
-";
-
-$saldadas = mysqli_query($con, $query_saldadas)
-    or die("Error en la consulta de partidas saldadas: " . mysqli_error($con));
-
-// Validar resultado de la consulta
-if ($saldadas) {
-    while ($saldos = mysqli_fetch_assoc($saldadas)) {
-        if ($contableMayores['saldo'] == 'D') {
-            $saldo1 = $saldos['cargo'] - $saldos['abono']; // Deudor = Cargo - Abono
-        } else {
-            $saldo1 = $saldos['abono'] - $saldos['cargo']; // Acreedor = Abono - Cargo
-        }
-
-        if ($saldo1 < 0) {
-            $saldo1 = $saldo1 * -1;
-        }
-
-        // Inicialización de arreglos y variables
-        $index = $index ?? 0; // Validar $index
-        $cuentaId[$index]               = $contableMayores["cuentaId"];
-        $cuentaDependiente[$index]      = $contableMayores["cuentaDependiente"];
-        $numeroCuenta[$index]           = $contableMayores["numeroCuenta"];
-        $nombreCuenta[$index]           = $contableMayores["nombreCuenta"];
-        $cargo[$index]                  = $saldos["cargo"];
-        $abono[$index]                  = $saldos["abono"];
-        $tipoSaldo[$index]              = $contableMayores["saldo"];
-        $saldo[$index]                  = $saldo1;
-        $index++;
-
-        // Asignación de saldo deudor y acreedor de la cuenta a variables
-        if ($tipoSaldo[$index - 1] == "D") {
-            $saldoDeudor = $saldo[$index - 1];
-            $saldoAcreedor = 0;
-        } else {
-            $saldoDeudor = 0;
-            $saldoAcreedor = $saldo[$index - 1];
-        }
-
-        $jsonDetalles = [
-            "cuentaId" => $cuentaId[$index - 1],
-            "cuentaDependiente" => $cuentaDependiente[$index - 1],
-            "numeroCuenta" => $numeroCuenta[$index - 1],
-            "nombreCuenta" => $nombreCuenta[$index - 1],
-            "fechaActual" => $fechaActual,
-            "cargo" => round($cargo[$index - 1], 2),
-            "abono" => round($abono[$index - 1], 2),
-            "debe" => round($saldoDeudor, 2),
-            "haber" => round($saldoAcreedor, 2),
-            "estado" => 0,
-            "usuarioCrea" => $_SESSION["usuarios"]
-        ];
-
-        $id = "cuenta" . $numeroCuenta[$index - 1];
-        $json[$id] = $jsonDetalles;
-    }
-
-    $jsonEncoded = json_encode($json);
-
-    // Validar existencia de mayorizacion para actualizar o insertar
-    $query_mayor_existe = "SELECT COUNT(*) as cuenta FROM mayorizacion WHERE fecha = '$fecha'";
-    $mayor_existe = mysqli_query($con, $query_mayor_existe)
-        or die('Error al verificar existencia de mayorizacion: ' . mysqli_error($con));
-    $mayor_data = mysqli_fetch_assoc($mayor_existe);
-
-    if ($mayor_data['cuenta'] > 0) {
-        // Actualizar mayorizacion
-        $updateMayor = mysqli_query($con, "
-            UPDATE mayorizacion SET 
-                detalles = '$jsonEncoded',
-                cambio = 0,
-                usuarioEdita = '{$_SESSION['usuarios']}',
-                fechaEdita = '$fechaActual'
-            WHERE fecha = '$fecha'
-        ") or die('Error en actualización de mayorizacion: ' . mysqli_error($con));
-    } else {
-        // Insertar nueva mayorizacion
-        $insertMayor = mysqli_query($con, "
-            INSERT INTO mayorizacion (
-                fecha, hora, detalles, estado, usuarioCrea, fechaCrea
-            ) VALUES (
-                '$fecha', CURRENT_TIMESTAMP, '$jsonEncoded', '0', '{$_SESSION['usuarios']}', '$fechaActual'
-            )
-        ") or die('Error en inserción de mayorizacion: ' . mysqli_error($con));
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        echo "Partida no balanceada: " . $row["partidaId"] . "<br>";
     }
 } else {
-    die("No se encontraron saldos para las partidas.");
+    echo "Todas las partidas están balanceadas.<br>";
 }
-?>
+
+// Consolidación de movimientos
+$sql = "SELECT 
+            pd.cuentaId,
+            SUM(pd.cargo) AS total_cargos,
+            SUM(pd.abono) AS total_abonos,
+            (SUM(pd.cargo) - SUM(pd.abono)) AS saldo
+        FROM partidadetalle pd
+        JOIN partidas p ON pd.partidaId = p.partidaId
+        WHERE p.estadoId = 1  -- Asegúrate de usar el estado correcto
+        GROUP BY pd.cuentaId";
+
+$result = $con->query($sql);
+
+$cuentas = [];
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        $cuentas[] = $row;
+    }
+} else {
+    echo "No se encontraron movimientos.<br>";
+}
+
+// Actualización del libro mayor
+foreach ($cuentas as $cuenta) {
+    $cuentaId = $cuenta['cuentaId'];
+    $totalCargos = $cuenta['total_cargos'];
+    $totalAbonos = $cuenta['total_abonos'];
+    $saldo = $cuenta['saldo'];
+    $detalles = "Mayorización de la cuenta $cuentaId";
+
+    $sql = "INSERT INTO mayorizacion (fecha, hora, detalles, estado, usuarioCrea, fechaCrea)
+            VALUES (CURDATE(), CURTIME(), '$detalles', 'activo', 'usuario', NOW())
+            ON DUPLICATE KEY UPDATE
+                detalles = VALUES(detalles),
+                estado = VALUES(estado),
+                usuarioEdita = 'usuario',  -- Cambia esto por el usuario actual
+                fechaEdita = NOW()";
+
+    if ($con->query($sql) === TRUE) {
+        echo "Cuenta $cuentaId mayorizada correctamente.<br>";
+    } else {
+        echo "Error al mayorizar la cuenta $cuentaId: " . $con->error . "<br>";
+    }
+}
+
+// Marcar partidas como mayorizadas
+$sql = "UPDATE partidas SET estadoId = 2 WHERE estadoId = 1";  // Cambia los valores de estado según corresponda
+
+if ($con->query($sql) === TRUE) {
+    echo "Partidas actualizadas a estado mayorizado.<br>";
+} else {
+    echo "Error al actualizar partidas: " . $con->error . "<br>";
+}
