@@ -45,12 +45,11 @@ foreach ($cuentas as $cuenta) {
     $saldo = $cuenta['saldo'];
     $detalles = "Mayorización de la cuenta $cuentaId";
 
-    $sql = "INSERT INTO mayorizacion (fecha, hora, detalles, estado, usuarioCrea, fechaCrea)
-            VALUES (CURDATE(), CURTIME(), '$detalles', 'activo', 'usuario', NOW())
+    $sql = "INSERT INTO mayorizacion (fecha, hora, detalles, estado, fechaCrea)
+            VALUES (CURDATE(), CURTIME(), '$detalles', 'activo', NOW())
             ON DUPLICATE KEY UPDATE
                 detalles = VALUES(detalles),
                 estado = VALUES(estado),
-                usuarioEdita = 'usuario',  -- Cambia esto por el usuario actual
                 fechaEdita = NOW()";
 
     if ($con->query($sql) === TRUE) {
@@ -61,7 +60,7 @@ foreach ($cuentas as $cuenta) {
 }
 
 // Marcar partidas como mayorizadas
-$sql = "UPDATE partidas SET estadoId = 2 WHERE estadoId = 1";  // Cambia los valores de estado según corresponda
+$sql = "UPDATE partidas SET estadoId = 2 WHERE estadoId = 1";  // Cambiar este apartado como corresponde (estadoId = 3)
 
 if ($con->query($sql) === TRUE) {
     echo "Partidas actualizadas a estado mayorizado.<br>";

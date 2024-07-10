@@ -209,7 +209,7 @@
         $("#generarMayorizacion").click(function() {
         var partidaId = $("#partidaId").val();
         $.ajax({
-            url: "../../backend/Mayorizacion/mayorizacion.php", // Reemplaza por la ruta correcta
+            url: "../../backend/Mayorizacion/mayorizacion.php",
             type: "POST",
             data: {
                 partidaId: partidaId
