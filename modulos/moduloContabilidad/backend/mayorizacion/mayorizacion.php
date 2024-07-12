@@ -8,9 +8,12 @@ $fechaActualHoras = date('y-m-d h:i:s');
 $solofecha = date('y-m-d');
 $fecha = $_POST['fechacontable']; // la fecha que traemos de la tabla Partidas
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+$selMay = mysqli_query($con,"SELECT COUNT(mayorizacionId) AS existe FROM mayorizacion WHERE fecha='$fecha' LIMIT 1")OR die("Codigo 02=>".mysqli_error($con));
+$datMay = mysqli_fetch_assoc($selMay);
+
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(E_ALL);
 
 $selecCtsMayores = mysqli_query($con, 
     "SELECT cc.cuentaId, cc.numeroCuenta, cc.nombreCuenta, cc.cuentaDependiente, cc.nivelCuenta, cc.tipoSaldoId, ts.nombreTipo
@@ -70,14 +73,11 @@ $json = array();
             $tipoSaldoId[$index] = $cuentasMayDato["tipoSaldoId"];
             $saldo[$index] = $saldo1;
             $index ++;
-
             
         }
 
     }
 
- 
-/*
     $selPart = mysqli_query($con,
         "SELECT partidaId
         FROM partidas
@@ -86,9 +86,10 @@ $json = array();
     );
 
     $numParts = mysqli_num_rows($selPart);
-
-    if($numParts == 0){
+  
+    if($numParts != 0){
         foreach ($cuentaId as $dato => $value) {
+
             if($tipoSaldoId[$dato]== 1){
                 $saldoDeudor = $saldo[$dato];
                 $saldoAcreedor = 0;
@@ -119,6 +120,7 @@ $json = array();
         }
 
         $json = json_encode($json, JSON_UNESCAPED_SLASHES);
+
         if ($datMay["existe"]>=1) {
             $updMayorizacion = mysqli_query($son,
             "UPDATE mayorizacion SET
@@ -136,12 +138,13 @@ $json = array();
             )
             VALUES
             (
-                '$fecha','$json'
-                '0','$usuario_sesion',$fechaActualHoras 
+                '$fecha','$json',
+                '0','$usuario_sesion','$fechaActualHoras'
             )
             ")
             or die(' instMayotizacion => '.mysqli_error($con));
         }
 
+    }else{
+        echo "NO entra al if";
     }
-*/
