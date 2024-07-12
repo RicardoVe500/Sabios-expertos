@@ -1,6 +1,6 @@
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Agregar Usuario</h6>
+        <h6 class="m-0 font-weight-bold text-primary">editar Subcuenta</h6>
     </div>
     <div class="card-body">
 
@@ -35,22 +35,38 @@
                         </select>
                     </div>
 
-                    <button type="button" class="btn btn-success mb-3" id="editarsubcuentas">
-                        <i class="fa fa-save"></i> Guardar
-                    </button>
+                    <div>
+                        <label>Tipo de Saldo:</label>
+                        <select class="form-control" id="selectTipoSaldo" name="selectTipoSaldo">
+                        </select>
+                    </div>
+
                 </div>
             </div>
+            </form>
+            <button type="button" class="btn btn-success mb-3 mt-3" id="editarsubcuentas">
+                        <i class="fa fa-save"></i> Guardar
+                    </button>
     </div>
-
-
-    </form>
+    
+   
+    
 </div>
 </div>
 <script src="../lib/js/scripts/frmSubcuentas.js"></script>
 <script>
-$("#regresarSub").click(function() {
+$(document).ready(function(){
 
-    
+    selectTipoSaldo()
+
+    $("#editarsubcuentas").click(function() {
+        editarSubcuentas()
+    })
+  
+});
+
+
+$("#regresarSub").click(function() {
     // Obtener el valor de cuentaId
     var numeroCuenta = $("#numeroCuenta").val().charAt(0);
     // Realizar la petición AJAX
@@ -68,5 +84,8 @@ $("#regresarSub").click(function() {
             console.error("Error al cargar la página: ", error);
         }
     });
+
+   
+
 });
 </script>

@@ -36,8 +36,14 @@
                         <select class="form-control" id="selectsubcuentas" name="selectsubcuentas">
                         </select>
                     </div>
-                    
-                    <button type="button" class="btn btn-success mb-3" id="guardarDatossub">
+
+                    <div>
+                        <label>Tipo de Saldo:</label>
+                        <select class="form-control" id="selectTipoSaldo" name="selectTipoSaldo">
+                        </select>
+                    </div>
+
+                    <button type="button" class="btn btn-success mb-3 mt-3" id="guardarDatossub">
                         <i class="fa fa-plus"></i> Crear
                     </button>
                 </div>
@@ -45,13 +51,23 @@
 
         </form>
 
-        
+
     </div>
 </div>
 
 <script src="../lib/js/scripts/frmSubcuentas.js"></script>
 <script>
-    
+$(document).ready(function() {
+
+    selectTipoSaldo()
+
+    $("#guardarDatossub").click(function() {
+        guardarSubcuentas()
+    })
+
+});
+
+
 $("#regresarSubCatalogo").click(function() {
     // Obtener el valor de cuentaId
     var numeroCuenta = $("#numeroCuenta").val().charAt(0);

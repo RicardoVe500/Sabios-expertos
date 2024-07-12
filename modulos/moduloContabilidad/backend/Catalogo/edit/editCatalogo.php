@@ -12,9 +12,10 @@ if (isset($_POST["cuentaId"])) {
 
   $numeroCuenta = $_POST["numeroCuenta"];
   $nombreCuenta = $_POST["nombreCuenta"];
+  $tipoSaldo = $_POST["selectTipoSaldo"];
   $fechaHoraActual = date("Y-m-d H:i:s"); 
 
-    $query = "UPDATE catalogoCuentas SET numeroCuenta = $numeroCuenta, nombreCuenta = '$nombreCuenta', fechaModifica = '$fechaHoraActual', usuarioModifica = '$usuario_sesion'  
+    $query = "UPDATE catalogoCuentas SET tipoSaldoId = $tipoSaldo,  numeroCuenta = $numeroCuenta, nombreCuenta = '$nombreCuenta', fechaModifica = '$fechaHoraActual', usuarioModifica = '$usuario_sesion'  
       WHERE cuentaId = $cuentaId ";
 
     $result = mysqli_query($con, $query);
@@ -31,6 +32,8 @@ if (isset($_POST["cuentaId"])) {
           "datosNuevos" => [
               "numeroCuenta" => $numeroCuenta,
               "nombreCuenta" => $nombreCuenta,
+              "tipoSaldoId" => $tipoSaldo,
+
           ],
           "fechaHora" => $fechaHoraActual
       ];

@@ -1,12 +1,13 @@
 <?php
 include("../../../../../lib/config/conect.php");
 $usuario_sesion = $_SESSION['usuario'];
+ 
 
-
-if (isset($_POST['numeroCuenta']) || isset($_POST['nombreCuenta'])) {
+if (isset($_POST['numeroCuenta']) || isset($_POST['nombreCuenta']) || isset($_POST['selectTipoSaldo'])) {
   
   $nivelcuenta =  $_POST["nivelCuenta"] + 1;
   $movimientos = $_POST["movimientos"];
+  $tipoSaldo = $_POST["tipoSaldo"];
   $numerocuenta = $_POST["numeroCuenta"];
   $nombrecuenta = $_POST["nombreCuenta"];
   $fechaHoraActual = date("Y-m-d H:i:s"); 
@@ -45,8 +46,8 @@ if (isset($_POST['numeroCuenta']) || isset($_POST['nombreCuenta'])) {
         $dependiente = $numerocuenta;
     }
 
-       $queryInsert = "INSERT INTO catalogoCuentas(movimientoId, n1, n2, n3, n4, n5, n6, n7, n8, numeroCuenta, cuentaDependiente, nivelCuenta, nombreCuenta, usuarioAgrega, fechaAgrega, usuarioModifica, fechaModifica) 
-                       VALUES ('$movimientos','','','','','','','','','$nuevoNumeroCuenta','$dependiente','$nivelcuenta','$nombrecuenta','$usuario_sesion','$fechaHoraActual','$usuario_sesion','$fechaHoraActual')";
+       $queryInsert = "INSERT INTO catalogoCuentas(movimientoId, tipoSaldoId, n1, n2, n3, n4, n5, n6, n7, n8, numeroCuenta, cuentaDependiente, nivelCuenta, nombreCuenta, usuarioAgrega, fechaAgrega, usuarioModifica, fechaModifica) 
+                       VALUES ('$movimientos','$tipoSaldo','','','','','','','','','$nuevoNumeroCuenta','$dependiente','$nivelcuenta','$nombrecuenta','$usuario_sesion','$fechaHoraActual','$usuario_sesion','$fechaHoraActual')";
 
        $resultInsert = mysqli_query($con, $queryInsert);
 
@@ -62,6 +63,7 @@ if (isset($_POST['numeroCuenta']) || isset($_POST['nombreCuenta'])) {
                 "nombrecuenta" => $nombrecuenta,
                 "dependiente" => $dependiente,
                 "movimientos" => $movimientos,
+                "tipoSaldo" => $tipoSaldoId,
                 "fechaHoraActual" => $fechaHoraActual,
 
             ]

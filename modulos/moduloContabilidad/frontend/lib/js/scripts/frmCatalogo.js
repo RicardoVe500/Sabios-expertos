@@ -4,10 +4,6 @@ $(document).ready(function(){
         regresar();
     });
 
-    $("#guardarDatos").click(function(){
-        guardarDatos();
-    });
-
 });
 
 $('#inputGroupFileAddon03').click(function() {
@@ -49,7 +45,7 @@ $('#inputGroupFileAddon03').click(function() {
 
 function guardarDatos(){
 
-    if($("#numeroCuenta").val()==""|| $("#nombreCuenta").val() == ""){
+    if($("#numeroCuenta").val()==""|| $("#nombreCuenta").val() == ""|| $("#selectTipoSaldo").val() == ""){
         Swal.fire({
             title: 'Error',
             text: 'NO deben de haber datos sin llenar',
@@ -142,7 +138,6 @@ $('#tablacatalogo').on('click', 'button.btn-delete', function () {
     });
 })
 
-
 $('#tablacatalogo').on('click', 'button.btn-modificar', function () {
     var data = $('#tablacatalogo').DataTable().row($(this).parents('tr')).data();
     var id = data.cuentaId
@@ -157,18 +152,29 @@ $.ajax({
         $("#cuentaId").val(task.cuentaId)
         $("#editnumeroCuenta").val(task.numeroCuenta)
         $("#editnombreCuenta").val(task.nombreCuenta)
+        $("#selectTipoSaldo").val(task.nombreTipo)
+
+        var newOption = {
+            id: task.tipoSaldoId,
+            text: task.nombreTipo,
+            selected: true,
+            title: task.nombreTipo
+        };
+        $("#selectTipoSaldo").empty().append(new Option(newOption.text, newOption.id, true, true)).trigger('change');
+
+        
+
     },
 })
 
 });
 
 function editarDatos(){
-
-    $(document).on("click", "#editarcatalogo", ()=>{
         const pData = {
             cuentaId: $("#cuentaId").val(),
             numeroCuenta: $("#editnumeroCuenta").val(),
             nombreCuenta: $("#editnombreCuenta").val(),
+            selectTipoSaldo: $("#selectTipoSaldo").val(),
         }
         $.ajax({
             url: "../../backend/Catalogo/edit/editCatalogo.php",
@@ -193,10 +199,36 @@ function editarDatos(){
             }
         })
         
-       }) 
+       }
     
-}
+
 
 function regresar(){
     $("#render").load("./load/adminCatalogo.php");
+}
+
+function selectTipoSaldo(){
+    $('#selectTipoSaldo').select2({
+        ajax: {
+            url: "../../backend/Catalogo/listardatos/selectTipoSaldo.php",
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    searchTerm: params.term // Término de búsqueda enviado al servidor
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data.map(item => ({
+                        id: item.tipoSaldoId,
+                        text: item.nombreTipo // Aqui se concatena los campos para mostrarlos
+                    }))
+                };
+            }
+        },
+        theme: "bootstrap",
+        placeholder: 'Buscar cuenta...',
+        allowClear: true  // se establece el limpiado del select 
+    });
 }

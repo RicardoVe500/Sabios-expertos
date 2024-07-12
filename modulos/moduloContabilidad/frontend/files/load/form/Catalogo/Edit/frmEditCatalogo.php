@@ -32,13 +32,19 @@
                             name="nombreCuenta">
                     </div>
 
-                    <button type="button" class="btn btn-success mb-3" id="editarcatalogo">
-                        <i class="fa fa-save"></i> Guardar
-                    </button>
+                    <div>
+                        <label>Tipo de Saldo:</label>
+                        <select class="form-control" id="selectTipoSaldo" name="selectTipoSaldo">
+                        </select>
+                    </div>
                 </div>
             </div>
-
         </form>
+
+        <button type="button" class="btn btn-success mb-3" id="editarcatalogo">
+            <i class="fa fa-save"></i> Guardar
+        </button>
+        
     </div>
 </div>
 <script src="../lib/js/scripts/frmCatalogo.js"></script>
@@ -52,7 +58,13 @@ function isNumberKey(evt) {
     return true;
 }
 $(document).ready(function() {
+    
+    selectTipoSaldo()  
+
+    $("#editarcatalogo").click(function(){
         editarDatos()
+    });
+
     })
 </script>
 

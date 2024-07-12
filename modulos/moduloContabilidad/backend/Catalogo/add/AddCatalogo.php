@@ -8,12 +8,13 @@ $usuario_sesion = $_SESSION['usuario'];
   $movimientos = 2;
   $nivelcuenta = 1;
   $numerocuenta = $_POST["numeroCuenta"];
+  $tipoSaldo = $_POST["selectTipoSaldo"];
   $nombrecuenta = $_POST["nombreCuenta"];
   $fechaHoraActual = date("Y-m-d H:i:s"); 
 
   
-  $query = mysqli_query($con,"INSERT INTO catalogoCuentas(movimientoId, n1, n2, n3, n4, n5, n6, n7, n8, numeroCuenta, cuentaDependiente, nivelCuenta, nombreCuenta, usuarioAgrega, fechaAgrega, usuarioModifica, fechaModifica) 
-  VALUES ('$movimientos','','','','','','','','','$numerocuenta','','$nivelcuenta','$nombrecuenta','$usuario_sesion ','$fechaHoraActual','$usuario_sesion ','$fechaHoraActual')") or die('ERROR INS USUARIO: '.mysqli_error($con));
+  $query = mysqli_query($con,"INSERT INTO catalogoCuentas(movimientoId, tipoSaldoId, n1, n2, n3, n4, n5, n6, n7, n8, numeroCuenta, cuentaDependiente, nivelCuenta, nombreCuenta, usuarioAgrega, fechaAgrega, usuarioModifica, fechaModifica) 
+  VALUES ('$movimientos','$tipoSaldo','','','','','','','','','$numerocuenta','','$nivelcuenta','$nombrecuenta','$usuario_sesion ','$fechaHoraActual','$usuario_sesion ','$fechaHoraActual')") or die('ERROR INS USUARIO: '.mysqli_error($con));
  
 
 echo "1";

@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-
+ 
     //Se captura el dato del campo partidaId que se mando desde Partidas
 
     $('#selectcomprobante').select2({
@@ -314,6 +314,7 @@ function editardatos() {
         }
     })
 }
+
 $('#cerrarCuenta').click(function () {
     // Usamos SweetAlert para confirmar la acción
     Swal.fire({
@@ -354,6 +355,34 @@ $('#cerrarCuenta').click(function () {
                                         tipoPartidaId: tipoPartidaId
                                     },
                                     success: function(response) {
+
+                                        var fechacontable = $("#cuerpofechacontable").val();
+                                        console.log(fechacontable)
+                                        $.ajax({
+                                            url: "../../backend/mayorizacion/mayorizacion.php",
+                                            type: "POST",
+                                            data: {
+                                                fechacontable: fechacontable
+                                            },
+                                            success: function(response) {                                            
+                                                $("#render").html(response);
+                                                Swal.fire({
+                                                    icon: 'success',
+                                                    title: 'La mayorizacion se ejecuto',
+                                                    text: 'Se ejecuto la mayorizacion.',
+                                                    confirmButtonText: 'Aceptar'
+                                                });
+                                            },
+                                            error: function(xhr, status, error) {
+                                                Swal.fire({
+                                                    icon: 'error',
+                                                    title: 'Error mayorizacion',
+                                                    text: 'intenta de nuevo.',
+                                                    confirmButtonText: 'Aceptar'
+                                                });
+                                            }
+                                        });
+
                                         $("#render").html(response);
                                     },
                                     error: function(xhr, status, error) {
@@ -388,4 +417,6 @@ $('#cerrarCuenta').click(function () {
         }
     });
 });
+
+
 

@@ -28,7 +28,14 @@
                         <input type="text" class="form-control" placeholder="Nombre Cuenta" id="nombreCuenta"
                             name="nombreCuenta">
                     </div>
-                    <button type="button" class="btn btn-success mb-3" id="guardarDatos">
+
+                    <div>
+                        <label>Tipo de Saldo:</label>
+                        <select class="form-control" id="selectTipoSaldo" name="selectTipoSaldo">
+                        </select>
+                    </div>
+
+                    <button type="button" class="btn btn-success mb-3 mt-3" id="guardarDatos">
                         <i class="fa fa-plus"></i> Guardar
                     </button>
                 </div>
@@ -38,6 +45,15 @@
     </div>
 </div>
 <script>
+$(document).ready(function(){
+    selectTipoSaldo();
+
+    $("#guardarDatos").click(function(){
+        guardarDatos();
+    });
+
+});
+    
 function isNumberKey(evt) {
     var charCode = (evt.which) ? evt.which : evt.keyCode;
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {

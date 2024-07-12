@@ -2,11 +2,12 @@ $(document).ready(function(){
     
     $("#regresarcat").click(function(){
         $("#render").load("./load/adminCatalogo.php");
-    });
+    }); 
 
     ImprimirtablaSub()
   
 });
+
     function ImprimirtablaSub() {
         var numeroCuenta = $('#numeroCuenta').val();
         $.ajax({
@@ -51,6 +52,8 @@ $(document).ready(function(){
             columnDefs: [{ "targets": -1, "orderable": false, "className": "dt-center" }],
             order: [[1, 'asc']]
         });
+
+        
     
         $('#tablasubcuenta').on('click', 'button.btn-deletesub', function () {
             var data = $('#tablasubcuenta').DataTable().row($(this).parents('tr')).data();
@@ -73,8 +76,6 @@ $(document).ready(function(){
             });
         });
   
-
-
         // Llenar el select con datos de movimientos al cargar la página
         $.ajax({
             url: "../../backend/SubCuentas/listardatos/select.php",
@@ -124,13 +125,14 @@ $(document).ready(function(){
     
     });
 
-    $('#guardarDatossub').off('click').on('click', function() {
+    function guardarSubcuentas(){
         const pData = {
             cuentaId: $("#cuentaId").val(),
             numeroCuenta: $("#numeroCuenta").val(),
             nivelCuenta: $("#nivelCuenta").val(),
             nombreCuenta: $("#nombreCuenta").val(),
-            movimientos: $("#selectsubcuentas").val()
+            movimientos: $("#selectsubcuentas").val(),
+            tipoSaldo: $("#selectTipoSaldo").val()
         }
         $.ajax({
             url: "../../backend/SubCuentas/add/addSubCuentas.php",
@@ -146,9 +148,10 @@ $(document).ready(function(){
                     
             },
         })
-    });
 
-         
+    }
+       
+          
         
     $('#tablasubcuenta').on('click', 'button.btn-modificarsub', function () {
         var data = $('#tablasubcuenta').DataTable().row($(this).parents('tr')).data();
@@ -165,39 +168,73 @@ $(document).ready(function(){
             $("#numeroCuenta").val(task.numeroCuenta)
             $("#editnombreCuenta").val(task.nombreCuenta)
 
+            var newOption = {
+                id: task.tipoSaldoId,
+                text: task.nombreTipo,
+                selected: true,
+                title: task.nombreTipo
+            };
+            $("#selectTipoSaldo").empty().append(new Option(newOption.text, newOption.id, true, true)).trigger('change');
+    
+
         },
     })
     
     });
 
-    $(document).on("click", "#editarsubcuentas", ()=>{
-        const pData = {
-            cuentaId: $("#cuentaId").val(),
-            numeroCuenta: $("#numeroCuenta").val(),
-            nombreCuenta: $("#editnombreCuenta").val(),
-            movimientos: $("#selectsubcuentas").val()
+
+function editarSubcuentas(){
+    const pData = {
+        cuentaId: $("#cuentaId").val(),
+        numeroCuenta: $("#numeroCuenta").val(),
+        nombreCuenta: $("#editnombreCuenta").val(),
+        movimientos: $("#selectsubcuentas").val(),
+        tipoSaldo: $("#selectTipoSaldo").val()
+
+    }
+    $.ajax({
+        url: "../../backend/SubCuentas/edit/editSubCuentas.php",
+        data: pData,
+        type: "POST",
+        success: function(response){
+            Swal.fire({
+                icon: 'success',
+                title: '¡Actualización exitosa!',
+                text: 'Los cambios se han guardado correctamente.',
+            });
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.error("Error desde el servidor:", textStatus, errorThrown);
+            alert("Error en el servidor: " + textStatus);
         }
-        $.ajax({
-            url: "../../backend/SubCuentas/edit/editSubCuentas.php",
-            data: pData,
-            type: "POST",
-            success: function(response){
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Actualización exitosa!',
-                    text: 'Los cambios se han guardado correctamente.',
-                });
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                console.error("Error desde el servidor:", textStatus, errorThrown);
-                alert("Error en el servidor: " + textStatus);
-            }
-        })
-            
-    }) 
-        
+    })
+}
     
-    $('#tablasubcuenta').on('click', '#frmAddSubcuenta', function() {
-        $("#render").load("./load/form/SubCatalogo/Add/frmAddSubCuenta.php");
+       
+ 
+
+function selectTipoSaldo(){
+    $('#selectTipoSaldo').select2({
+        ajax: {
+            url: "../../backend/SubCuentas/listardatos/selectTipoSaldo.php",
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    searchTerm: params.term // Término de búsqueda enviado al servidor
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data.map(item => ({
+                        id: item.tipoSaldoId,
+                        text: item.nombreTipo // Aqui se concatena los campos para mostrarlos
+                    }))
+                };
+            }
+        },
+        theme: "bootstrap",
+        placeholder: 'Buscar Tipo de Saldo...',
+        allowClear: true  // se establece el limpiado del select 
     });
-        
+}

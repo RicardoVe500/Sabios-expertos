@@ -6,7 +6,11 @@ if (isset($_POST['id'])) {
     
     $cuentaId = $_POST['id'];
 
-    $query = "SELECT * FROM catalogoCuentas WHERE cuentaId = {$cuentaId} ";
+    $query = "SELECT cc.cuentaId, cc.movimientoId, cc.tipoSaldoId,
+    ts.nombreTipo, cc.numeroCuenta, cc.cuentaDependiente, cc.nivelCuenta,
+    cc.nombreCuenta, cc.usuarioAgrega, cc.fechaAgrega, cc.usuarioModifica,
+    cc.fechaModifica  FROM catalogoCuentas cc LEFT JOIN tipoDeSaldo ts ON cc.tipoSaldoId = ts.tipoSaldoId
+     WHERE cc.cuentaId = {$cuentaId} ";
     $result = mysqli_query($con, $query);
 
     if (!$result) {
@@ -20,6 +24,8 @@ if (isset($_POST['id'])) {
         $json[] = array(
             "cuentaId"=>$row["cuentaId"],
             "movimientoId"=>$row["movimientoId"],
+            "tipoSaldoId"=>$row["tipoSaldoId"],
+            "nombreTipo"=>$row["nombreTipo"],
             "numeroCuenta"=>$row["numeroCuenta"],
             "cuentaDependiente"=>$row["cuentaDependiente"],
             "nivelCuenta"=>$row["nivelCuenta"],
