@@ -5,6 +5,7 @@ $usuario_sesion = $_SESSION['usuario'];
 // Se Capturan los datos
 $tipoPartidaId = $_POST["tipoPartidaId"];
 $estadoId = 1;
+$mayorizada = 1;
 $concepto = $_POST["concepto"];
 $fechacontable = $_POST["fechacontable"];
 $fechaHoraActual = date("Y-m-d H:i:s");
@@ -31,7 +32,7 @@ if ($rowUltimoCodigo['ultimoCodigo'] != null) {
 $codigoPartida = $mesActual . substr($anoActual, -2) . '-' . $numeroSecuencial;
 
 // Se hace la inserción a la base de datos
-$query = "INSERT INTO Partidas(tipoPartidaId, estadoId, codigoPartida, concepto, fechacontable, fechaActual, usuarioAgrega, fechaAgrega, usuarioModifica, fechaModifica) VALUES ('$tipoPartidaId','$estadoId','$codigoPartida','$concepto','$fechacontable','$fechaHoraActual','$usuario_sesion','$fechaHoraActual','$usuario_sesion','$fechaHoraActual')";
+$query = "INSERT INTO Partidas(tipoPartidaId, estadoId, codigoPartida, concepto, mayorizada, fechacontable, fechaActual, usuarioAgrega, fechaAgrega, usuarioModifica, fechaModifica) VALUES ('$tipoPartidaId','$estadoId','$codigoPartida','$concepto', '$mayorizada', '$fechacontable','$fechaHoraActual','$usuario_sesion','$fechaHoraActual','$usuario_sesion','$fechaHoraActual')";
 
 $result = mysqli_query($con, $query);
 

@@ -11,9 +11,9 @@ $fecha = $_POST['fechacontable']; // la fecha que traemos de la tabla Partidas
 $selMay = mysqli_query($con,"SELECT COUNT(mayorizacionId) AS existe FROM mayorizacion WHERE fecha='$fecha' LIMIT 1")OR die("Codigo 02=>".mysqli_error($con));
 $datMay = mysqli_fetch_assoc($selMay);
 
-//ini_set('display_errors', 1);
-//ini_set('display_startup_errors', 1);
-//error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 $selecCtsMayores = mysqli_query($con, 
     "SELECT cc.cuentaId, cc.numeroCuenta, cc.nombreCuenta, cc.cuentaDependiente, cc.nivelCuenta, cc.tipoSaldoId, ts.nombreTipo
@@ -122,13 +122,13 @@ $json = array();
         $json = json_encode($json, JSON_UNESCAPED_SLASHES);
 
         if ($datMay["existe"]>=1) {
-            $updMayorizacion = mysqli_query($son,
+            $updMayorizacion = mysqli_query($con,
             "UPDATE mayorizacion SET
                 detalles = '$json',
-                cambio = 0,
-                usuarioAgregar =  '$usuario_sesion'
+                estado = 0,
+                usuarioCrea =  '$usuario_sesion',
                 fechaEdita = '$fechaActualHoras'
-            WHERE fecha = $solofecha") or die('insMayotizacion => '.mysqli_error($con));
+            WHERE fecha = '$fecha'") or die('insMayotizacion => '.mysqli_error($con));
         }else{
             $insMayorizacion = mysqli_query($con, 
             "INSERT INTO  mayorizacion
