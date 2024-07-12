@@ -8,8 +8,12 @@ $fechaActualHoras = date('y-m-d h:i:s');
 $solofecha = date('y-m-d');
 $fecha = $_POST['fechacontable']; // la fecha que traemos de la tabla Partidas
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 $selecCtsMayores = mysqli_query($con, 
-    "SELECT cc.numeroCuenta, cc.nombreCuenta, cc.cuentaDependiente, cc.nivelCuenta, cc.tipoSaldoId, ts.nombreTipo
+    "SELECT cc.cuentaId, cc.numeroCuenta, cc.nombreCuenta, cc.cuentaDependiente, cc.nivelCuenta, cc.tipoSaldoId, ts.nombreTipo
     FROM catalogocuentas cc
     LEFT JOIN  tipoDeSaldo ts ON cc.tipoSaldoId = ts.tipoSaldoId
     WHERE cc.nivelCuenta = 3" )or die('ERROR consulta: '.mysqli_error($con));
@@ -26,7 +30,7 @@ $index = 0;
 $json = array();
 
     while ($cuentasMayDato = mysqli_fetch_assoc($selecCtsMayores)) {
-        $selectSaldos = mysql_query($con,
+        $selectSaldos = mysqli_query($con,
             "SELECT pd.partidaDetalleId, 
             SUM(pd.cargo) AS ttcargo, 
             SUM(pd.abono) AS ttabono,
@@ -42,7 +46,7 @@ $json = array();
         )or die("001 ". mysqli_error($con));
 
         $datasaldos = mysqli_fetch_assoc($selectSaldos);
-        if ($cuentasMayDato['tipoSaldoId']== 1) {
+        if ($cuentasMayDato['tipoSaldoId'] == 1) {
             $saldo1 = $datasaldos['ttcargo'] - $datasaldos['ttabono'];
         }else{
             $saldo1 = $datasaldos['ttabono'] - $datasaldos['ttcargo'] ;
@@ -56,6 +60,7 @@ $json = array();
             //se omite ya que no me muestra nada si esta en 0
         }
         else{
+
             $cuentaId[$index] = $cuentasMayDato["cuentaId"];
             $cuentaDependiente[$index] = $cuentasMayDato["cuentaDependiente"];
             $cuentaMayor[$index] = $cuentasMayDato["numeroCuenta"];
@@ -65,11 +70,14 @@ $json = array();
             $tipoSaldoId[$index] = $cuentasMayDato["tipoSaldoId"];
             $saldo[$index] = $saldo1;
             $index ++;
+
+            
         }
 
     }
- 
 
+ 
+/*
     $selPart = mysqli_query($con,
         "SELECT partidaId
         FROM partidas
@@ -136,3 +144,4 @@ $json = array();
         }
 
     }
+*/

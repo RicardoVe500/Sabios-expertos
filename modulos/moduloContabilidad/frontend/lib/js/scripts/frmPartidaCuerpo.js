@@ -357,7 +357,6 @@ $('#cerrarCuenta').click(function () {
                                     success: function(response) {
 
                                         var fechacontable = $("#cuerpofechacontable").val();
-                                        console.log(fechacontable)
                                         $.ajax({
                                             url: "../../backend/mayorizacion/mayorizacion.php",
                                             type: "POST",

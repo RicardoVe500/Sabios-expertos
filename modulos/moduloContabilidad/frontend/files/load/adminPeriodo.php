@@ -42,7 +42,9 @@ $(document).ready(function() {
             "data": "estadoId", 
             "render": function(data, type, row) {
                 if (data != 4) {
-                    return '<button class="btn btn-danger btn-sm btn-cerrarPeriodo"><i class="fas fa-lock"></i> Cerrar</button>';
+                    return `<button class="btn btn-danger btn-sm btn-cerrarPeriodo"><i class="fas fa-lock"></i> Cerrar</button>
+                            <button class="btn btn-primary btn-sm btn-diario"><i class="fas fa-lock"></i> cierre dia</button>`;
+
                 } else {
                     // Aquí puedes definir otro botón u omitirlo si no necesitas otro botón
                     return '<button class="btn btn-success btn-sm btn-abrirPeriodo"><i class="fas fa-unlock"></i> Abrir</button>';
@@ -65,6 +67,14 @@ $(document).ready(function() {
 
    
 })
+
+$('#tablaperiodocierre').on('click', '.btn-diario', function () {
+    $("#render").load("load/form/Periodo/diario/diario.php");
+});
+
+ 
+
+
 
 $('#tablaperiodocierre').on('click', '.btn-cerrarPeriodo', function () {
     var data = $('#tablaperiodocierre').DataTable().row($(this).parents('tr')).data();
