@@ -5,6 +5,7 @@ header('Content-Type: application/json');
 
 if (isset($_POST['id'])) {
     $tipoPartidaId = $_POST['id'];
+    $fechaHoraActual = date("Y-m-d H:i:s"); 
 
     $fetchQuery = "SELECT nombrePartida, abreviacion, descripcion FROM tipoPartida WHERE tipoPartidaId = $tipoPartidaId";
     $fetchResult = mysqli_query($con, $fetchQuery);
@@ -25,11 +26,13 @@ if (isset($_POST['id'])) {
 
         if ($result) {
             // Preparar datos para la bitácora incluyendo todos los detalles del registro eliminado
-            $datos = [
-                "tipoPartidaId" => $tipoPartidaId,
-                "Usuario que elimino" => $usuario_sesion,
-                "accion" => "Eliminacion_tipo_partida",
-                "datosEliminados" => $datosEliminados
+            $datos = [ 
+                "Tipo partida Elimino" => [
+                    "accion" => "Eliminacion_tipo_partida",
+                    "Usuario que elimino" => $usuario_sesion,
+                    "Fecha Elimino" => $fechaHoraActual,
+                    "datosEliminados" => $datosEliminados
+                ],
             ];
             $jsonDatos = json_encode($datos);
             $fechajson = date("Y-m-d"); 

@@ -70,7 +70,7 @@ function guardarDatos(){
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: 'Algo no salió como esperábamos: ' + data
+                        text: 'Datos ya existen.'
                     });
                 } else {
                     Swal.fire({

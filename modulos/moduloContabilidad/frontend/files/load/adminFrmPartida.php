@@ -212,6 +212,23 @@
     })
 
 
+    function validarEntrada(event) {
+            const campo = event.target;
+            const valor = campo.value;
+            // Permite solo números y un punto decimal
+            const nuevoValor = valor.replace(/[^0-9.]/g, '');
+            // Asegúrate de que solo haya un punto decimal
+            const partes = nuevoValor.split('.');
+            if (partes.length > 2) {
+                campo.value = partes[0] + '.' + partes.slice(1).join('');
+            } else {
+                campo.value = nuevoValor;
+            }
+        }
+
+        document.getElementById('debeCuerpo').addEventListener('input', validarEntrada);
+        document.getElementById('haberCuerpo').addEventListener('input', validarEntrada);
+        document.getElementById('numeroComprobante').addEventListener('input', validarEntrada);
 
   
 

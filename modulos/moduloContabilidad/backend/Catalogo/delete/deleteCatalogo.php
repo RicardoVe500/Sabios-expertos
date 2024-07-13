@@ -5,6 +5,7 @@ $usuario_sesion = $_SESSION['usuario'];
 
 if (isset($_POST['id'])) {
 
+    $fechaActualHoras = date('y-m-d h:i:s');
     $cuentaId = $_POST['id'];
 
     $fetchQuery = "SELECT numeroCuenta, cuentaDependiente, nivelCuenta, nombreCuenta FROM catalogoCuentas WHERE cuentaId = $cuentaId";
@@ -21,10 +22,11 @@ if (isset($_POST['id'])) {
       } else{$fechajson = date("Y-m-d");
       // Preparar datos para la bitácora
       $datos = [
-        "cuentaId" => $cuentaId,
-        "Usuario que elimino" => $usuario_sesion,
-                "accion" => "Eliminacion_Catalogo",
-                "datosEliminados" => $datosEliminados
+        "Elimino Catalogo" => [
+          "Usuario que Elimino" => $usuario_sesion,
+          "Fecha Eliminado" => $fechaActualHoras,
+          "datosEliminados" => $datosEliminados
+         ]
       ];
      
     $jsonDatos = json_encode($datos);

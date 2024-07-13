@@ -43,15 +43,15 @@ if (!$result) {
     $fechajson = date("Y-m-d");
     // Preparar datos para la bitácora
     $datos = [
+        "Agrego Partida"=>[
         "accion" => "Agrego_Partida",
         "Usuario que agrego" => $usuario_sesion,
+        "Fecha Agrega" => $fechaHoraActual,
         "datosIngresados" => [
-            "tipoPartidaId" => $tipoPartidaId,
-            "estadoId" => $estadoId,
             "concepto" => $concepto,
             "fechacontable" => $fechacontable,
-            "fechaHoraActual" => $fechaHoraActual,
         ]
+     ],
     ];
     $jsonDatos = json_encode($datos);
 

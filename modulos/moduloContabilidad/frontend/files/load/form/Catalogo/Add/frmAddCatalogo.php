@@ -18,7 +18,7 @@
                             <span class="input-group-text"><i class="fa fa-hashtag"></i></span>
                         </div>
                         <input type="text" class="form-control" placeholder="Numero Cuenta" id="numeroCuenta"
-                            name="numeroCuenta" onkeypress="return isNumberKey(event)">
+                            name="numeroCuenta" onkeypress="return isNumberKey(event) " maxlength="1">
                     </div>
                     <label for="Numero">Nombre de la cuenta:</label>
                     <div class="input-group mb-3">
@@ -61,6 +61,15 @@ function isNumberKey(evt) {
     }
     return true;
 }
+
+function validarEntrada(event) {
+            const campo = event.target;
+            const valor = campo.value;
+            // Permite solo letras (mayúsculas y minúsculas)
+            campo.value = valor.replace(/[^a-zA-Z]/g, '');
+        }
+
+        document.getElementById('nombreCuenta').addEventListener('input', validarEntrada);
 </script>
 
 <script src="../lib/js/scripts/frmCatalogo.js"></script>

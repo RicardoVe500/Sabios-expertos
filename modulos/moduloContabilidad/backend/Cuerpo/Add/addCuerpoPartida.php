@@ -13,6 +13,13 @@ $fechaComprobante = $_POST["fechaComprobante"];
 $concepto = $_POST["conceptoespecifico"];
 $fechaHoraActual = date("Y-m-d H:i:s"); 
 
+// Consulta para obtener los datos de la cuenta//////////////////////////////
+$queryCuenta = "SELECT numeroCuenta, nombreCuenta, cuentaDependiente, nivelCuenta FROM catalogocuentas  WHERE cuentaId = '$cuentaId'";
+$resultCuenta = mysqli_query($con, $queryCuenta);
+$cuentaData = mysqli_fetch_assoc($resultCuenta);
+////////////////////////////////////////////////////////////////
+
+//insertando los datos 
 $queryInsert = "INSERT INTO partidaDetalle (partidaId, cuentaId, tipoComprobanteId, cargo, abono, saldo, numeroComprobante, fechaComprobante, concepto, usuarioAgrega, fechaAgrega, usuarioModifica, fechaModifica) 
 VALUES ('$partidaId','$cuentaId','$tipoComprobanteId','$cargo','$abono','$saldo','$numeroComprobante','$fechaComprobante','$concepto','$usuario_sesion','$fechaHoraActual','$usuario_sesion','$fechaHoraActual')";
 
@@ -26,18 +33,24 @@ if (!$resultInsert) {
 
         $fechajson = date("Y-m-d");
         // Preparar datos para la bitácora
+        
         $datos = [
-          "accion" => "Agrego_Movimiento_Partida",
-          "Usuario agrego" => $usuario_sesion,
-          "datosIngresados" => [
-              "partidaId" => $partidaId,
-              "cuentaId" => $cuentaId,
-              "cargo" => $cargo,
-              "abono" => $abono,
-              "fechaComprobante" => $fechaComprobante,
-              "concepto" => $concepto,
-          ]
+          "Partida Detalle Agregado" =>[
+              "accion" => "Agrego_Partida_Detalle",
+              "Fecha Agrego" => $fechaHoraActual,
+              "datosIngresados" => [
+                "Usuario agrego" => $usuario_sesion,
+                "Numero cuenta" => $cuentaData['numeroCuenta'],
+                "Nombre cuenta" => $cuentaData['nombreCuenta'],
+                "Nivel cuenta" => $cuentaData['nivelCuenta'],
+                "Cargo" => $cargo,
+                "Abono" => $abono,
+                "FechaComprobante" => $fechaComprobante,
+                "Concepto" => $concepto,
+            ]
+        ],
       ];
+
       $jsonDatos = json_encode($datos);
     
       // Verificar si ya existe un registro para el día actual

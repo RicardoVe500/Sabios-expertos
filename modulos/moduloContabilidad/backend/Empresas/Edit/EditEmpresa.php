@@ -1,5 +1,6 @@
 <?php
 include("../../../../../lib/config/conect.php");
+$usuario_sesion = $_SESSION['usuario'];
 
 if (isset($_POST["empresaId"])) {
 
@@ -18,7 +19,7 @@ if (isset($_POST["empresaId"])) {
     $telefono = $_POST["telefono"];
 
     // Actualizar los datos
-    $updateQuery = "UPDATE empresa SET nombre = '$nombre', direccion = '$direccion', correo = '$correo', telefono = '$telefono', fechaModifica = '$fechaHoraActual' WHERE empresaId = $empresaId";
+    $updateQuery = "UPDATE empresa SET nombre = '$nombre', direccion = '$direccion', correo = '$correo', telefono = '$telefono', usuarioModifica = $usuario_sesion, fechaModifica = '$fechaHoraActual' WHERE empresaId = $empresaId";
     $result = mysqli_query($con, $updateQuery);
 
     if (!$result) {
@@ -26,16 +27,18 @@ if (isset($_POST["empresaId"])) {
     } else {
         // Preparar datos para la bitácora
         $datosBitacora = [
+            "Empresa Editada"=>[
             "accion" => "Modificado_tipo_partida",
+            "Usuario Modifica" => $usuario_sesion,
+            "Fecha Modificacion" => $fechaHoraActual,
             "datosAntiguos" => $datosAntiguos,
             "datosNuevos" => [
                 "Nombre Empresa" => $nombre,
                 "Direccion" => $direccion,
                 "Correo" => $correo,
                 "telefono" => $telefono
-
             ],
-            "fechaHora" => $fechaHoraActual
+          ],
         ];
 
         // Verificar si ya existe un registro para el día actual en la bitácora

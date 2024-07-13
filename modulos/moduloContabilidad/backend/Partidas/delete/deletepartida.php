@@ -5,6 +5,7 @@ $usuario_sesion = $_SESSION['usuario'];
 if (isset($_POST['id'])) {
 
     $partidaId = $_POST['id'];
+    $fechaHoraActual = date("Y-m-d H:i:s");
 
     $fetchQuery = "SELECT * FROM partidaDetalle WHERE partidaId = $partidaId";
     $fetchResult = mysqli_query($con, $fetchQuery);
@@ -26,9 +27,9 @@ if (isset($_POST['id'])) {
       if ($result) {
          // Preparar datos para la bitácora incluyendo todos los detalles del registro eliminado
          $datos = [
-          "partidaId" => $partidaId,
-          "Usuario elimino" => $usuario_sesion ,
           "accion" => "Eliminacion_Partida",
+          "Usuario elimino" => $usuario_sesion,
+          "Fecha elimino" => $fechaHoraActual,
           "datosEliminados" => $datosEliminados
       ];
       $jsonDatos = json_encode($datos);

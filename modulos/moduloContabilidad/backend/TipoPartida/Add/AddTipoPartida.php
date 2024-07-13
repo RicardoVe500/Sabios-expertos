@@ -2,8 +2,6 @@
 include("../../../../../lib/config/conect.php");
 $usuario_sesion = $_SESSION['usuario'];
 
-
-
   $nombrePartida = $_POST["nombrePartida"];
   $abreviacion = $_POST["abreviacion"];
   $descripcion = $_POST["descripcion"];
@@ -22,13 +20,16 @@ $usuario_sesion = $_SESSION['usuario'];
     $fechajson = date("Y-m-d");
     // Preparar datos para la bitácora
     $datos = [
-      "Usuario que agrego" => $usuario_sesion,
-      "accion" => "Agrego_Tipo_Partida",
+      "Tipo partida Agrega" => [
+        "accion" => "Agrego_Tipo_Partida",
+        "Usuario que agrego" => $usuario_sesion,
+        "Fecha agrega" => $fechaHoraActual,
       "datosIngresados" => [
           "nombrePartida" => $nombrePartida,
           "abreviacion" => $abreviacion,
           "descripcion" => $descripcion,
       ]
+    ],
   ];
   $jsonDatos = json_encode($datos);
 

@@ -3,19 +3,28 @@ include("../../../../../lib/config/conect.php");
 $usuario_sesion = $_SESSION['usuario'];
 
 if (isset($_POST['id'])) {
+
     $partidaDetalleId = $_POST['id'];
     $partidaId = $_POST["partidaId"];
-
+ 
     // Captura los detalles antes de eliminar
-    $selectQuery = "SELECT * FROM partidaDetalle WHERE partidaDetalleId = '$partidaDetalleId'";
+    $selectQuery = "SELECT pd.concepto, pd.cuentaId, 
+    cc.nombreCuenta, cc.nivelCuenta, cc.numeroCuenta, 
+    pd.cargo, pd.abono
+    FROM partidaDetalle pd
+    JOIN catalogocuentas cc 
+    ON pd.cuentaId = cc.cuentaId WHERE partidaDetalleId = '$partidaDetalleId'";
     $selectResult = mysqli_query($con, $selectQuery);
     $detallePartida = mysqli_fetch_assoc($selectResult);
 
     $datosEliminacion = [
+        "Partida Detalle Eliminado" => [
         "accion" => "Eliminacion_Movimiento_Partida",
         "Usuario eliminó" => $usuario_sesion,
         "datosEliminados" => $detallePartida
+     ],
     ];
+
     $jsonDatosEliminacion = json_encode($datosEliminacion);
 
     // Eliminar el detalle de partida

@@ -1,6 +1,6 @@
 <?php
 include("../../../../../lib/config/conect.php");
-
+$usuario_sesion = $_SESSION['usuario'];
 
   $nombreEmpresa = $_POST["nombreEmpresa"];
   $direccion = $_POST["direccion"];
@@ -10,7 +10,7 @@ include("../../../../../lib/config/conect.php");
 
   
   $query = "INSERT INTO empresa(nombre, direccion, correo, telefono, usuarioAgrega , fechaAgrega, usuarioModifica, fechaModifica) 
-  VALUES ('$nombreEmpresa','$direccion','$correo', $telefono, '', '$fechaHoraActual','','$fechaHoraActual')";
+  VALUES ('$nombreEmpresa','$direccion','$correo', $telefono, '$usuario_sesion', '$fechaHoraActual','$usuario_sesion','$fechaHoraActual')";
 
   $result = mysqli_query($con, $query);
 
@@ -22,14 +22,17 @@ include("../../../../../lib/config/conect.php");
     $fechajson = date("Y-m-d");
     // Preparar datos para la bitácora
     $datos = [
-      "accion" => "Registro_Empresa",
-      "datosIngresados" => [
-          "Nombre Empresa" => $nombreEmpresa,
-          "Direccion" => $direccion,
-          "Correo" => $correo,
-          "Telefono" => $telefono,
-
+      "Empresa agrega" =>[
+        "accion" => "Agrega Empresa",
+        "Usuario agrega" => $usuario_sesion,
+        "Fecha Agrega" =>  $fechaHoraActual,
+        "datosIngresados" => [
+            "Nombre Empresa" => $nombreEmpresa,
+            "Direccion" => $direccion,
+            "Correo" => $correo,
+            "Telefono" => $telefono,
       ]
+    ],
   ];
 
   $jsonDatos = json_encode($datos);

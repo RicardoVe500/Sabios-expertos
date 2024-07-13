@@ -23,15 +23,17 @@ $usuario_sesion = $_SESSION['usuario'];
     $fechajson = date("Y-m-d");
     // Preparar datos para la bitácora
     $datos = [
+      "Sucursal Agrega" => [
       "accion" => "Registro_Sucursal",
       "Usuario agrega" => $usuario_sesion,
+      "Fecha agrega" => $fechaHoraActual,
       "datosIngresados" => [
           "Nombre Empresa" => $nombreSucursal,
           "Direccion" => $direccion,
           "Correo" => $correo,
           "Telefono" => $telefono,
-
       ]
+    ],
   ];
 
   $jsonDatos = json_encode($datos);

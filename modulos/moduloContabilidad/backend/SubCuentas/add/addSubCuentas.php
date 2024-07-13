@@ -55,8 +55,11 @@ if (isset($_POST['numeroCuenta']) || isset($_POST['nombreCuenta']) || isset($_PO
             $fechajson = date("Y-m-d");
   // Preparar datos para la bitácora
         $datos = [
+
+            "Agrega Subcuenta" => [
             "accion" => "Agrego_SubCuenta",
             "Usuario agrega" => $usuario_sesion,
+            "Fecha Agrega" => $fechaHoraActual,
             "datosIngresados" => [
                 "nuevoNumeroCuenta" => $nuevoNumeroCuenta,
                 "nivelcuenta" => $nivelcuenta,
@@ -64,9 +67,8 @@ if (isset($_POST['numeroCuenta']) || isset($_POST['nombreCuenta']) || isset($_PO
                 "dependiente" => $dependiente,
                 "movimientos" => $movimientos,
                 "tipoSaldo" => $tipoSaldoId,
-                "fechaHoraActual" => $fechaHoraActual,
-
             ]
+           ],
         ];
 
         $jsonDatos = json_encode($datos);

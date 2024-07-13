@@ -1,6 +1,8 @@
 <?php
 include("../../../../../lib/config/conect.php");
 header('Content-Type: application/json');
+$usuario_sesion = $_SESSION['usuario'];
+$fechaHoraActual = date("Y-m-d H:i:s"); 
 
 if (isset($_POST['id'])) {
     $empresaId = $_POST['id'];
@@ -16,9 +18,12 @@ if (isset($_POST['id'])) {
         if ($result) {
             // Preparar datos para la bitácora incluyendo todos los detalles del registro eliminado
             $datos = [
-                "empresaId" => $empresaId,
-                "accion" => "Eliminacion_Empresa",
-                "datosEliminados" => $datosEliminados
+                "Empresa Eliminada"=>[
+                    "accion" => "Eliminacion_Empresa",
+                    "Usuario Elimina" => $usuario_sesion,
+                    "Fecha Eliminacion" => $fechaHoraActual,
+                    "datosEliminados" => $datosEliminados
+                ],
             ];
             $jsonDatos = json_encode($datos);
             $fechajson = date("Y-m-d"); 

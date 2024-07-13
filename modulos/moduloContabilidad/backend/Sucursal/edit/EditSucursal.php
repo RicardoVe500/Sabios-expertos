@@ -27,17 +27,18 @@ if (isset($_POST["sucursalId"])) {
     } else {
     
 $datosBitacora = [
-            "accion" => "Modificado_tipo_partida",
+     "Sucursal edita" => [
+            "accion" => "Modificado Sucursal",
             "Usuario Modifica" => $usuario_sesion,
+            "Fecha Modificacion" => $fechaHoraActual,
             "datosAntiguos" => $datosAntiguos,
             "datosNuevos" => [
                 "Nombre Empresa" => $nombre,
                 "Direccion" => $direccion,
                 "Correo" => $correo,
                 "telefono" => $telefono
-
             ],
-            "fechaHora" => $fechaHoraActual
+        ],
         ];
 
         // Verificar si ya existe un registro para el día actual en la bitácora

@@ -27,15 +27,17 @@ if (isset($_POST["cuentaId"])) {
   }else{
     // Preparar datos para la bitácora
     $datosBitacora = [
+      "Edita Subcuenta" => [
       "accion" => "Modificado_SubCuentas",
       "Usuario Modifica" => $usuario_sesion,
+      "Fecha Modifica" => $fechaHoraActual,
       "datosAntiguos" => $datosAntiguos,
       "datosNuevos" => [
           "movimientos" => $movimientos,
           "numeroCuenta" => $numeroCuenta,
           "nombreCuenta" => $nombreCuenta,
       ],
-      "fechaHora" => $fechaHoraActual
+    ],
   ];
   $fechaActual = date("Y-m-d");
 

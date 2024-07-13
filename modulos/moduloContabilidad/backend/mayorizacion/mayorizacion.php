@@ -11,9 +11,9 @@ $fecha = $_POST['fechacontable']; // la fecha que traemos de la tabla Partidas
 $selMay = mysqli_query($con,"SELECT COUNT(mayorizacionId) AS existe FROM mayorizacion WHERE fecha='$fecha' LIMIT 1")OR die("Codigo 02=>".mysqli_error($con));
 $datMay = mysqli_fetch_assoc($selMay);
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(E_ALL);
 
 $selecCtsMayores = mysqli_query($con, 
     "SELECT cc.cuentaId, cc.numeroCuenta, cc.nombreCuenta, cc.cuentaDependiente, cc.nivelCuenta, cc.tipoSaldoId, ts.nombreTipo

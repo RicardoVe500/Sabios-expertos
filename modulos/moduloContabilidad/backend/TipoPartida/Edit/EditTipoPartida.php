@@ -25,15 +25,17 @@ if (isset($_POST["tipoPartidaId"])) {
     } else {
         // Preparar datos para la bitácora
         $datosBitacora = [
-            "accion" => "Modificado_tipo_partida",
-            "Usuario que modifica" => "$usuario_sesion",
+            "Tipo partida Modificado" => [
+            "accion" => "Modifico tipo partida",
+            "Usuario que Modifica" => $usuario_sesion,
+            "Fecha Modifico" => $fechaHoraActual,
             "datosAntiguos" => $datosAntiguos,
             "datosNuevos" => [
                 "nombrePartida" => $nombrePartida,
                 "abreviacion" => $abreviacion,
                 "descripcion" => $descripcion
             ],
-            "fechaHora" => $fechaHoraActual
+        ],
         ];
 
         // Verificar si ya existe un registro para el día actual en la bitácora

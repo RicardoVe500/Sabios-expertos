@@ -355,7 +355,7 @@ $('#cerrarCuenta').click(function () {
                                         tipoPartidaId: tipoPartidaId
                                     },
                                     success: function(response) {
-
+                                        $("#render").html(response);
                                         var fechacontable = $("#cuerpofechacontable").val();
                                         $.ajax({
                                             url: "../../backend/mayorizacion/mayorizacion.php",
@@ -364,7 +364,6 @@ $('#cerrarCuenta').click(function () {
                                                 fechacontable: fechacontable
                                             },
                                             success: function(response) {                                            
-                                                $("#render").html(response);
                                                 Swal.fire({
                                                     icon: 'success',
                                                     title: 'La mayorizacion se ejecuto',

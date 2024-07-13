@@ -26,17 +26,21 @@ if (isset($_POST["cuentaId"])) {
     }else {
       
       $datosBitacora = [
-          "accion" => "Modificado_Catalogo",
+          "Catalogo Modificacion" => [
           "Usuario modifica" => $usuario_sesion,
-          "datosAntiguos" => $datosAntiguos,
+          "fecha Modificacion" => $fechaHoraActual,
+          "datos antiguos" =>[
+          "Datos anteriores" => $datosAntiguos,
+          ],
           "datosNuevos" => [
               "numeroCuenta" => $numeroCuenta,
               "nombreCuenta" => $nombreCuenta,
               "tipoSaldoId" => $tipoSaldo,
 
           ],
-          "fechaHora" => $fechaHoraActual
+        ],
       ];
+
       $fechaActual = date("Y-m-d");
       // Verificar si ya existe un registro para el día actual en la bitácora
       $queryBitacora = "SELECT bitacoraId, detalle FROM bitacora WHERE fecha = '$fechaActual'";
