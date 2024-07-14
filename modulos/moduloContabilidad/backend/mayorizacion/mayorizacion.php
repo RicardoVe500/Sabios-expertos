@@ -2,8 +2,8 @@
 include("../../../../lib/config/conect.php");
 
 $usuario_sesion = $_SESSION['usuario'];
-$mes = $SESSION['periodo']['mes'];
-$anio = $SESSION['periodo']['anio'];
+$mes = $_SESSION['periodo']['mes'];
+$anio = $_SESSION['periodo']['anio'];
 $fechaActualHoras = date('y-m-d h:i:s');
 $solofecha = date('y-m-d');
 $fecha = $_POST['fechacontable']; // la fecha que traemos de la tabla Partidas
