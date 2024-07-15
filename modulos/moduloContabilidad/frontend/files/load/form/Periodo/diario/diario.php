@@ -28,10 +28,15 @@ if (isset($_SESSION['periodo'])) {
                 </div>
                 <input type="text" id="fechaCierreDia" name="fechaCierreDia" class="datepickerdia form-control">
             </div>
-                <button class="btn btn-danger" id="cerrarDia">
+
+            <?php $periodoId = $_REQUEST['periodoId'] ?? 'defaultID';
+                  echo "<input type='hidden' id='periodoId' name='periodoId' value='$periodoId'>"; 
+            ?>
+
+        </form>
+        <button class="btn btn-danger" id="cerrarDia">
                     <i class="fas fa-lock"></i> Cerrar Día
                 </button>
-        </form>
 
     </div>
 </div>
@@ -88,6 +93,7 @@ $(document).ready(function() {
 
 $("#cerrarDia").click(function() {
     var fechaCierre = $("#fechaCierreDia").val();
+    var periodoId = $("#periodoId").val();
     if (!fechaCierre) {
         Swal.fire({
             icon: 'warning',
@@ -99,9 +105,9 @@ $("#cerrarDia").click(function() {
     }
     
     $.ajax({
-        url: "../../backend/Periodo/Cierre/Cierre.php", // Cambia esto al endpoint real donde se verifica el estado de las partidas
+        url: "../../backend/Periodo/Cierre/cierreDiario.php", // Cambia esto al endpoint real donde se verifica el estado de las partidas
         type: "POST",
-        data: { fecha: fechaCierre },
+        data: { fechaCierre : fechaCierre, periodoId : periodoId },
         success: function(response) {
             if (response.todasCerradas) {
                 Swal.fire({
@@ -117,6 +123,7 @@ $("#cerrarDia").click(function() {
                     text: 'Todas las partidas diarias tienen que estar cerradas.',
                     confirmButtonText: 'Aceptar'
                 });
+             
             }
         },
         error: function(xhr, status, error) {

@@ -66,6 +66,11 @@ $(document).ready(function() {
 
 $('#tablaperiodocierre').on('click', '.btn-diario', function () {
     $("#render").load("load/form/Periodo/diario/diario.php");
+    
+    var data = $('#tablaperiodocierre').DataTable().row($(this).parents('tr')).data();
+        var id = data.periodoId
+        $("#render").load("load/form/Periodo/diario/diario.php", { periodoId: id }, function() {
+        });
 });
 
  
