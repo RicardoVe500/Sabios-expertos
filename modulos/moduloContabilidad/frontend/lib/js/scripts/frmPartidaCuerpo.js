@@ -318,6 +318,7 @@ function editardatos() {
                 title: '¡SubCuenta agregada!',
                 text: 'Los cambios se han guardado correctamente.',
             });
+            agregarSaldo()
             $('#frmcuerpo')[0].reset(); // Resetear el formulario
             $('#selectcomprobante').val('').trigger('change');
             $('#selectcuentas').val('').trigger('change');
