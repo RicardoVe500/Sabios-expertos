@@ -10,7 +10,7 @@ if (isset($_SESSION['periodo'])) {
 }
 ?>
 
-<div class="card shadow mb-4" data-periodo-id="<?php echo $mesActual . $anio; ?>">
+<div class="card shadow mb-4" data-periodo-id="<?php echo isset($mesActual) && isset($anio) ? $mesActual . $anio : 'defaultID'; ?>">
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Cierres Diarios</h6>
     </div>
@@ -21,7 +21,7 @@ if (isset($_SESSION['periodo'])) {
         </button>
 
         <form name="frmCierreDia" id="frmCierreDia">
-            <label for="Numero">Día a cerrar:</label>
+            <label for="fechaCierreDia">Día a cerrar:</label>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
@@ -30,40 +30,16 @@ if (isset($_SESSION['periodo'])) {
             </div>
 
             <?php $periodoId = $_REQUEST['periodoId'] ?? 'defaultID';
-                  echo "<input type='hidden' id='periodoId' name='periodoId' value='$periodoId'>"; 
+            echo "<input type='hidden' id='periodoId' name='periodoId' value='$periodoId'>"; 
             ?>
-
         </form>
         <button class="btn btn-danger" id="cerrarDia">
-                    <i class="fas fa-lock"></i> Cerrar Día
-                </button>
-
+            <i class="fas fa-lock"></i> Cerrar Día
+        </button>
     </div>
 </div>
 
 <script>
-$("#regresarperiodo").click(function() {
-    // Obtener el valor de periodoId
-    var periodoId = $(".card").data("periodo-id").charAt(0);
-    console.log("periodoId:", periodoId); // Verificar que periodoId se está obteniendo correctamente
-
-    // Realizar la petición AJAX
-    $.ajax({
-        url: "./load/adminPeriodo.php", // Asumiendo que este es el endpoint correcto
-        type: "POST",
-        data: {
-            periodoId: periodoId // Envía periodoId como parte de los datos del cuerpo de la petición
-        },
-        success: function(response) {
-            //console.log("Respuesta del servidor:", response); // Verificar la respuesta del servidor
-            $("#render").html(response);
-        },
-        error: function(xhr, status, error) {
-            console.error("Error al cargar la página: ", error);
-        }
-    });
-});
-
 $(document).ready(function() {
     // Inicializar el datepicker
     $('.datepickerdia').datepicker({
@@ -78,52 +54,63 @@ $(document).ready(function() {
         var firstDay = new Date(anioInicio, mesInicio - 1, 1); // Ajuste de mes (0-indexed)
         var lastDay = new Date(anioInicio, mesInicio, 0); // Ajuste de mes (0-indexed)
 
-        console.log('First Day:', firstDay.toISOString().split('T')[0]);
-        console.log('Last Day:', lastDay.toISOString().split('T')[0]);
-
-        var firstDayStr = firstDay.toISOString().split('T')[0];
-        var lastDayStr = lastDay.toISOString().split('T')[0];
-
-        $('.datepickerdia').datepicker('setStartDate', firstDayStr);
-        $('.datepickerdia').datepicker('setEndDate', lastDayStr);
+        $('.datepickerdia').datepicker('setStartDate', firstDay.toISOString().split('T')[0]);
+        $('.datepickerdia').datepicker('setEndDate', lastDay.toISOString().split('T')[0]);
     } else {
         console.log("Variables de sesión no definidas.");
     }
 });
 
+$("#regresarperiodo").click(function() {
+    var periodoId = $("#periodoId").val();
+
+    $.ajax({
+        url: "./load/adminPeriodo.php",
+        type: "POST",
+        data: { periodoId: periodoId },
+        success: function(response) {
+            $("#render").html(response);
+        },
+        error: function(xhr, status, error) {
+            console.error("Error al cargar la página: ", error);
+        }
+    });
+});
+
 $("#cerrarDia").click(function() {
     var fechaCierre = $("#fechaCierreDia").val();
     var periodoId = $("#periodoId").val();
+
     if (!fechaCierre) {
         Swal.fire({
             icon: 'warning',
             title: 'Fecha requerida',
-            text: 'Por favor, es necesario seleccionar la fecha exacta para el cierre del dia.',
+            text: 'Por favor, es necesario seleccionar la fecha exacta para el cierre del día.',
             confirmButtonText: 'Aceptar'
         });
         return;
     }
-    
+
     $.ajax({
-        url: "../../backend/Periodo/Cierre/cierreDiario.php", // Cambia esto al endpoint real donde se verifica el estado de las partidas
+        url: "../../backend/Periodo/Cierre/cierreDiario.php",
         type: "POST",
-        data: { fechaCierre : fechaCierre, periodoId : periodoId },
+        dataType: 'json',
+        data: { fechaCierre: fechaCierre, periodoId: periodoId },
         success: function(response) {
-            if (response.todasCerradas) {
+            if (response.success) {
                 Swal.fire({
                     icon: 'success',
                     title: 'Cierre Diario Completo',
-                    text: 'Todas las partidas están cerradas.',
+                    text: response.message,
                     confirmButtonText: 'Aceptar'
                 });
             } else {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Cierre Diario Incompleto',
-                    text: 'Todas las partidas diarias tienen que estar cerradas.',
+                    text: response.message,
                     confirmButtonText: 'Aceptar'
                 });
-             
             }
         },
         error: function(xhr, status, error) {

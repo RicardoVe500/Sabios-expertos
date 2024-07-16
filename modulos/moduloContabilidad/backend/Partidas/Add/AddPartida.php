@@ -10,6 +10,16 @@ $concepto = $_POST["concepto"];
 $fechacontable = $_POST["fechacontable"];
 $fechaHoraActual = date("Y-m-d H:i:s");
 
+// Verificar si el día está cerrado
+$queryCierre = "SELECT COUNT(*) as total FROM cierre WHERE fechaCierre = '$fechacontable'";
+$resultCierre = mysqli_query($con, $queryCierre);
+$rowCierre = mysqli_fetch_assoc($resultCierre);
+
+if ($rowCierre['total'] > 0) {
+    echo json_encode(array("success" => false, "message" => "El día seleccionado ya está cerrado. No se pueden agregar partidas."));
+    exit;
+}
+
 // Se establece el formato del mes y el año
 $mesActual = $_SESSION['periodo']['mes'];
 $anoActual = date("Y"); // Se usa el año completo para reiniciar cada año
@@ -38,7 +48,7 @@ $result = mysqli_query($con, $query);
 
 // Manejo de errores
 if (!$result) {
-    echo "Error en la consulta" . mysqli_error($con);
+    echo json_encode(array("success" => false, "message" => "Error en la consulta: " . mysqli_error($con)));
 } else {
     $fechajson = date("Y-m-d");
     // Preparar datos para la bitácora
@@ -70,6 +80,6 @@ if (!$result) {
         $insertQuery = "INSERT INTO bitacora(fecha, detalle) VALUES ('$fechajson', '$jsonDatos')";
         mysqli_query($con, $insertQuery);
     }
-}
 
-?>
+    echo json_encode(array("success" => true, "message" => "Partida agregada exitosamente."));
+}

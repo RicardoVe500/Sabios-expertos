@@ -142,7 +142,7 @@ function guardarPartidas() {
                     text: 'No se pudo crear el tipo partida. Por favor, intenta de nuevo.',
                     confirmButtonText: 'Aceptar'
                 });
-            }
+            }  
         });
     }
 }
