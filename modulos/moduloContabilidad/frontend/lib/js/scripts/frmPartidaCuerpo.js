@@ -136,6 +136,7 @@ function guardarCuerpoPartida() {
                 confirmButtonText: 'Aceptar'
             }).then((result) => {
                 if (result.isConfirmed) {
+                    agregarSaldo()
                     $('#frmcuerpo')[0].reset(); // Resetear el formulario
                     $('#selectcomprobante').val('').trigger('change');
                     $('#selectcuentas').val('').trigger('change');
@@ -253,11 +254,13 @@ $('#tablaCuerpo').on('click', 'button.btn-deletecuerpo', function () {
     var data = $('#tablaCuerpo').DataTable().row($(this).parents('tr')).data();
     var id = data.partidaDetalleId
     var partidaId = data.partidaId
+    var cuentaId = data.cuentaId
+console.log(cuentaId)
 
     Swal.fire({
         title: '¿Quieres eliminar este elemento?',
         text: 'Esta acción no se puede deshacer.',
-        icon: 'warning',
+        icon: 'warning', 
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
@@ -265,6 +268,27 @@ $('#tablaCuerpo').on('click', 'button.btn-deletecuerpo', function () {
     }).then((result) => {
         if (result.isConfirmed) {
             $.post("../../backend/Cuerpo/delete/deleteCuerpo.php", { id, partidaId }, () => {
+                $.ajax({
+                    url: "../../backend/Saldos/Saldos.php",
+                    data: {cuentaId: cuentaId},
+                    type: "POST",
+                    success: function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Se guardo el saldo!',
+                            text: 'Los cambios se han guardado correctamente.',
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error)
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error al hacer saldo',
+                            text: 'No se pudo modificar la partida. Por favor, intenta de nuevo.',
+                            confirmButtonText: 'Aceptar'
+                        });
+                    }
+                });
                 cargadatospartida()
                 $('#tablacatalogo').DataTable().ajax.reload();
             });
@@ -355,7 +379,7 @@ $('#cerrarCuenta').click(function () {
                                         tipoPartidaId: tipoPartidaId
                                     },
                                     success: function(response) {
-                                        $("#render").html(response);
+
                                         var fechacontable = $("#cuerpofechacontable").val();
                                         $.ajax({
                                             url: "../../backend/mayorizacion/mayorizacion.php",
@@ -370,6 +394,8 @@ $('#cerrarCuenta').click(function () {
                                                     text: 'Se ejecuto la mayorizacion.',
                                                     confirmButtonText: 'Aceptar'
                                                 });
+
+                                                $("#render").html(response);
                                             },
                                             error: function(xhr, status, error) {
                                                 Swal.fire({
@@ -418,3 +444,27 @@ $('#cerrarCuenta').click(function () {
 
 
 
+function agregarSaldo(){
+    var cuentaId = $('#selectcuentas').val();
+    $.ajax({
+        url: "../../backend/Saldos/Saldos.php",
+        data: {cuentaId: cuentaId},
+        type: "POST",
+        success: function (response) {
+            Swal.fire({
+                icon: 'success',
+                title: '¡Se guardo el saldo!',
+                text: 'Los cambios se han guardado correctamente.',
+            });
+        },
+        error: function (xhr, status, error) {
+            console.log(error)
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al hacer saldo',
+                text: 'No se pudo modificar la partida. Por favor, intenta de nuevo.',
+                confirmButtonText: 'Aceptar'
+            });
+        }
+    })
+}

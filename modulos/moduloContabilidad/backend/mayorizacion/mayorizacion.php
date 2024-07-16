@@ -2,18 +2,18 @@
 include("../../../../lib/config/conect.php");
 
 $usuario_sesion = $_SESSION['usuario'];
-$mes = $SESSION['periodo']['mes'];
-$anio = $SESSION['periodo']['anio'];
 $fechaActualHoras = date('y-m-d h:i:s');
 $solofecha = date('y-m-d');
 $fecha = $_POST['fechacontable']; // la fecha que traemos de la tabla Partidas
 
+//echo "La fecha contable es: " . $fecha;
+
 $selMay = mysqli_query($con,"SELECT COUNT(mayorizacionId) AS existe FROM mayorizacion WHERE fecha='$fecha' LIMIT 1")OR die("Codigo 02=>".mysqli_error($con));
 $datMay = mysqli_fetch_assoc($selMay);
 
-//ini_set('display_errors', 1);
-//ini_set('display_startup_errors', 1);
-//error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 $selecCtsMayores = mysqli_query($con, 
     "SELECT cc.cuentaId, cc.numeroCuenta, cc.nombreCuenta, cc.cuentaDependiente, cc.nivelCuenta, cc.tipoSaldoId, ts.nombreTipo
@@ -21,16 +21,16 @@ $selecCtsMayores = mysqli_query($con,
     LEFT JOIN  tipoDeSaldo ts ON cc.tipoSaldoId = ts.tipoSaldoId
     WHERE cc.nivelCuenta = 3" )or die('ERROR consulta: '.mysqli_error($con));
 
-$cuentaId = array();
-$cuentaDependiente = array();
-$cuentaMayor = array();
-$nombreCuenta = array();
-$cargo = array();
-$abono = array();
-$tipoSaldoId = array();
-$saldo = array();
-$index = 0;
-$json = array();
+    $cuentaId = array();
+    $cuentaDependiente = array();
+    $cuentaMayor = array();
+    $nombreCuenta = array();
+    $cargo = array();
+    $abono = array();
+    $tipoSaldoId = array();
+    $saldo = array();
+    $index = 0;
+    $json = array();
 
     while ($cuentasMayDato = mysqli_fetch_assoc($selecCtsMayores)) {
         $selectSaldos = mysqli_query($con,
@@ -146,5 +146,5 @@ $json = array();
         }
 
     }else{
-        echo "NO entra al if";
+        echo "no hay nada";
     }
