@@ -31,6 +31,13 @@ if (isset($_SESSION['periodo'])) {
             <i class="fa fa-arrow-left"></i> Regresar
         </button>
 
+        <button class="btn btn-secondary float-right btn-sm" id="balance" title="Reporte">
+            <i class="fas fa-print"></i></button>
+
+            <button class="btn btn-secondary float-right btn-sm" id="mayor" title="mayor">
+            <i class="fas fa-print"></i></button>
+        
+
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
@@ -94,6 +101,15 @@ $(document).ready(function() {
     
 });
 
+$("#balance").click(function() {
+    var reportUrl = '../../backend/Reportes/balanceCuentas/balanceCuenta.php';
+        window.open(reportUrl, '_blank');
+    })
+
+    $("#mayor").click(function() {
+    var reportUrl = '../../backend/Reportes/libroMayor/libroMayor.php';
+        window.open(reportUrl, '_blank');
+    })
 
 
 </script>

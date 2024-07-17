@@ -44,7 +44,7 @@ $selecCtsMayores = mysqli_query($con,
             FROM partidaDetalle pd
             JOIN catalogocuentas cc ON pd.cuentaId = cc.cuentaId
             JOIN partidas p ON pd.partidaId = p.partidaId
-            WHERE SUBSTRING(cc.numeroCuenta, 1, 4) = $cuentasMayDato[numeroCuenta] and p.fechacontable = '$fecha'
+            WHERE SUBSTRING(cc.numeroCuenta, 1, 4) = $cuentasMayDato[numeroCuenta] 
             AND estadoId = 3"
         )or die("001 ". mysqli_error($con));
 
@@ -57,7 +57,15 @@ $selecCtsMayores = mysqli_query($con,
         $saldo1 = $datasaldos['ttcargo'] - $datasaldos['ttabono'];
         if ($saldo1<0) {
             $saldo1 = $saldo1 * -1;
+
         }
+        
+
+       
+        // Insertar directamente con mysqli_query
+     
+
+  
 
         if ($datasaldos["ttcargo"] == 0 && $datasaldos["ttcargo"] == 0 && $saldo1 == 0) {
             //se omite ya que no me muestra nada si esta en 0
@@ -73,6 +81,29 @@ $selecCtsMayores = mysqli_query($con,
             $tipoSaldoId[$index] = $cuentasMayDato["tipoSaldoId"];
             $saldo[$index] = $saldo1;
             $index ++;
+
+            $queryCheck = "SELECT cuentaId FROM saldo WHERE cuentaId = $cuentasMayDato[cuentaId]";
+            $resultCheck = mysqli_query($con, $queryCheck);
+            
+            if (mysqli_num_rows($resultCheck) > 0) {
+                // Si la cuentaId existe, realiza una actualización
+                $queryUpdate = "UPDATE saldo SET debe = '$datasaldos[ttcargo]', haber = '$datasaldos[ttabono]', fecha = '$fecha', saldo = '$saldo1', saldoDia = '$saldo1' WHERE cuentaId = $cuentasMayDato[cuentaId]";
+                $resultUpdate = mysqli_query($con, $queryUpdate);
+                if ($resultUpdate) {
+                    echo "Actualizado correctamente\n";
+                } else {
+                    echo "Error en la actualización\n";
+                }
+            } else {
+                // Si la cuentaId no existe, realiza una inserción
+                $queryInsert = "INSERT INTO saldo (cuentaId, debe, haber, fecha, saldo, saldoDia, SaldoAnterior) VALUES ($cuentasMayDato[cuentaId], '$datasaldos[ttcargo]', '$datasaldos[ttabono]', '$fecha', '$saldo1', '$saldo1', '0')";
+                $resultInsert = mysqli_query($con, $queryInsert);
+                if ($resultInsert) {
+                    echo "Insertado correctamente\n";
+                } else {
+                    echo "Error en la inserción\n";
+                }
+            }
             
         }
 
@@ -104,8 +135,8 @@ $selecCtsMayores = mysqli_query($con,
             $jsonDetalle["nombreCuenta"] = $nombreCuenta[$dato];
             $jsonDetalle["totalCargo"] = round($cargo[$dato],2);
             $jsonDetalle["totalabono"] = round($abono[$dato],2);
-            $jsonDetalle["saldoDeudor"] = round($saldoDeudor,2); //duda
-            $jsonDetalle["saldoAcreedor"] = round($saldoAcreedor,2); //duda
+            $jsonDetalle["saldoDeudor"] = round($saldoDeudor,2); 
+            $jsonDetalle["saldoAcreedor"] = round($saldoAcreedor,2); 
             $jsonDetalle["estadoId"] = 0;
             $jsonDetalle["usuarioCrea"] = $usuario_sesion;
 
