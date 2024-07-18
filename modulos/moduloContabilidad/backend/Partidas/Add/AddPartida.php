@@ -1,5 +1,7 @@
 <?php
+
 include("../../../../../lib/config/conect.php");
+
 $usuario_sesion = $_SESSION['usuario'];
 
 // Se Capturan los datos
@@ -16,7 +18,7 @@ $resultCierre = mysqli_query($con, $queryCierre);
 $rowCierre = mysqli_fetch_assoc($resultCierre);
 
 if ($rowCierre['total'] > 0) {
-    echo json_encode(array("success" => false, "message" => "El día seleccionado ya está cerrado. No se pueden agregar partidas."));
+    echo json_encode(array("success" => false, "message" => "El día seleccionado ya está cerrado."));
     exit;
 }
 

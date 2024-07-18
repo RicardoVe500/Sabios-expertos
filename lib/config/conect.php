@@ -2,7 +2,7 @@
 //Conexion
 	$server="localhost";
 	$user="root";
-	$pass="";
+	$pass="root1234";
 	$bd="tesis";
 
 	$con = mysqli_connect("$server","$user","$pass", "$bd")or die ("Error al conectar con el Servidor");

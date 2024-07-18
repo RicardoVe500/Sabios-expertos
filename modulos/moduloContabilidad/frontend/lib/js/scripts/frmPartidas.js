@@ -114,11 +114,10 @@ $("#reporpar").click(function () {
 
 //Funcion para guardar las partidas contables
 function guardarPartidas() {
-
     if ($("#fechacontable").val() == "" || $("#concepto").val() == "") {
         Swal.fire({
             title: 'Error',
-            text: 'NO deben de haber datos sin llenar',
+            text: 'No deben de haber datos sin llenar',
             icon: 'warning',
             confirmButtonText: 'Aceptar'
         });
@@ -128,21 +127,31 @@ function guardarPartidas() {
             type: "POST",
             url: url,
             data: $("#frmAddPartida").serialize(),
-            success: function (data) {
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Tipo Partida Agregada!',
-                    text: 'El Tipo de partida se agrego exitosamente.',
-                });
+            success: function (response) {
+                var data = JSON.parse(response);
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Partida Agregada!',
+                        text: data.message,
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Error al agregar partida',
+                        text: data.message,
+                        confirmButtonText: 'Aceptar'
+                    });
+                }
             },
             error: function (xhr, status, error) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error al crear',
-                    text: 'No se pudo crear el tipo partida. Por favor, intenta de nuevo.',
+                    text: 'No se pudo crear la partida. Por favor, intenta de nuevo.',
                     confirmButtonText: 'Aceptar'
                 });
-            }  
+            }
         });
     }
 }
