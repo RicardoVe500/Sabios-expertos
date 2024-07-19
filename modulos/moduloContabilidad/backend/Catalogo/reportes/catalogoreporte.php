@@ -58,7 +58,12 @@ class PDF extends FPDF
     // Cargar datos
     function LoadData($con)
     {
-        $query = "SELECT nombreCuenta, numeroCuenta, cuentaDependiente, nivelCuenta FROM catalogoCuentas ORDER BY numeroCuenta";
+        $query = "SELECT cc.nombreCuenta, cc.numeroCuenta, cc.cuentaDependiente, cc.nivelCuenta, 
+                    IF(cc.cuentaDependiente = 0 ,'',cuentaDependiente) AS depCuenta 
+                    FROM catalogocuentas cc
+                    GROUP By cc.numeroCuenta
+                    ORDER BY (cc.numeroCuenta) ASC;";
+
         $result = mysqli_query($con, $query);
         if (!$result) {
             die("Error en la consulta: " . mysqli_error($con));

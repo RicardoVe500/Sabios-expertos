@@ -133,7 +133,7 @@ $pdf->AliasNbPages();
 $pdf->AddPage();
 
 // Conectar a la base de datos
-include("../../../../../lib/config/conect.php");
+
 
 // Cargar datos
 $data = $pdf->LoadData($con);

@@ -43,8 +43,8 @@ session_start();
                 <h6 class="collapse-header">Mantenimientos</h6>
                 <a class="collapse-item" href="#" id="roles">Roles</a>
                 <a class="collapse-item" href="#" id="usuarios">Usuarios</a>
-                <a class="collapse-item" href="#" id="empresas">Empresas</a>
-                <a class="collapse-item" href="#" id="periodo">Periodos</a>
+                <!-- <a class="collapse-item" href="#" id="empresas">Empresas</a>-->
+                <a class="collapse-item" href="#" id="periodo">Cierres</a>
             </div>
         </div>
     </li>
