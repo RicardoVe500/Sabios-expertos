@@ -38,30 +38,63 @@ if ($result->num_rows > 0) {
             $saldofinal =  $ttabono - $ttcargo;
         }
 
-        if ($saldofinal<0) {
-            $saldofinal = $saldofinal * -1;
-        }
 
         // Verificar si existe el cuentaId en la tabla saldo
         $checkQuery = "SELECT cuentaId, SaldoAnterior FROM saldo WHERE cuentaId = '$cuentaId'";
         $checkResult = $con->query($checkQuery);
 
-        if ($checkResult->num_rows > 0) {
 
-            $oldSaldo = $checkResult->fetch_assoc()['SaldoAnterior'];
+        if ($saldofinal<0) {
+            //$saldofinal = $saldofinal * -1;
 
-            // Si existe, hacemos UPDATE
-            $updateQuery = "UPDATE saldo SET debe = '$ttcargo', haber = '$ttabono', saldo = '$saldofinal', fecha = '$solofecha', saldoDia = '$saldofinal', SaldoAnterior = '$oldSaldo' WHERE cuentaId = '$cuentaId'";
-            if (!$con->query($updateQuery)) {
-                echo "Error al actualizar datos: " . $con->error;
-            }
-        } else {
-            // Si no existe, hacemos INSERT
-            $insertQuery = "INSERT INTO saldo (cuentaId, debe, haber, fecha, saldo, saldoDia, SaldoAnterior) VALUES ('$cuentaId', '$ttcargo', '$ttabono', '$solofecha', '$saldofinal', '$saldofinal', '$saldofinal')";
-            if (!$con->query($insertQuery)) {
-                echo "Error al insertar datos: " . $con->error;
-            }
+            if ($checkResult->num_rows > 0) {
+
+           
+               
+                $oldSaldo = $checkResult->fetch_assoc()['SaldoAnterior'];
+                // Si existe, hacemos UPDATE
+                $updateQuery = "UPDATE saldo SET  debe = '$ttcargo', haber = '$ttabono', saldo = '$saldofinal', fecha = '$solofecha', saldoDia = '$saldofinal', SaldoAnterior = '$oldSaldo' WHERE cuentaId = '$cuentaId'";
+                if (!$con->query($updateQuery)) {
+                    echo "Error al actualizar datos: " . $con->error;
+                }
+            } else {
+          
+                // Si no existe, hacemos INSERT
+                $insertQuery = "INSERT INTO saldo (cuentaId, debe, haber, fecha, saldo, saldoDia, SaldoAnterior) VALUES ('$cuentaId', '$ttcargo', '$ttabono', '$solofecha', '$saldofinal', '$saldofinal', '$saldofinal')";
+                if (!$con->query($insertQuery)) {
+                    echo "Error al insertar datos: " . $con->error;
+                }
+                
         }
+        
+
+        }else{
+
+            if ($checkResult->num_rows > 0) {
+
+               
+               
+                $oldSaldo = $checkResult->fetch_assoc()['SaldoAnterior'];
+
+                // Si existe, hacemos UPDATE
+                $updateQuery = "UPDATE saldo SET debe = '$ttcargo', haber = '$ttabono', saldo = '$saldofinal', fecha = '$solofecha', saldoDia = '$saldofinal', SaldoAnterior = '$oldSaldo' WHERE cuentaId = '$cuentaId'";
+                if (!$con->query($updateQuery)) {
+                    echo "Error al actualizar datos: " . $con->error;
+                }
+            } else {
+                
+         
+                // Si no existe, hacemos INSERT
+                $insertQuery = "INSERT INTO saldo (cuentaId, debe, haber, fecha, saldo, saldoDia, SaldoAnterior) VALUES ('$cuentaId', '$ttcargo', '$ttabono', '$solofecha', '$saldofinal', '$saldofinal', '$saldofinal')";
+                if (!$con->query($insertQuery)) {
+                    echo "Error al insertar datos: " . $con->error;
+                }
+        }
+
+
+        }
+
+
     }
     echo json_encode(['status' => 'success', 'message' => 'Proceso completado correctamente']);
 

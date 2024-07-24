@@ -3,9 +3,6 @@
 require_once("../../../../../lib/fpdf/fpdf.php");
 require_once("../../../../../lib/fpdf/mc_table.php");
 
-$fechaInicio = mysqli_real_escape_string($con, $_POST['fechadesde']);
-$fechaFin = mysqli_real_escape_string($con, $_POST['fechahasta']);
-
 class PDF extends PDF_MC_Table
 {
     function Header()
@@ -40,38 +37,14 @@ class PDF extends PDF_MC_Table
 
     function LoadData()
     {
-        $data = ['Activos' => [], 'Pasivos y Capital' => []];
-        $mysqli = new mysqli('localhost', 'root', '', 'tesis');
-        $query = "SELECT pd.partidaId, pd.cargo, pd.abono, pd.cuentaId, cc.nombreCuenta, cc.tipoSaldoId, p.fechacontable, cc.nivelCuenta,
-                    CASE WHEN LEFT(cc.numeroCuenta, 1) = '1' THEN 'Activo'
-                        WHEN LEFT(cc.numeroCuenta, 1) = '2' OR LEFT(cc.numeroCuenta, 1) = '3' THEN 'Pasivo y Capital'
-                        END AS Tipo
-                    FROM partidaDetalle pd
-                    JOIN partidas p ON p.partidaId = pd.partidaId
-                    JOIN catalogocuentas cc ON cc.cuentaId = pd.cuentaId
-                    WHERE p.fechacontable BETWEEN 'fechadesde' AND 'fechahasta'
-                    ORDER by cc.numeroCuenta ASC;";
         
-        if ($result = $mysqli->query($query)) {
-            while ($row = $result->fetch_assoc()) {
-                if ($row['Tipo'] == 'Activo') {
-                    $data['Activos'][] = $row;
-                } else {
-                    $data['Pasivos y Capital'][] = $row;
-                }
-            }
-            $result->free();
-        }
-        $mysqli->close();
-        return $data;
     }
 
-    
-
+   
     function FancyTable($header, $data)
-        {
+    {
            
-        }
+    }
         
 
 }

@@ -90,7 +90,7 @@ $('#tablaperiodocierre').on('click', '.btn-cerrarPeriodo', function () {
             if (task.success) {
                 Swal.fire({
                     icon: 'success',
-                    title: '¡Actualización exitosa!',
+                    title: '¡Mes cerrado!',
                     text: task.message, // Usa el mensaje de la respuesta del servidor
                     confirmButtonText: 'Aceptar'
                 });

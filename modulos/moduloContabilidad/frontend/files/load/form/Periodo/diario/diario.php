@@ -81,8 +81,8 @@ $("#cierrediario").click(function() {
                 error: function(xhr, status, error) {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Error al crear',
-                        text: 'No se pudo crear el tipo partida. Por favor, intenta de nuevo.',
+                        title: 'Error al Cerrar dia',
+                        text: 'No se pudo Cerrar debido',
                         confirmButtonText: 'Aceptar'
                     });
                 }

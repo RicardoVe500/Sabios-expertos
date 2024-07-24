@@ -25,7 +25,9 @@ class PDF extends FPDF {
         $this->SetFont('Arial', '', 10);
         $this->Cell(190, 5, 'Unidad de Contabilidad', 0, 1, 'C');
         $this->Cell(190, 5, 'Reporte de Bitacora', 0, 1, 'C');
-        $this->Cell(190, 5, 'Fecha de Impresion: ' . date('d-m-Y H:i:s'), 0, 1, 'C');
+        $this->Cell(190, 5, 'Desde: ' . '2024-07-01'.' Hasta: '.'2024-07-17', 0, 1, 'C');
+        $date = date('d-m-Y H:i:s');
+        $this->Cell(190,5,'Fecha de impresion: ' . $date,0,0,'C');
         $this->Ln(10);
     }
 
@@ -70,7 +72,7 @@ $pdf->Ln();
 
 // Data loading
 foreach ($data as $row) {
-    $pdf->Cell(40, 10, $row['fecha'], 1, 0);
+    $pdf->Cell(40, 10, $row['fecha'], 0, 0);
     $detailText = $pdf->PrintJSON($row['detalle']); 
     $pdf->MultiCell(150, 10, $detailText, 1);
 }

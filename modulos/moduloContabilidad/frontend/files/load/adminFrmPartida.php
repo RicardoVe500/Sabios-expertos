@@ -1,8 +1,11 @@
 <?php
+    $partidaId = $_REQUEST['partidaId'] ?? 'partidaId';
+    echo "<input type='hidden' id='partidaId' name='partidaId' value='$partidaId'>";
     $codigoPartida = $_REQUEST['codigoPartida'] ?? 'defaultCodigo';
     echo "<input type='hidden' id='codigoPartida' name='codigoPartida' value='$codigoPartida'>";
     $tipoPartidaId = $_REQUEST['tipoPartidaId'] ?? 'defaultTipopartida';
     echo "<input type='hidden' id='tipoPartidaId' name='tipoPartidaId' value='$tipoPartidaId'>";
+    
 ?>
 <div class="card shadow mb-4">
     <div class="card-header py-3 card-header py-3 d-flex justify-content-between align-items-center" id="cabezaboton">

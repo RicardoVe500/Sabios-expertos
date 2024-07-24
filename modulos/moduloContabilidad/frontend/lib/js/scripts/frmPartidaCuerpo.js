@@ -58,6 +58,8 @@ $(document).ready(function () {
 
 var partidaId = $('#partidaId').val();
 var codigoPartida = $('#codigoPartida').val();
+var fechacontable = $('#fechacontable').val();
+
 
 function cargadatospartida() {
     $.ajax({
@@ -137,6 +139,7 @@ function guardarCuerpoPartida() {
             }).then((result) => {
                 if (result.isConfirmed) {
                     agregarSaldo()
+                    agregarDetalle()
                     $('#frmcuerpo')[0].reset(); // Resetear el formulario
                     $('#selectcomprobante').val('').trigger('change');
                     $('#selectcuentas').val('').trigger('change');
@@ -319,6 +322,7 @@ function editardatos() {
                 text: 'Los cambios se han guardado correctamente.',
             });
             agregarSaldo()
+            editDetalle()
             $('#frmcuerpo')[0].reset(); // Resetear el formulario
             $('#selectcomprobante').val('').trigger('change');
             $('#selectcuentas').val('').trigger('change');
@@ -389,14 +393,7 @@ $('#cerrarCuenta').click(function () {
                                                 fechacontable: fechacontable
                                             },
                                             success: function(response) {                                            
-                                                Swal.fire({
-                                                    icon: 'success',
-                                                    title: 'La mayorizacion se ejecuto',
-                                                    text: 'Se ejecuto la mayorizacion.',
-                                                    confirmButtonText: 'Aceptar'
-                                                });
-
-                                                $("#render").html(response);
+                                                
                                             },
                                             error: function(xhr, status, error) {
                                                 Swal.fire({
@@ -452,14 +449,75 @@ function agregarSaldo(){
         data: {cuentaId: cuentaId},
         type: "POST",
         success: function (response) {
+           
+        },
+        error: function (xhr, status, error) {
+          
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al hacer saldo',
+                text: 'No se pudo modificar la partida. Por favor, intenta de nuevo.',
+                confirmButtonText: 'Aceptar'
+            });
+        }
+    })
+}
+
+//se guarda el movimiento de los saldos de las cuentas
+function agregarDetalle(){
+    const pData = {
+        partidaId: $("#partidaId").val(),
+        cuentaId: $("#selectcuentas").val(),
+        fechacontable: $("#cuerpofechacontable").val(),
+        cargo: $("#debeCuerpo").val() || '0',
+        abono: $("#haberCuerpo").val() || '0',
+    } 
+    $.ajax({
+        url: "../../backend/detalle/add/detalle.php",
+        data: pData,
+        type: "POST",
+        success: function (response) {
             Swal.fire({
                 icon: 'success',
-                title: '¡Se guardo el saldo!',
-                text: 'Los cambios se han guardado correctamente.',
+                title: 'inserto',
+                text: 'XD.',
+                confirmButtonText: 'Aceptar'
             });
         },
         error: function (xhr, status, error) {
-            console.log(error)
+          
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al hacer saldo',
+                text: 'No se pudo modificar la partida. Por favor, intenta de nuevo.',
+                confirmButtonText: 'Aceptar'
+            });
+        }
+    })
+}
+
+function editDetalle(){
+    const pData = {
+        partidaId: $("#partidaId").val(),
+        cuentaId: $("#selectcuentas").val(),
+        fechacontable: $("#cuerpofechacontable").val(),
+        cargo: $("#debeCuerpo").val() || '0',
+        abono: $("#haberCuerpo").val() || '0',
+    } 
+    $.ajax({
+        url: "../../backend/detalle/edit/detalleedit.php",
+        data: pData,
+        type: "POST",
+        success: function (response) {
+            wal.fire({
+                icon: 'success',
+                title: 'inserto',
+                text: 'XD.',
+                confirmButtonText: 'Aceptar'
+            });
+        },
+        error: function (xhr, status, error) {
+          
             Swal.fire({
                 icon: 'error',
                 title: 'Error al hacer saldo',

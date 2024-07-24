@@ -51,15 +51,16 @@ $selecCtsMayores = mysqli_query($con,
         $datasaldos = mysqli_fetch_assoc($selectSaldos);
         if ($cuentasMayDato['tipoSaldoId'] == 1) {
             $saldo1 = $datasaldos['ttcargo'] - $datasaldos['ttabono'];
+       
         }else{
             $saldo1 = $datasaldos['ttabono'] - $datasaldos['ttcargo'] ;
-        }
-        $saldo1 = $datasaldos['ttcargo'] - $datasaldos['ttabono'];
-        if ($saldo1<0) {
-            $saldo1 = $saldo1 * -1;
-
-        }
         
+        }
+
+        // se elimino una linea repetida que venia del codigo anterior que no 
+        //se sabia muy bine que hacia ya que se repite $saldo1 = $datasaldos['ttcargo'] - $datasaldos['ttabono'];
+        //se elimino la comprobacion de si es numero negativo
+       
 
        
         // Insertar directamente con mysqli_query
@@ -82,12 +83,16 @@ $selecCtsMayores = mysqli_query($con,
             $saldo[$index] = $saldo1;
             $index ++;
 
+
+
+
             $queryCheck = "SELECT cuentaId FROM saldo WHERE cuentaId = $cuentasMayDato[cuentaId]";
             $resultCheck = mysqli_query($con, $queryCheck);
-            
+                 
             if (mysqli_num_rows($resultCheck) > 0) {
+                
                 // Si la cuentaId existe, realiza una actualización
-                $queryUpdate = "UPDATE saldo SET debe = '$datasaldos[ttcargo]', haber = '$datasaldos[ttabono]', fecha = '$fecha', saldo = '$saldo1', saldoDia = '$saldo1' WHERE cuentaId = $cuentasMayDato[cuentaId]";
+                $queryUpdate = "UPDATE saldo SET  debe = '$datasaldos[ttcargo]', haber = '$datasaldos[ttabono]', fecha = '$fecha', saldo = '$saldo1', saldoDia = '$saldo1' WHERE cuentaId = $cuentasMayDato[cuentaId]";
                 $resultUpdate = mysqli_query($con, $queryUpdate);
                 if ($resultUpdate) {
                     echo "Actualizado correctamente\n";
@@ -104,7 +109,7 @@ $selecCtsMayores = mysqli_query($con,
                     echo "Error en la inserción\n";
                 }
             }
-            
+        
         }
 
     }

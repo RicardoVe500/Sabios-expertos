@@ -46,8 +46,8 @@ if (isset($_POST['numeroCuenta']) || isset($_POST['nombreCuenta']) || isset($_PO
         $dependiente = $numerocuenta;
     }
 
-       $queryInsert = "INSERT INTO catalogoCuentas(movimientoId, tipoSaldoId, n1, n2, n3, n4, n5, n6, n7, n8, numeroCuenta, cuentaDependiente, nivelCuenta, nombreCuenta, usuarioAgrega, fechaAgrega, usuarioModifica, fechaModifica) 
-                       VALUES ('$movimientos','$tipoSaldo','','','','','','','','','$nuevoNumeroCuenta','$dependiente','$nivelcuenta','$nombrecuenta','$usuario_sesion','$fechaHoraActual','$usuario_sesion','$fechaHoraActual')";
+       $queryInsert = "INSERT INTO catalogoCuentas(movimientoId, tipoSaldoId, numeroCuenta, cuentaDependiente, nivelCuenta, nombreCuenta, usuarioAgrega, fechaAgrega, usuarioModifica, fechaModifica) 
+                       VALUES ('$movimientos','$tipoSaldo','$nuevoNumeroCuenta','$dependiente','$nivelcuenta','$nombrecuenta','$usuario_sesion','$fechaHoraActual','$usuario_sesion','$fechaHoraActual')";
 
        $resultInsert = mysqli_query($con, $queryInsert);
 

@@ -22,11 +22,11 @@ if (isset($_SESSION['periodo'])) {
         <button class="btn btn-success mb-3" id="frmAddPartidas">
             <i class="fa fa-plus"></i> Agregar Partida
         </button>
-
+<!--
         <button class="btn btn-success mb-3" id="reporpar">
             <i class="fa fa-plus"></i> reporte
         </button>
-
+-->
         <button class="btn btn-warning mb-3" id="regresarTipos">
             <i class="fa fa-arrow-left"></i> Regresar
         </button>
@@ -39,7 +39,7 @@ if (isset($_SESSION['periodo'])) {
 
             <button class="btn btn-secondary float-right btn-sm" id="pre" title="pre">
             <i class="fas fa-print"></i></button>
-        
+
 
         <div class="input-group mb-3">
             <div class="input-group-prepend">

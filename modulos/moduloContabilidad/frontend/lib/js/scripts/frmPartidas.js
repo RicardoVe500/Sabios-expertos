@@ -89,7 +89,8 @@ $('#tablaPartida').on('click', '.btn-frmcuerpo', function () {
     var num = data.partidaId
     var num2 = data.tipoPartidaId
     var codigo = data.codigoPartida
-    $("#render").load("./load/adminFrmPartida.php", { partidaId: num, codigoPartida: codigo, tipoPartidaId:num2 }, function() {
+    var fecha = data.fechacontable
+    $("#render").load("./load/adminFrmPartida.php", { partidaId: num, codigoPartida: codigo, tipoPartidaId:num2, fechacontable:fecha }, function() {
     });
 });
 
