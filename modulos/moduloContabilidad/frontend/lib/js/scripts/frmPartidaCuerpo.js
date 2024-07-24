@@ -384,13 +384,13 @@ $('#cerrarCuenta').click(function () {
                                         tipoPartidaId: tipoPartidaId
                                     },
                                     success: function(response) {
-
+                                        var partidaId = $('#partidaId').val();
                                         var fechacontable = $("#cuerpofechacontable").val();
                                         $.ajax({
                                             url: "../../backend/mayorizacion/mayorizacion.php",
                                             type: "POST",
                                             data: {
-                                                fechacontable: fechacontable
+                                                fechacontable: fechacontable, partidaId: partidaId
                                             },
                                             success: function(response) {                                            
                                                 

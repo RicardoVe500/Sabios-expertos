@@ -4,7 +4,9 @@ include("../../../../lib/config/conect.php");
 $usuario_sesion = $_SESSION['usuario'];
 $fechaActualHoras = date('y-m-d h:i:s');
 $solofecha = date('y-m-d');
-$fecha = $_POST['fechacontable']; // la fecha que traemos de la tabla Partidas
+$fecha = $_POST['fechacontable'];// la fecha que traemos de la tabla Partidas
+$partidaId = $_POST['partidaId']; 
+
 
 //echo "La fecha contable es: " . $fecha;
 
@@ -86,23 +88,34 @@ $selecCtsMayores = mysqli_query($con,
 
 
 
-            $queryCheck = "SELECT cuentaId FROM saldo WHERE cuentaId = $cuentasMayDato[cuentaId]";
-            $resultCheck = mysqli_query($con, $queryCheck);
+            $queryCheck = "SELECT d.fechaContable, d.debe, d.haber, d.cuentaId, cc.numeroCuenta
+                            FROM detalle d
+                            join catalogocuentas cc on d.cuentaId = cc.cuentaId
+                            WHERE cc.numeroCuenta = $cuentasMayDato[numeroCuenta] AND d.cuentaId = $cuentasMayDato[cuentaId] AND d.fechaContable = '$fecha';";
+           
+           $resultCheck = mysqli_query($con, $queryCheck);
+
+            
                  
             if (mysqli_num_rows($resultCheck) > 0) {
                 
                 // Si la cuentaId existe, realiza una actualización
-                $queryUpdate = "UPDATE saldo SET  debe = '$datasaldos[ttcargo]', haber = '$datasaldos[ttabono]', fecha = '$fecha', saldo = '$saldo1', saldoDia = '$saldo1' WHERE cuentaId = $cuentasMayDato[cuentaId]";
+                $queryUpdate = "UPDATE detalle SET  debe = '$datasaldos[ttcargo]', haber = '$datasaldos[ttabono]' WHERE cuentaId = $cuentasMayDato[cuentaId] AND fechaContable = '$fecha'";
                 $resultUpdate = mysqli_query($con, $queryUpdate);
+
+               
+
                 if ($resultUpdate) {
                     echo "Actualizado correctamente\n";
                 } else {
                     echo "Error en la actualización\n";
                 }
+
             } else {
                 // Si la cuentaId no existe, realiza una inserción
-                $queryInsert = "INSERT INTO saldo (cuentaId, debe, haber, fecha, saldo, saldoDia, SaldoAnterior) VALUES ($cuentasMayDato[cuentaId], '$datasaldos[ttcargo]', '$datasaldos[ttabono]', '$fecha', '$saldo1', '$saldo1', '0')";
+                $queryInsert = "INSERT INTO detalle (cuentaId, partidaId, fechacontable, debe, haber) VALUES ($cuentasMayDato[cuentaId], '$partidaId', '$fecha', '$datasaldos[ttcargo]', '$datasaldos[ttabono]')";
                 $resultInsert = mysqli_query($con, $queryInsert);
+
                 if ($resultInsert) {
                     echo "Insertado correctamente\n";
                 } else {
