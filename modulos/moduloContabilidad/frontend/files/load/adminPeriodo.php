@@ -5,7 +5,7 @@
     <div class="card-body">
 
         <button class="btn btn-success mb-3" id="frmAddPeriodo">
-            <i class="fa fa-plus"></i> Agregar Tipo Partida
+            <i class="fa fa-plus"></i> Agregar Periodo
         </button> 
 
         <div class="input-group mb-3">

@@ -34,6 +34,10 @@ $(document).ready(function(){
         $("#render").load("load/adminEmpresas.php");
     });
 
+    $("#balancegeneral").click(function(){
+        $("#render").load("load/adminbalancegeneral.php");
+    });
+
     
 })
 

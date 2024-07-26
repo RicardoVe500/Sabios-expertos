@@ -57,6 +57,10 @@ if ($result->num_rows > 0) {
                 if (!$con->query($updateQuery)) {
                     echo "Error al actualizar datos: " . $con->error;
                 }
+
+
+
+
             } else {
           
                 // Si no existe, hacemos INSERT
@@ -64,6 +68,11 @@ if ($result->num_rows > 0) {
                 if (!$con->query($insertQuery)) {
                     echo "Error al insertar datos: " . $con->error;
                 }
+
+
+
+
+                
                 
         }
         

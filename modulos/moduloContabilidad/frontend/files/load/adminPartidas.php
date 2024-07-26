@@ -115,7 +115,7 @@ $("#balance").click(function() {
     })
 
     $("#pre").click(function() {
-    var reportUrl = '../../backend/Reportes/balancepreeliminar/balancepreeliminar.php';
+    var reportUrl = '../../backend/Reportes/balanceCuentas/balanceCuenta.php';
         window.open(reportUrl, '_blank');
     })
 

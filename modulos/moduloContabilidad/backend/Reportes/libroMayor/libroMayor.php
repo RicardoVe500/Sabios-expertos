@@ -59,7 +59,8 @@ class PDF extends FPDF
         cc.nombreCuenta, cc.numeroCuenta, s.saldo
         FROM partidas p JOIN partidaDetalle pd on p.partidaId = pd.partidaId 
         JOIN catalogocuentas cc on pd.cuentaId = cc.cuentaId
-        JOIN saldo s on cc.cuentaId = s.cuentaId";
+        JOIN saldo s on cc.cuentaId = s.cuentaId
+        ORDER BY cc.numeroCuenta";
     
         $result = mysqli_query($con, $query);
     
@@ -69,7 +70,7 @@ class PDF extends FPDF
     
         $data = [];
         while ($row = mysqli_fetch_assoc($result)) {
-            $data[$row['nombreCuenta']][] = $row;
+            $data[$row['numeroCuenta'].'  '.$row['nombreCuenta']][] = $row;
         }
         return $data;
     }
@@ -89,9 +90,9 @@ function FancyTable($header, $data, $saldo)
     }
 
     // Colores, ancho de línea y fuente en negrita para el encabezado
-    $this->SetFillColor(255,0,0);
-    $this->SetTextColor(255);
-    $this->SetDrawColor(128,0,0);
+    $this->SetFillColor(224, 224, 224);
+    $this->SetTextColor(0);
+    $this->SetDrawColor(0,0,0);
     $this->SetLineWidth(.3);
     $this->SetFont('', 'B');
 
@@ -102,24 +103,33 @@ function FancyTable($header, $data, $saldo)
     $this->Ln();
 
     // Restauración de colores y fuentes para los datos
-    $this->SetFillColor(224, 235, 255);
+    $this->SetFillColor(224, 224, 224);
     $this->SetTextColor(0);
     $this->SetFont('');
 
     // Datos
-    $fill = false;
+    
     foreach ($data as $row) {
-        $this->Cell($w[0], $rowHeight, $row['codigoPartida'], 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], $rowHeight, $row['fechacontable'], 'LR', 0, 'L', $fill);
-        $this->Cell($w[2], $rowHeight, $row['numeroCuenta'], 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], $rowHeight, number_format($row['cargo']), 'LR', 0, 'R', $fill);
-        $this->Cell($w[4], $rowHeight, number_format($row['abono']), 'LR', 0, 'R', $fill);
+        $this->Cell($w[0], $rowHeight, $row['codigoPartida'], 'LR', 0, 'L', 0);
+        $this->Cell($w[1], $rowHeight, $row['fechacontable'], 'LR', 0, 'L', 0);
+        $this->Cell($w[2], $rowHeight, $row['numeroCuenta'], 'LR', 0, 'R', 0);
+        // Para el campo 'cargo'
+        $cargoFormatted = $row['cargo'] == 0 ? '-' : '$' . number_format($row['cargo']);
+        $this->Cell($w[3], $rowHeight, $cargoFormatted, 'LR', 0, 'R', 0);
+
+        // Para el campo 'abono'
+        $abonoFormatted = $row['abono'] == 0 ? '-' : '$' . number_format($row['abono']);
+        $this->Cell($w[4], $rowHeight, $abonoFormatted, 'LR', 0, 'R', 0);
         $this->Ln();
-        $fill = !$fill;
+        
     }
 
     // Agregar el saldo al final
-    $this->Cell(array_sum($w), $rowHeight, 'Saldo: ' . number_format($saldo), 1, 0, 'R', true);
+    // Comprobar si el saldo es negativo y formatearlo
+    $formattedSaldo = $saldo < 0 ? '($' . number_format(-$saldo) . ')' : '$' . number_format($saldo);
+
+    // Usar el saldo formateado en la celda
+    $this->Cell(array_sum($w), $rowHeight, 'Saldo: ' . $formattedSaldo, 1, 0, 'R', true);
     $this->Ln();
 
     $this->Cell(array_sum($w), 0, '', 'T');
