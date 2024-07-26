@@ -3,9 +3,6 @@ include("../../../../../lib/config/conect.php");
 require_once("../../../../../lib/fpdf/fpdf.php"); // Asegúrate de ajustar la ruta al archivo FPDF
 
 
-
-
-
 class PDF extends FPDF
 {
     // Encabezado de página
@@ -60,7 +57,7 @@ class PDF extends FPDF
         // Movernos a la derecha nuevamente
         $this->Cell(80);
         // Sub-título: Departamento de contabilidad
-        $this->Cell(30,10,'BALANCE GENERAL AL '.$fechaFormateadaheader,0,0,'C');
+        $this->Cell(30,10,'BALANCE COMPROBACION AL '.$fechaFormateadaheader,0,0,'C');
         // Salto de línea
         $this->Ln(5);
 
@@ -129,6 +126,7 @@ class PDF extends FPDF
             LEFT JOIN detalle d ON cc.cuentaId = d.cuentaId 
             WHERE SUBSTRING(cc.numeroCuenta, 1, 2) = $cuentasMayDato[numeroCuenta]
             AND cc.nivelCuenta = 3
+            AND SUBSTRING(cc.numeroCuenta, 1, 1) IN ('1', '2', '3')
             AND d.fechaContable BETWEEN '$fechaCompleta' AND '$fechaFormateada'
             GROUP BY cc.cuentaId;");
 

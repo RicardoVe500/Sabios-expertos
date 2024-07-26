@@ -35,7 +35,7 @@ $(document).ready(function(){
     });
 
     $("#balancegeneral").click(function(){
-        $("#render").load("load/adminbalancegeneral.php");
+        $("#render").load("load/adminbalancecomprobacion.php");
     });
 
     

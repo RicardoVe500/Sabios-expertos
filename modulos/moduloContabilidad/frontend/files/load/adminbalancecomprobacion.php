@@ -3,7 +3,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Reporte de bitacora</h6>
     </div>
     <div class="card-body">
-    <form id="balancegeneral" method="POST" action="../../backend/Reportes/balanceCuentas/balanceCuenta.php" target="_blank">
+    <form id="balancegeneral" method="POST" action="../../backend/Reportes/BalanceComprobacion/BalanceComprobacion.php" target="_blank">
         
             <div class="row mb-3">
                 <div class="col-md-5">

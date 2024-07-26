@@ -31,7 +31,7 @@ if (isset($_SESSION['periodo'])) {
             <i class="fa fa-arrow-left"></i> Regresar
         </button>
 
-        <button class="btn btn-secondary float-right btn-sm" id="balance" title="Reporte">
+        <button class="btn btn-secondary float-right btn-sm" id="balance" title="Balance">
             <i class="fas fa-print"></i></button>
 
             <button class="btn btn-secondary float-right btn-sm" id="mayor" title="mayor">
@@ -105,7 +105,7 @@ $(document).ready(function() {
 });
 
 $("#balance").click(function() {
-    var reportUrl = '../../backend/Reportes/balanceCuentas/balanceCuenta.php';
+    var reportUrl = '../../backend/Reportes/BalanceGeneral/BalanceGeneral.php';
         window.open(reportUrl, '_blank');
     })
 
