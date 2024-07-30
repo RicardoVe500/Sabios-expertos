@@ -15,6 +15,19 @@ if (isset($_POST['usuarioId'])) {
         exit;
     }
 
+    // Verificar si el usuario es el superadministrador
+    $checkSuperAdminQuery = $con->prepare("SELECT isSuperAdmin FROM usuarios WHERE usuarioId = ?");
+    $checkSuperAdminQuery->bind_param('i', $usuarioId);
+    $checkSuperAdminQuery->execute();
+    $resultado = $checkSuperAdminQuery->get_result();
+    $userData = $resultado->fetch_assoc();
+    $checkSuperAdminQuery->close();
+
+    if ($userData && $userData['isSuperAdmin'] == 1) {
+        echo json_encode(['status' => 'error', 'message' => 'No se puede eliminar al super administrador.']);
+        exit;
+    }
+
     // Primero, recuperar los datos del usuario a eliminar
     $selectQuery = $con->prepare("SELECT nombre, apellidos, email FROM usuarios WHERE usuarioId = ?");
     $selectQuery->bind_param('i', $usuarioId);
@@ -27,7 +40,6 @@ if (isset($_POST['usuarioId'])) {
 
         if ($query->execute()) {
             $fechaHoraActual = date("Y-m-d H:i:s");
-            // Preparar datos para la bitácora
             $datos = [
                 "accion" => "Elimino_Usuario",
                 "usuario" => $usuario_sesion,
@@ -39,14 +51,12 @@ if (isset($_POST['usuarioId'])) {
             $queryBitacora = "SELECT bitacoraId, detalle FROM bitacora WHERE fecha = '$fechaJson'";
             $resultBitacora = mysqli_query($con, $queryBitacora);
             if ($row = mysqli_fetch_assoc($resultBitacora)) {
-                // Actualiza el registro existente
                 $datosExistentes = json_decode($row["detalle"], true);
                 $datosExistentes[] = $datos;
                 $jsonDatos = json_encode($datosExistentes);
                 $updateQuery = "UPDATE bitacora SET detalle = '$jsonDatos' WHERE bitacoraId = {$row['bitacoraId']}";
                 mysqli_query($con, $updateQuery);
             } else {
-                // Crea un nuevo registro en la bitácora
                 $insertQuery = "INSERT INTO bitacora(fecha, detalle) VALUES ('$fechaJson', '$jsonDatos')";
                 mysqli_query($con, $insertQuery);
             }

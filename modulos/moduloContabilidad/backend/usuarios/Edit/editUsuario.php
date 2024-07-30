@@ -1,8 +1,4 @@
 <?php
-
-//Iniciar Sesion
-//session_start();
-
 // Crear conexión a la BD
 require_once '../../../../../lib/config/conect.php';
 
@@ -30,6 +26,19 @@ if (isset($_POST['usuarioId']) && isset($_POST['nombre']) && isset($_POST['apell
     // Si el campo clave está vacío, ocurre el error.
     if (empty($clave)) {
         echo json_encode(['status' => 'error', 'message' => 'Debes confirmar tu contraseña']);
+        exit;
+    }
+
+    // Verificar si el usuario es el superadministrador
+    $checkSuperAdminQuery = $con->prepare("SELECT isSuperAdmin FROM usuarios WHERE usuarioId = ?");
+    $checkSuperAdminQuery->bind_param('i', $usuarioId);
+    $checkSuperAdminQuery->execute();
+    $resultado = $checkSuperAdminQuery->get_result();
+    $userData = $resultado->fetch_assoc();
+    $checkSuperAdminQuery->close();
+
+    if ($userData && $userData['isSuperAdmin'] == 1) {
+        echo json_encode(['status' => 'error', 'message' => 'No se puede modificar al super administrador.']);
         exit;
     }
 

@@ -1,3 +1,5 @@
+addUsuario
+
 <?php
 require_once '../../../../../lib/config/conect.php';
 $usuario_sesion = $_SESSION['usuario']; 
@@ -7,8 +9,8 @@ if (!$con) {
     exit;
 }
 
+// Lógica para manejar la adición de usuarios
 if (isset($_POST['nombre'], $_POST['apellidos'], $_POST['email'], $_POST['clave'], $_POST['rol'])) {
-    // Recoger los valores del formulario de registro
     $nombre = mysqli_real_escape_string($con, $_POST['nombre']);
     $apellidos = mysqli_real_escape_string($con, $_POST['apellidos']);
     $email = mysqli_real_escape_string($con, $_POST['email']);
@@ -16,7 +18,6 @@ if (isset($_POST['nombre'], $_POST['apellidos'], $_POST['email'], $_POST['clave'
     $tipoUsuarioId = (int)$_POST['rol'];
     $fecha = date("Y-m-d H:i:s");
 
-    // Validar que el nombre y los apellidos no contengan números
     if (preg_match('/[0-9]/', $nombre)) {
         echo json_encode(['status' => 'error', 'message' => 'El nombre no debe contener números']);
         exit;
@@ -32,33 +33,28 @@ if (isset($_POST['nombre'], $_POST['apellidos'], $_POST['email'], $_POST['clave'
         exit;
     }
 
-     // En este apartado se verifica si el email ya esta registrado 
-     $queryEmail = "SELECT * FROM usuarios WHERE email = '$email'";
-     $resultEmail = mysqli_query($con, $queryEmail);
-     if (mysqli_num_rows($resultEmail) > 0) {
-         echo json_encode(['status' => 'error', 'message' => 'El email ya está registrado']);
-         exit;
-     }
+    $queryEmail = "SELECT * FROM usuarios WHERE email = '$email'";
+    $resultEmail = mysqli_query($con, $queryEmail);
+    if (mysqli_num_rows($resultEmail) > 0) {
+        echo json_encode(['status' => 'error', 'message' => 'El email ya está registrado']);
+        exit;
+    }
 
     $clave_segura = password_hash($clave, PASSWORD_BCRYPT, ['cost' => 4]);
 
-    // Insertar los datos en la base de datos
     $query = "INSERT INTO usuarios (nombre, apellidos, email, clave, tipoUsuarioId) VALUES ('$nombre', '$apellidos', '$email', '$clave_segura', $tipoUsuarioId)";
     if (mysqli_query($con, $query)) {
-        // Obtener el ID del usuario insertado
         $usuarioId = mysqli_insert_id($con);
 
-        // Obtener los datos ingresados
         $datosIngresados = [
             'nombre' => $nombre,
             'apellidos' => $apellidos,
             'email' => $email,
             'tipoUsuarioId' => $tipoUsuarioId,
             'fecha' => $fecha,
-            'usuario' => $usuario_sesion // Agregar usuario de sesión
+            'usuario' => $usuario_sesion
         ];
 
-        // Preparar datos para la bitácora
         $datosBitacora = [
             "accion" => "Registro_Usuario",
             "datosIngresados" => $datosIngresados
@@ -69,25 +65,24 @@ if (isset($_POST['nombre'], $_POST['apellidos'], $_POST['email'], $_POST['clave'
         $queryBitacora = "SELECT bitacoraId, detalle FROM bitacora WHERE fecha = '$fechaJson'";
         $resultBitacora = mysqli_query($con, $queryBitacora);
         if ($row = mysqli_fetch_assoc($resultBitacora)) {
-            // Actualizar el registro existente en la bitácora
             $datosExistentes = json_decode($row["detalle"], true);
+            if (!is_array($datosExistentes)) {
+                $datosExistentes = [];
+            }
             $datosExistentes[] = $datosBitacora;
             $jsonDatosBitacora = json_encode($datosExistentes);
             $updateQuery = "UPDATE bitacora SET detalle = '$jsonDatosBitacora' WHERE bitacoraId = {$row['bitacoraId']}";
             mysqli_query($con, $updateQuery);
         } else {
-            // Crear un nuevo registro en la bitácora
             $insertQuery = "INSERT INTO bitacora(fecha, detalle) VALUES ('$fechaJson', '$jsonDatosBitacora')";
             mysqli_query($con, $insertQuery);
         }
 
-        // Devolver respuesta con los datos ingresados
         echo json_encode(['status' => 'success', 'message' => 'Registro exitoso.', 'datosIngresados' => $datosIngresados]);
     } else {
         echo json_encode(['status' => 'error', 'message' => 'Error al registrar los datos: ' . mysqli_error($con)]);
     }
-    
-    // Cerrar la conexión
+
     mysqli_close($con);
 } else {
     echo json_encode(['status' => 'error', 'message' => 'Todos los campos son requeridos.']);
