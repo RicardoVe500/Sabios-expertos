@@ -38,6 +38,11 @@ $(document).ready(function(){
         $("#render").load("load/adminbalancecomprobacion.php");
     });
 
+    $("#cambiopatrimonio").click(function(){
+        $("#render").load("load/adminCambioPatrimonio.php");
+    });
+    
+
     
 })
 
