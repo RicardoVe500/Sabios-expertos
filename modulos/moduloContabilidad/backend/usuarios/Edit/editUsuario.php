@@ -1,7 +1,7 @@
 <?php
 
-//Iniciar Sesion
-//session_start();
+// Iniciar Sesión
+// session_start();
 
 // Crear conexión a la BD
 require_once '../../../../../lib/config/conect.php';
@@ -34,6 +34,19 @@ if (isset($_POST['usuarioId']) && isset($_POST['nombre']) && isset($_POST['apell
     }
 
     $clave_segura = password_hash($clave, PASSWORD_BCRYPT, ['cost' => 4]);
+
+    // Verificar si el correo ya existe para otro usuario
+    $queryEmail = $con->prepare("SELECT usuarioId FROM usuarios WHERE email = ? AND usuarioId != ?");
+    $queryEmail->bind_param('si', $email, $usuarioId);
+    $queryEmail->execute();
+    $resultadoEmail = $queryEmail->get_result();
+
+    if ($resultadoEmail->num_rows > 0) {
+        echo json_encode(['status' => 'error', 'message' => 'El correo electrónico ya está registrado por otro usuario.']);
+        exit;
+    }
+
+    $queryEmail->close();
 
     // Consultar datos existentes para la bitácora
     $queryDatosExistentes = $con->prepare("SELECT nombre, apellidos, email, tipoUsuarioId FROM usuarios WHERE usuarioId = ?");
