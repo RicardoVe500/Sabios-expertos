@@ -73,7 +73,7 @@
                     </select>
                 </div>
                 <div class="col-sm-4">
-                    <label>Numero de Conprobante:</label>
+                    <label>Número de Comprobante:</label>
                     <input type="text" id="numeroComprobante" name="numeroComprobante" class="form-control">
                 </div>
                 <div class="col-sm-3">
@@ -89,7 +89,7 @@
                     </select>
                 </div>
                 <div class="col-sm-4">
-                    <label>Conepto Especifico:</label>
+                    <label>Concepto Especifico:</label>
                     <input type="text" id="conceptoespecifico" name="conceptoespecifico" class="form-control">
                 </div>
                 <div class="col-sm-2">
