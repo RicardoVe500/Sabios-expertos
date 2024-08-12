@@ -2,13 +2,48 @@
 include("../../../../../lib/config/conect.php");
 require_once("../../../../../lib/fpdf/fpdf.php"); // Asegúrate de ajustar la ruta al archivo FPDF
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 class PDF extends FPDF
 {
     // Encabezado de página
     function Header()
     {
-       
+        $fechacontable = $_POST['monthYearPickerbalance'];
+
+        // Crear un objeto DateTime desde el formato mes/año
+        $date = DateTime::createFromFormat('m/Y', $fechacontable);
+        
+        // Formatear la fecha para que aparezca como 'June 2024'
+        $fechaFormateada = $date->format('F Y'); // Se elimina la pleca, solo espacio entre mes y año
+        
+        // Crear un array de traducción de meses de inglés a español
+        $meses = [
+            'January' => 'ENERO',
+            'February' => 'FEBRERO',
+            'March' => 'MARZO',
+            'April' => 'ABRIL',
+            'May' => 'MAYO',
+            'June' => 'JUNIO',
+            'July' => 'JULIO',
+            'August' => 'AGOSTO',
+            'September' => 'SEPTIEMBRE',
+            'October' => 'OCTUBRE',
+            'November' => 'NOVIEMBRE',
+            'December' => 'DICIEMBRE'
+        ];
+        
+        // Obtener el nombre del mes en inglés
+        $mesIngles = $date->format('F');
+        
+        // Reemplazar el mes en inglés por el mes en español
+        $mesEspanol = $meses[$mesIngles];
+        $fechaFormateada = str_replace($mesIngles, $mesEspanol, $fechaFormateada);
+        
+        // Insertar " de " entre el mes y el año
+        $fechaFormateadaheader = str_replace(' ', ' DE ', $fechaFormateada);
 
         // Imagen de encabezado
         $this->Image('../../../../../lib/img/images.png', 10, 7, 30);
@@ -25,7 +60,7 @@ class PDF extends FPDF
         // Movernos a la derecha nuevamente
         $this->Cell(80);
         // Sub-título: Departamento de contabilidad
-        $this->Cell(30,10,'BALANCE COMPROBACION AL ',0,0,'C');
+        $this->Cell(30,10,'BALANCE GENERAL AL '.$fechaFormateadaheader,0,0,'C');
         // Salto de línea
         $this->Ln(5);
 
@@ -58,6 +93,16 @@ class PDF extends FPDF
 
     function LoadData($con) {
 
+        $anioActual = date("Y");
+        $fechaCompleta = $anioActual . "-01-01";
+        $fechacontable = $_POST['monthYearPickerbalance'];
+    
+    
+        list($mes, $anio) = explode('/', $fechacontable);
+        $ultimoDia = cal_days_in_month(CAL_GREGORIAN, $mes, $anio);
+        $fechaFormateada = $anio . '-' . $mes . '-' . $ultimoDia;
+
+
    
         $data = [];
         $totalActivos = 0;
@@ -86,6 +131,7 @@ class PDF extends FPDF
             FROM catalogocuentas cc 
             LEFT JOIN detalle d ON cc.cuentaId = d.cuentaId 
             WHERE SUBSTRING(cc.numeroCuenta, 1, 2) = $cuentasMayDato[numeroCuenta]
+            AND d.fechaContable BETWEEN '$fechaCompleta' AND '$fechaFormateada'
             GROUP BY cc.cuentaId
             ORDER BY cc.numeroCuenta;");
 
@@ -221,6 +267,7 @@ class PDF extends FPDF
                 $this->Line(115, $y - 1, 135, $y - 1);
 
                 $this->Ln(10);
+
             }
         }
     
@@ -233,6 +280,58 @@ class PDF extends FPDF
         $this->Line(165, $y3 - 1, 185, $y3 - 1);
         $y4 = $y3 + 2;
         $this->Line(165, $y4 - 1, 185, $y4 - 1);
+
+
+
+        $this->SetY(-125); // Ajustar la posición más arriba para tener espacio para las firmas
+    
+   
+        // Firma izquierda
+        $this->SetFont('Arial', '', 10);
+    
+        $this->SetX(15);
+        $this->Line(15, $this->GetY() + 10, 55, $this->GetY() + 10); // Longitud reducida de 60 a 40
+        $this->Ln(12); // Salto de línea para poner el texto debajo de la línea
+
+        // Texto de firma izquierda
+        $this->SetX(15);
+        $this->Cell(40, 5, 'Firma Izquierda', 0, 0, 'C');
+        $this->Ln(5); // Salto de línea
+        $this->SetX(15);
+        $this->Cell(40, 5, 'Nombre Izquierda', 0, 0, 'C');
+
+
+    
+        // Firma centro
+        $this->SetY(-125); // Regresa a la posición inicial de las firmas
+        $this->SetX(90);
+
+        // Línea para la firma centro, más pequeña y centrada
+        $this->Line(85, $this->GetY() + 10, 125, $this->GetY() + 10); // Longitud reducida
+        $this->Ln(12); // Salto de línea para poner el texto debajo de la línea
+
+        // Texto de firma centro
+        $this->SetX(90);
+        $this->Cell(30, 5, 'Firma Centro', 0, 0, 'C');
+        $this->Ln(5); // Salto de línea
+        $this->SetX(90);
+        $this->Cell(30, 5, 'Nombre Centro', 0, 0, 'C'); // Nombre aún no establecido
+    
+        // Firma derecha
+        $this->SetY(-125); // Regresa a la posición inicial de las firmas
+        $this->SetX(160);
+
+        // Línea para la firma derecha, más pequeña y centrada
+        $this->Line(155, $this->GetY() + 10, 195, $this->GetY() + 10); // Longitud reducida
+        $this->Ln(12); // Salto de línea para poner el texto debajo de la línea
+
+        // Texto de firma derecha
+        $this->SetX(160);
+        $this->Cell(30, 5, 'Firma Derecha', 0, 0, 'C');
+        $this->Ln(5); // Salto de línea
+        $this->SetX(160);
+        $this->Cell(30, 5, 'Nombre Derecha', 0, 0, 'C'); // Nombre aún no establecido
+    
     }
        
     

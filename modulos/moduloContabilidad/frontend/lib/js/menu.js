@@ -38,6 +38,10 @@ $(document).ready(function(){
         $("#render").load("load/adminbalancecomprobacion.php");
     });
 
+    $("#gen").click(function(){
+        $("#render").load("load/adminBalanceGeneral.php");
+    });
+
     
 })
 

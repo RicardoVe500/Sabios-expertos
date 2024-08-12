@@ -17,7 +17,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 
-// Suponiendo que $con ya está establecido y es la conexión a tu base de datos.
+
 
 $queryInsert = "UPDATE detalle SET fechacontable = '$fechacontable', haber = '$cargo', debe = '$abono'
                 WHERE partidaId = '$partidaId'";
