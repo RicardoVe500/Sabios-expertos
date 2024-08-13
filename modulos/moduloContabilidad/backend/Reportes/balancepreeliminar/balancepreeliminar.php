@@ -8,6 +8,8 @@ $fechaFin = mysqli_real_escape_string($con, $_POST['fechahasta']);
 
 class PDF extends PDF_MC_Table
 {
+        
+    
     function Header()
     {
         $this->Image('../../../../../lib/img/images.png', 10, 7, 30);

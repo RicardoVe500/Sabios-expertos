@@ -8,17 +8,27 @@ error_reporting(E_ALL);
 
 class PDF extends FPDF
 {
+    // Redefine el constructor para incluir el establecimiento de márgenes
+    function __construct($orientation = 'P', $unit = 'mm', $size = 'A4') {
+        parent::__construct($orientation, $unit, $size);
+        // Establece los márgenes (izquierdo, superior, derecho)
+        $this->SetMargins(25, 20, 25);
+    }
+
     // Encabezado de página
     function Header()
     {
         $fechacontable = $_POST['monthYearPickerbalance'];
-
+    
         // Crear un objeto DateTime desde el formato mes/año
         $date = DateTime::createFromFormat('m/Y', $fechacontable);
-        
+    
+        // Obtener el último día del mes
+        $ultimoDiaMes = $date->format('t'); // 't' da el último día del mes
+    
         // Formatear la fecha para que aparezca como 'June 2024'
-        $fechaFormateada = $date->format('F Y'); // Se elimina la pleca, solo espacio entre mes y año
-        
+        $fechaFormateada = $date->format('F Y');
+    
         // Crear un array de traducción de meses de inglés a español
         $meses = [
             'January' => 'ENERO',
@@ -34,51 +44,47 @@ class PDF extends FPDF
             'November' => 'NOVIEMBRE',
             'December' => 'DICIEMBRE'
         ];
-        
+    
         // Obtener el nombre del mes en inglés
         $mesIngles = $date->format('F');
-        
+    
         // Reemplazar el mes en inglés por el mes en español
         $mesEspanol = $meses[$mesIngles];
         $fechaFormateada = str_replace($mesIngles, $mesEspanol, $fechaFormateada);
-        
-        // Insertar " de " entre el mes y el año
-        $fechaFormateadaheader = str_replace(' ', ' DE ', $fechaFormateada);
-
+    
+        // Formatear la fecha final como "Último día del mes Mes de Año"
+        $fechaFormateadaheader = $ultimoDiaMes . ' DE ' . $fechaFormateada;
+    
         // Imagen de encabezado
-        $this->Image('../../../../../lib/img/images.png', 10, 7, 30);
-        $this->SetFont('Arial','B',12);
+        $this->Image('../../../../../lib/img/images.png', 20, 10, 30);
+        $this->SetFont('Arial', 'B', 12);
         // Movernos a la derecha para centrar el título
-        $this->Cell(80);
+        $this->Cell(70);
         // Título
-        $this->Cell(30,10,'SABIOS Y EXPERTOS',0,0,'C');
+        $this->Cell(30, 10, 'SABIOS Y EXPERTOS', 0, 0, 'C');
         // Salto de línea
         $this->Ln(5);
-
+    
         // Restablecer fuente para sub-títulos
         
         // Movernos a la derecha nuevamente
-        $this->Cell(80);
+        $this->Cell(70);
         // Sub-título: Departamento de contabilidad
-        $this->Cell(30,10,'BALANCE GENERAL AL '.$fechaFormateadaheader,0,0,'C');
+        $this->Cell(30, 10, 'BALANCE GENERAL AL ' . $fechaFormateadaheader, 0, 0, 'C');
         // Salto de línea
         $this->Ln(5);
-
+    
         // Movernos a la derecha
-        $this->Cell(80);
+        $this->Cell(70);
         // Sub-título: Balance de Comprobacion
-       $this->Cell(35,10,'(Expresado en Dolares de los Estados Unidos de America)',0,0,'C');
+        $this->Cell(35, 10, '(Expresado en Dolares de los Estados Unidos de America)', 0, 0, 'C');
         // Salto de línea
         $this->Ln(5);
-
-        // Movernos a la derecha
-        //$this->Cell(80);
-        // Fecha de impresión
-        //$date = date('d-m-Y H:i:s');
-        //$this->Cell(30,10,'Fecha de impresion: ' . $date,0,0,'C');
+    
         // Salto de línea para comenzar con el contenido del reporte
         $this->Ln(15);
     }
+    
 
     // Pie de página
     function Footer()
@@ -186,24 +192,24 @@ class PDF extends FPDF
         foreach ($data as $item) {
             if ($item['tipoSaldoId'] == 1) { // Activos
                 $this->SetFont('Arial', 'B', 12);
-                $this->Cell(140, 6, $item['nombreCuenta'], 0, 0);
+                $this->Cell(135, 6, $item['nombreCuenta'], 0, 0);
                 $this->Cell(0, 6, number_format($item['totalSaldo']), 0, 1, 'C');
     
                 // Imprimir subcuentas de Activos con niveles de indentación
                 $this->SetFont('Arial', '', 11);
                 foreach ($item['subcuentas'] as $sub) {
-                    $indent = 20; // Espacio base para las subcuentas
+                    $indent = 30; // Espacio base para las subcuentas
                     if ($sub['nivel'] == 3) {
                         
                         $this->SetX($indent);
-                        $this->Cell(100, 6, $sub['nombreSubcuenta'], 0, 0);
+                        $this->Cell(90, 6, $sub['nombreSubcuenta'], 0, 0);
                         $this->Cell(40, 6, number_format($sub['saldo'], 2), 0, 1, 'R');
                         
 
                     } elseif ($sub['nivel'] > 3) {
 
                         $this->SetX($indent + 10); // Doble sangría para niveles mayores a 3
-                        $this->Cell(100, 6, $sub['nombreSubcuenta'], 0, 0);
+                        $this->Cell(90, 6, $sub['nombreSubcuenta'], 0, 0);
                         $this->Cell(5, 6, number_format($sub['saldo'], 2), 0, 1, 'R');
                         
 
@@ -221,12 +227,12 @@ class PDF extends FPDF
         // Impresión del total de activos
         $this->Ln(5);
         $this->SetFont('Arial', 'B', 12);
-        $this->Cell(155, 6, 'Total Activos y Cuentas Deudoras', 0, 0);
+        $this->Cell(135, 6, 'Total Activos y Cuentas Deudoras', 0, 0);
         $this->Cell(0, 6, '$ ' . number_format($totalActivos), 0, 1);
         $y1 = $this->GetY();
-        $this->Line(165, $y1 - 1, 185, $y1 - 1);
+        $this->Line(160, $y1 - 1, 180, $y1 - 1);
         $y2 = $y1 + 2;
-        $this->Line(165, $y2 - 1, 185, $y2 - 1);
+        $this->Line(160, $y2 - 1, 180, $y2 - 1);
 
         $this->Ln(13);
     
@@ -238,23 +244,23 @@ class PDF extends FPDF
         foreach ($data as $item) {
             if ($item['tipoSaldoId'] == 2) { // Pasivos
                 $this->SetFont('Arial', 'B', 12);
-                $this->Cell(140, 6, $item['nombreCuenta'], 0, 0);
+                $this->Cell(130, 6, $item['nombreCuenta'], 0, 0);
                 $this->Cell(0, 6, number_format($item['totalSaldo']), 0, 1, 'C');
     
                 // Imprimir subcuentas de Pasivos con niveles de indentación
                 $this->SetFont('Arial', '', 11);
                 foreach ($item['subcuentas'] as $sub) {
-                    $indent = 20; // Espacio base para las subcuentas
+                    $indent = 30; // Espacio base para las subcuentas
                     if ($sub['nivel'] == 3) {
 
                         $this->SetX($indent);
-                        $this->Cell(100, 6, $sub['nombreSubcuenta'], 0, 0);
+                        $this->Cell(90, 6, $sub['nombreSubcuenta'], 0, 0);
                         $this->Cell(40, 6, number_format($sub['saldo'], 2), 0, 1, 'R');
 
                     } elseif ($sub['nivel'] > 3) {
 
                     $this->SetX($indent + 10); // Doble sangría para niveles mayores a 3
-                    $this->Cell(100, 6, $sub['nombreSubcuenta'], 0, 0);
+                    $this->Cell(90, 6, $sub['nombreSubcuenta'], 0, 0);
                     $this->Cell(5, 6, number_format($sub['saldo'], 2), 0, 1, 'R');
 
                     }
@@ -274,12 +280,12 @@ class PDF extends FPDF
         // Impresión del total de pasivos
         $this->Ln(10);
         $this->SetFont('Arial', 'B', 12);
-        $this->Cell(155, 6, 'Total Pasivos, patrimonio y Cuentas Acreedoras', 0, 0);
+        $this->Cell(135, 6, 'Total Pasivos, patrimonio y Cuentas Acreedoras', 0, 0);
         $this->Cell(0, 6, '$ ' . number_format($totalPasivos), 0, 1);
         $y3 = $this->GetY();
-        $this->Line(165, $y3 - 1, 185, $y3 - 1);
+        $this->Line(160, $y3 - 1, 180, $y3 - 1);
         $y4 = $y3 + 2;
-        $this->Line(165, $y4 - 1, 185, $y4 - 1);
+        $this->Line(160, $y4 - 1, 180, $y4 - 1);
 
 
 
