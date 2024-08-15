@@ -4,16 +4,12 @@
     </div>
     <div class="card-body">
 
-        <button class="btn btn-success mb-3" id="frmAddPeriodo">
-            <i class="fa fa-plus"></i> Agregar Periodo
-        </button> 
-
         <div class="input-group mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group-prepend" style="display: none;">
                 <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
             </div>
-            <input type="text" class="form-control" placeholder="Buscar" aria-label="Username"
-                aria-describedby="basic-addon1">
+            <!-- <input type="text" class="form-control" placeholder="Buscar" aria-label="Username"
+                aria-describedby="basic-addon1"> -->
         </div>
 
         <table id="tablaperiodocierre" class="table" style="width:100%">
@@ -42,8 +38,8 @@ $(document).ready(function() {
             "data": "estadoId", 
             "render": function(data, type, row) {
                 if (data != 4) {
-                    return `<button class="btn btn-danger btn-sm btn-cerrarPeriodo"><i class="fas fa-lock"></i> Cerrar</button>
-                            <button class="btn btn-primary btn-sm btn-diario"><i class="fas fa-lock"></i> cierre dia</button>`;
+                    return `<button class="btn btn-warning btn-sm btn-diario"><i class="fas fa-lock"></i> Cierre Diario</button>
+                            <button class="btn btn-danger btn-sm btn-cerrarPeriodo"><i class="fas fa-lock"></i> Cerrar Mes</button>`;
 
                 } else {
                     // Aquí puedes definir otro botón u omitirlo si no necesitas otro botón

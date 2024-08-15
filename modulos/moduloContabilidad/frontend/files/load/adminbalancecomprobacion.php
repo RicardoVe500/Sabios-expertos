@@ -1,6 +1,8 @@
 <div class="card shadow mb-4">
     <div class="card-header py-3">
+
         <h6 class="m-0 font-weight-bold text-primary">Reporte de Balance de Comprobacion</h6>
+
     </div>
     <div class="card-body">
     <form id="balancegeneral" method="POST" action="../../backend/Reportes/BalanceComprobacion/BalanceComprobacion.php" target="_blank">

@@ -1,5 +1,7 @@
 <?php
+
 include("../../../../../lib/config/conect.php");
+
 $usuario_sesion = $_SESSION['usuario'];
 
 // Se Capturan los datos
@@ -9,6 +11,16 @@ $mayorizada = 1;
 $concepto = $_POST["concepto"];
 $fechacontable = $_POST["fechacontable"];
 $fechaHoraActual = date("Y-m-d H:i:s");
+
+// Verificar si el día está cerrado
+$queryCierre = "SELECT COUNT(*) as total FROM cierre WHERE fechaCierre = '$fechacontable'";
+$resultCierre = mysqli_query($con, $queryCierre);
+$rowCierre = mysqli_fetch_assoc($resultCierre);
+
+if ($rowCierre['total'] > 0) {
+    echo json_encode(array("success" => false, "message" => "El día seleccionado ya está cerrado."));
+    exit;
+}
 
 // Se establece el formato del mes y el año
 $mesActual = $_SESSION['periodo']['mes'];
@@ -38,20 +50,20 @@ $result = mysqli_query($con, $query);
 
 // Manejo de errores
 if (!$result) {
-    echo "Error en la consulta" . mysqli_error($con);
+    echo json_encode(array("success" => false, "message" => "Error en la consulta: " . mysqli_error($con)));
 } else {
     $fechajson = date("Y-m-d");
     // Preparar datos para la bitácora
     $datos = [
-        "Agrego Partida"=>[
         "accion" => "Agrego_Partida",
         "Usuario que agrego" => $usuario_sesion,
-        "Fecha Agrega" => $fechaHoraActual,
         "datosIngresados" => [
+            "tipoPartidaId" => $tipoPartidaId,
+            "estadoId" => $estadoId,
             "concepto" => $concepto,
             "fechacontable" => $fechacontable,
+            "fechaHoraActual" => $fechaHoraActual,
         ]
-     ],
     ];
     $jsonDatos = json_encode($datos);
 
@@ -70,6 +82,6 @@ if (!$result) {
         $insertQuery = "INSERT INTO bitacora(fecha, detalle) VALUES ('$fechajson', '$jsonDatos')";
         mysqli_query($con, $insertQuery);
     }
-}
 
-?>
+    echo json_encode(array("success" => true, "message" => "Partida agregada exitosamente."));
+}

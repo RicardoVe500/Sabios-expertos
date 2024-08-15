@@ -1,8 +1,3 @@
-<?php
-// Asegúrate de iniciar sesión en la parte superior de tu archivo PHP
-session_start();
-?>
-
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="app.php">
@@ -83,6 +78,8 @@ session_start();
                 <a class="collapse-item" href="#" id="gen">Balance General</a>
                 <a class="collapse-item" href="#" id="#">Estado de Resultado</a>
                 <a class="collapse-item" href="#" id="bitacora">Bitacora</a>
+                <a class="collapse-item" href="#" id="balancegeneral">Balance General</a>
+                <a class="collapse-item" href="#" id="cambiopatrimonio">Cambio de Patrimonio</a>
 
 
             </div>
