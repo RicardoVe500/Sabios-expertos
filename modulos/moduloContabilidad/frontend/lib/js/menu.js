@@ -46,6 +46,15 @@ $(document).ready(function(){
         $("#render").load("load/adminBalanceGeneral.php");
     });
 
+    $("#libroMayor").click(function(){
+        $("#render").load("load/adminlibromayor.php");
+    });
+
+    $("#estadoresultado").click(function(){
+        $("#render").load("load/adminestadodecomprobacion.php");
+    });
+
+    
     
 
 })

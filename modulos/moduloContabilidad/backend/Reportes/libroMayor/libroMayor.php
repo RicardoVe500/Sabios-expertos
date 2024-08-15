@@ -2,44 +2,61 @@
 include("../../../../../lib/config/conect.php");
 require_once("../../../../../lib/fpdf/fpdf.php"); // Asegúrate de ajustar la ruta al archivo FPDF
 
+
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+
 class PDF extends FPDF
 {
+    function __construct($orientation = 'P', $unit = 'mm', $size = 'A4') {
+        parent::__construct($orientation, $unit, $size);
+        // Establece los márgenes (izquierdo, superior, derecho)
+        $this->SetMargins(25, 20, 25);
+    }
+
     // Encabezado de página
     function Header()
-    {
+    { 
+
+        $fechaInicio = $_POST['fechadesdemayor'];
+        $fechaFin = $_POST['fechahastamayor'];
+
+        
         // Imagen de encabezado
-        $this->Image('../../../../../lib/img/images.png', 10, 7, 30);
+        $this->Image('../../../../../lib/img/images.png', 25, 15, 30);
         $this->SetFont('Arial','B',12);
         // Movernos a la derecha para centrar el título
-        $this->Cell(80);
+        $this->Cell(70);
         // Título
         $this->Cell(30,10,'SABIOS Y EXPERTOS',0,0,'C');
         // Salto de línea
         $this->Ln(5);
-
-        // Restablecer fuente para sub-títulos
-        $this->SetFont('Arial', '', 10);
         // Movernos a la derecha nuevamente
-        $this->Cell(80);
-        // Sub-título: Departamento de contabilidad
-        $this->Cell(30,10,'Departamento de contabilidad',0,0,'C');
-        // Salto de línea
-        $this->Ln(5);
-
         // Movernos a la derecha
-        $this->Cell(80);
+        $this->Cell(70);
         // Sub-título: Catálogo de Cuentas
-        $this->Cell(30,10,'Libro Mayor',0,0,'C');
+        $this->Cell(30,10,'LIBRO MAYOR',0,0,'C');
         // Salto de línea
         $this->Ln(5);
+        $this->Cell(70);
+        // Sub-título: Catálogo de Cuentas
+        $this->Cell(30, 10, 'Desde: '.$fechaInicio.' Hasta: '. $fechaFin , 0, 0, 'C');
 
-        // Movernos a la derecha
-        $this->Cell(80);
-        // Fecha de impresión
-        $date = date('d-m-Y H:i:s');
-        $this->Cell(30,10,'Fecha de impresion: ' . $date,0,0,'C');
-        // Salto de línea para comenzar con el contenido del reporte
+        $this->Ln(5);
+    
+        $this->Cell(70);
+        // Sub-título: Catálogo de Cuentas
+        $this->Cell(35, 10, '(Expresado en Dolares de los Estados Unidos de America)', 0, 0, 'C');
+
         $this->Ln(15);
+
+
+
+
+       
     }
 
     // Pie de página
@@ -55,12 +72,19 @@ class PDF extends FPDF
 
     // Cargar datos
     function LoadData($con) {
+
+        $fechaInicio = mysqli_real_escape_string($con, $_POST['fechadesdemayor']);
+        $fechaFin = mysqli_real_escape_string($con, $_POST['fechahastamayor']);
+
+
         $query = "SELECT p.codigoPartida, p.fechacontable, pd.cargo, pd.abono, 
-        cc.nombreCuenta, cc.numeroCuenta, s.saldo
-        FROM partidas p JOIN partidaDetalle pd on p.partidaId = pd.partidaId 
-        JOIN catalogocuentas cc on pd.cuentaId = cc.cuentaId
-        JOIN saldo s on cc.cuentaId = s.cuentaId
-        ORDER BY cc.numeroCuenta";
+            cc.nombreCuenta, cc.numeroCuenta, s.saldo, p.fechacontable
+        FROM partidas p 
+        JOIN partidaDetalle pd ON p.partidaId = pd.partidaId 
+        JOIN catalogocuentas cc ON pd.cuentaId = cc.cuentaId
+        JOIN saldo s ON cc.cuentaId = s.cuentaId
+        WHERE p.fechacontable BETWEEN '$fechaInicio' AND '$fechaFin'
+        ORDER BY cc.numeroCuenta;";
     
         $result = mysqli_query($con, $query);
     
@@ -97,7 +121,7 @@ function FancyTable($header, $data, $saldo)
     $this->SetFont('', 'B');
 
     // Anchuras de las columnas
-    $w = array(40, 35, 30, 43, 43);
+    $w = array(30, 25, 30, 40, 40);
     for ($i = 0; $i < count($header); $i++)
         $this->Cell($w[$i], 7, $header[$i], 1, 0, 'C', true);
     $this->Ln();
@@ -149,11 +173,11 @@ $pdf->AddPage();
 $data = $pdf->LoadData($con);
 
 // Encabezados de las columnas
-$header = array('Partida', 'Fecha Contable', 'Num. Cuenta', 'Cargo', 'Abono');
+$header = array('Partida', 'Fecha', 'N Cuenta', 'Cargo', 'Abono');
 
 // Generar una tabla por cada cuenta
 foreach ($data as $nombreCuenta => $rows) {
-    $pdf->SetX(10); // Restablece la posición x del cursor a 10, que es el margen izquierdo
+    $pdf->SetX(25); // Restablece la posición x del cursor a 10, que es el margen izquierdo
     $pdf->Cell(0, 10, 'Cuenta: ' . $nombreCuenta, 0, 1);
     $saldo = end($rows)['saldo']; // Asegúrate de que el saldo esté presente en los datos de las filas
     $pdf->FancyTable($header, $rows, $saldo);

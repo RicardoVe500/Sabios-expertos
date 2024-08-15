@@ -18,6 +18,42 @@ class PDF extends FPDF {
 
     function Header()
     {
+        $fechacontable = $_POST['resultadobalance'];
+    
+        // Crear un objeto DateTime desde el formato mes/año
+        $date = DateTime::createFromFormat('m/Y', $fechacontable);
+    
+        // Obtener el último día del mes
+        $ultimoDiaMes = $date->format('t'); // 't' da el último día del mes
+    
+        // Formatear la fecha para que aparezca como 'June 2024'
+        $fechaFormateada = $date->format('F Y');
+    
+        // Crear un array de traducción de meses de inglés a español
+        $meses = [
+            'January' => 'ENERO',
+            'February' => 'FEBRERO',
+            'March' => 'MARZO',
+            'April' => 'ABRIL',
+            'May' => 'MAYO',
+            'June' => 'JUNIO',
+            'July' => 'JULIO',
+            'August' => 'AGOSTO',
+            'September' => 'SEPTIEMBRE',
+            'October' => 'OCTUBRE',
+            'November' => 'NOVIEMBRE',
+            'December' => 'DICIEMBRE'
+        ];
+    
+        // Obtener el nombre del mes en inglés
+        $mesIngles = $date->format('F');
+    
+        // Reemplazar el mes en inglés por el mes en español
+        $mesEspanol = $meses[$mesIngles];
+        $fechaFormateada = str_replace($mesIngles, $mesEspanol, $fechaFormateada);
+    
+        // Formatear la fecha final como "Último día del mes Mes de Año"
+        $fechaFormateadaheader = $ultimoDiaMes . ' DE ' . $fechaFormateada;
 
         // Imagen de encabezado
         
@@ -35,7 +71,7 @@ class PDF extends FPDF {
         // Movernos a la derecha nuevamente
         $this->Cell(70);
         // Sub-título: Departamento de contabilidad
-        $this->Cell(30,10,'ESTADO DE RESULTADO AL ',0,0,'C');
+        $this->Cell(30, 10, 'BALANCE COMPROBACION AL ' . $fechaFormateadaheader, 0, 0, 'C');
         // Salto de línea
         $this->Ln(5);
 
@@ -67,6 +103,16 @@ class PDF extends FPDF {
     }
 
     function LoadData($con) {
+
+        $anioActual = date("Y");
+        $fechaCompleta = $anioActual . "-01-01";
+        $fechacontable = $_POST['resultadobalance'];
+    
+    
+        list($mes, $anio) = explode('/', $fechacontable);
+        $ultimoDia = cal_days_in_month(CAL_GREGORIAN, $mes, $anio);
+        $fechaFormateada = $anio . '-' . $mes . '-' . $ultimoDia;
+
         
         $selecCtsMayores = mysqli_query($con, "SELECT cc.cuentaId, cc.numeroCuenta, cc.nombreCuenta, 
         cc.cuentaDependiente, cc.nivelCuenta, 
@@ -98,7 +144,8 @@ class PDF extends FPDF {
                     cc.numeroCuenta NOT LIKE '2%' AND
                     cc.numeroCuenta NOT LIKE '3%' AND
                     cc.numerocuenta NOT LIKE '5102%' AND
-                    cc.numeroCuenta NOT LIKE '4102%'
+                    cc.numeroCuenta NOT LIKE '4102%' AND
+                    d.fechaContable BETWEEN '$fechaCompleta' AND '$fechaFormateada'
                 GROUP BY cc.cuentaId
                 ORDER BY cc.numeroCuenta;");
     
@@ -156,6 +203,16 @@ class PDF extends FPDF {
     }
 
     function LoadData2($con) {
+
+        $anioActual = date("Y");
+        $fechaCompleta = $anioActual . "-01-01";
+        $fechacontable = $_POST['resultadobalance'];
+    
+    
+        list($mes, $anio) = explode('/', $fechacontable);
+        $ultimoDia = cal_days_in_month(CAL_GREGORIAN, $mes, $anio);
+        $fechaFormateada = $anio . '-' . $mes . '-' . $ultimoDia;
+
         
         $selecCtsMayores = mysqli_query($con, "SELECT cc.cuentaId, cc.numeroCuenta, cc.nombreCuenta, 
         cc.cuentaDependiente, cc.nivelCuenta, 
@@ -187,7 +244,8 @@ class PDF extends FPDF {
                     cc.numeroCuenta NOT LIKE '2%' AND
                     cc.numeroCuenta NOT LIKE '3%' AND
                      (cc.numeroCuenta LIKE '4102%' OR
-                     cc.numeroCuenta LIKE '5102%' )
+                     cc.numeroCuenta LIKE '5102%' ) AND
+                     d.fechaContable BETWEEN '$fechaCompleta' AND '$fechaFormateada'
                 GROUP BY cc.cuentaId
                 ORDER BY cc.numeroCuenta;");
     

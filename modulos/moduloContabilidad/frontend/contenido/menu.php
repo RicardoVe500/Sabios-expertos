@@ -74,9 +74,10 @@
         <div id="collapsefour" class="collapse" aria-labelledby="headingtree" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Reportes</h6>
+                <a class="collapse-item" href="#" id="libroMayor">Libro Mayor</a>
                 <a class="collapse-item" href="#" id="balancegeneral">Balance Comprobacion</a>
                 <a class="collapse-item" href="#" id="gen">Balance General</a>
-                <a class="collapse-item" href="#" id="#">Estado de Resultado</a>
+                <a class="collapse-item" href="#" id="estadoresultado">Estado de Resultado</a>
                 <a class="collapse-item" href="#" id="cambiopatrimonio">Cambio de Patrimonio</a>
                 <a class="collapse-item" href="#" id="bitacora">Bitacora</a>
 
