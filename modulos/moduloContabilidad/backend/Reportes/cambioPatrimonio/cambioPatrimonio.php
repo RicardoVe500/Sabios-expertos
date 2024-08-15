@@ -61,7 +61,7 @@ class PDF extends FPDF
         $this->SetFont('Arial', 'I', 12);
         $this->Cell(0, 10, 'Departamento de contabilidad', 0, 1, 'C');
         $this->Cell(0, 10, 'Estado de Cambios en el Patrimonio', 0, 1, 'C');
-        $this->Cell(0, 10, "Periodo: $this->fechaInicio - $this->fechaFin, $this->anio", 0, 1, 'C');
+        $this->Cell(0, 10, "Periodo: $this->fechaInicio - $this->fechaFin", 0, 1, 'C');
         $this->Ln(10);
     }
 
@@ -70,6 +70,16 @@ class PDF extends FPDF
         $this->SetY(-15);
         $this->SetFont('Arial', 'I', 8);
         $this->Cell(0, 10, 'Pagina ' . $this->PageNo() . '/{nb}', 0, 0, 'C');
+    }
+
+    // Función para formatear los números, mostrando los negativos entre paréntesis
+    function formatNumber($number) {
+        // Si el número es negativo, lo formatea con paréntesis
+        if ($number < 0) {
+            return '($' . number_format(abs($number), 2) . ')';
+        } else {
+            return '$' . number_format($number, 2);
+        }
     }
 
     function FancyTable($totals)
@@ -100,16 +110,14 @@ class PDF extends FPDF
     
         foreach ($totals as $concept => $values) {
             $this->Cell($w[0], 8, utf8_decode($concept), 1);
-            $this->Cell($w[1], 8, '$' . number_format($values['capital_social'], 2), 1, 0, 'R');
-            $this->Cell($w[2], 8, '$' . number_format($values['utilidades_retenidas'], 2), 1, 0, 'R');
-            $this->Cell($w[3], 8, '$' . number_format($values['revalorizacion_activos'], 2), 1, 0, 'R');
-            $this->Cell($w[4], 8, '$' . number_format($values['total'], 2), 1, 0, 'R');
+            $this->Cell($w[1], 8, $this->formatNumber($values['capital_social']), 1, 0, 'R');
+            $this->Cell($w[2], 8, $this->formatNumber($values['utilidades_retenidas']), 1, 0, 'R');
+            $this->Cell($w[3], 8, $this->formatNumber($values['revalorizacion_activos']), 1, 0, 'R');
+            $this->Cell($w[4], 8, $this->formatNumber($values['total']), 1, 0, 'R');
             $this->Ln();
         }
     }
     
-    
-
     function LoadData($fechaInicio, $fechaFin)
     {
         $mysqli = new mysqli('localhost', 'root', '', 'tesis');
