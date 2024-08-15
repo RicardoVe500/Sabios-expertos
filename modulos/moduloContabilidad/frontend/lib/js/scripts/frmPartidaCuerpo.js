@@ -169,7 +169,7 @@ function validarCampos() {
     if (debe > 0 && haber > 0) {
         Swal.fire({
             title: 'Error',
-            text: 'No puedes ingresar saldos en debe y haber ha la vez',
+            text: 'No puedes ingresar saldos en debe y haber al mismo tiempo',
             icon: 'warning',
             confirmButtonText: 'Aceptar'
         });
@@ -472,15 +472,15 @@ function agregarDetalle(){
         cargo: $("#debeCuerpo").val() || '0',
         abono: $("#haberCuerpo").val() || '0',
     } 
-    $.ajax({
+/*     $.ajax({
         url: "../../backend/detalle/add/detalle.php",
         data: pData,
         type: "POST",
         success: function (response) {
             Swal.fire({
                 icon: 'success',
-                title: 'inserto',
-                text: 'XD.',
+                title: response.message,
+                text: response.message,
                 confirmButtonText: 'Aceptar'
             });
         },
@@ -493,10 +493,10 @@ function agregarDetalle(){
                 confirmButtonText: 'Aceptar'
             });
         }
-    })
+    }) */
 }
 
-function editDetalle(){
+/* function editDetalle(){
     const pData = {
         partidaId: $("#partidaId").val(),
         cuentaId: $("#selectcuentas").val(),
@@ -511,8 +511,8 @@ function editDetalle(){
         success: function (response) {
             wal.fire({
                 icon: 'success',
-                title: 'inserto',
-                text: 'XD.',
+                title: response.message,
+                text: response.message,
                 confirmButtonText: 'Aceptar'
             });
         },
@@ -526,4 +526,4 @@ function editDetalle(){
             });
         }
     })
-}
+} */

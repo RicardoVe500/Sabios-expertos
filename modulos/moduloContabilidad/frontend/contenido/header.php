@@ -6,18 +6,12 @@
         <i class="fa fa-bars"></i>
     </button>
 
-    <!-- Topbar Search -->
-    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-        <div class="input-group">
-            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                aria-label="Search" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-                <button class="btn btn-primary" id="topsearch" type="button">
-                    <i class="fas fa-search fa-sm"></i>
-                </button>
-            </div>
-        </div>
-    </form>
+<!-- Topbar Tiempo Display -->
+<div class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-time">
+    <div class="input-group">
+        <span id="current-time" class="form-control bg-light border-0 small text-center font-weight-bold rounded-pill shadow-lg" style="font-size: 1.2rem; color: #D7282F; padding: 5px 15px;"></span>
+    </div>
+</div>
 
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
@@ -63,6 +57,7 @@
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                    
                     <!-- Mostrar nombre y apellido del usuario -->
                     <em>Bienvenido: <?php echo $_SESSION['usuario']; ?></em>
                 </span>
@@ -180,4 +175,15 @@ function updateProfile() {
         Swal.fire('Error', 'Todos los campos son requeridos', 'error');
     }
 }
+
+//Hora y fecha exacta en tiempo real
+function updateTime() {
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'};
+        const now = new Date().toLocaleDateString('es-ES', options);
+        document.getElementById('current-time').textContent = now;
+    }
+
+    setInterval(updateTime, 1000);
+    updateTime();
+
 </script>
