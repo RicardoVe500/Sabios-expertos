@@ -41,6 +41,11 @@ $(document).ready(function(){
     $("#cambiopatrimonio").click(function(){
         $("#render").load("load/adminCambioPatrimonio.php");
     });
+
+    $("#gen").click(function(){
+        $("#render").load("load/adminBalanceGeneral.php");
+    });
+
     
 
 })

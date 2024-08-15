@@ -5,17 +5,25 @@ require_once("../../../../../lib/fpdf/fpdf.php"); // Asegúrate de ajustar la ru
 
 class PDF extends FPDF
 {
+    function __construct($orientation = 'P', $unit = 'mm', $size = 'A4') {
+        parent::__construct($orientation, $unit, $size);
+        // Establece los márgenes (izquierdo, superior, derecho)
+        $this->SetMargins(25, 20, 25);
+    }
     // Encabezado de página
     function Header()
     {
         $fechacontable = $_POST['monthYearPickergeneral'];
-
+    
         // Crear un objeto DateTime desde el formato mes/año
         $date = DateTime::createFromFormat('m/Y', $fechacontable);
-        
+    
+        // Obtener el último día del mes
+        $ultimoDiaMes = $date->format('t'); // 't' da el último día del mes
+    
         // Formatear la fecha para que aparezca como 'June 2024'
-        $fechaFormateada = $date->format('F Y'); // Se elimina la pleca, solo espacio entre mes y año
-        
+        $fechaFormateada = $date->format('F Y');
+    
         // Crear un array de traducción de meses de inglés a español
         $meses = [
             'January' => 'ENERO',
@@ -31,52 +39,47 @@ class PDF extends FPDF
             'November' => 'NOVIEMBRE',
             'December' => 'DICIEMBRE'
         ];
-        
+    
         // Obtener el nombre del mes en inglés
         $mesIngles = $date->format('F');
-        
+    
         // Reemplazar el mes en inglés por el mes en español
         $mesEspanol = $meses[$mesIngles];
         $fechaFormateada = str_replace($mesIngles, $mesEspanol, $fechaFormateada);
-        
-        // Insertar " de " entre el mes y el año
-        $fechaFormateadaheader = str_replace(' ', ' DE ', $fechaFormateada);
-
+    
+        // Formatear la fecha final como "Último día del mes Mes de Año"
+        $fechaFormateadaheader = $ultimoDiaMes . ' DE ' . $fechaFormateada;
+    
         // Imagen de encabezado
-        $this->Image('../../../../../lib/img/images.png', 10, 7, 30);
-        $this->SetFont('Arial','B',12);
+        $this->Image('../../../../../lib/img/images.png', 20, 7, 30);
+        $this->SetFont('Arial', 'B', 12);
         // Movernos a la derecha para centrar el título
-        $this->Cell(80);
+        $this->Cell(70);
         // Título
-        $this->Cell(30,10,'SABIOS Y EXPERTOS',0,0,'C');
+        $this->Cell(30, 10, 'SABIOS Y EXPERTOS', 0, 0, 'C');
         // Salto de línea
         $this->Ln(5);
-
+    
         // Restablecer fuente para sub-títulos
         
         // Movernos a la derecha nuevamente
-        $this->Cell(80);
+        $this->Cell(70);
         // Sub-título: Departamento de contabilidad
-        $this->Cell(30,10,'BALANCE COMPROBACION AL '.$fechaFormateadaheader,0,0,'C');
+        $this->Cell(30, 10, 'BALANCE COMPROBACION AL ' . $fechaFormateadaheader, 0, 0, 'C');
         // Salto de línea
         $this->Ln(5);
-
+    
         // Movernos a la derecha
-        $this->Cell(80);
+        $this->Cell(70);
         // Sub-título: Balance de Comprobacion
-       $this->Cell(35,10,'(Expresado en Dolares de los Estados Unidos de America)',0,0,'C');
+        $this->Cell(35, 10, '(Expresado en Dolares de los Estados Unidos de America)', 0, 0, 'C');
         // Salto de línea
         $this->Ln(5);
-
-        // Movernos a la derecha
-        //$this->Cell(80);
-        // Fecha de impresión
-        //$date = date('d-m-Y H:i:s');
-        //$this->Cell(30,10,'Fecha de impresion: ' . $date,0,0,'C');
+    
         // Salto de línea para comenzar con el contenido del reporte
         $this->Ln(15);
     }
-
+    
     // Pie de página
     function Footer()
     {
@@ -175,18 +178,21 @@ class PDF extends FPDF
             //Para escribir el total de activo
             if ($isFirstPassive && $item['tipoSaldoId'] == 2) {
                 $this->SetFont('Arial', 'B', 12);
-                $this->Cell(145, 6, 'Total Activos', 0, 0);
-                $this->Cell(0, 6, '$ '.number_format($totalActivos), 0, 1);
+                $this->Cell(125, 6, 'Total Activos', 0, 0);
+                $formattedTotalActivos = $totalActivos < 0 ? '(' . number_format(abs($totalActivos), 2) . ')' : number_format($totalActivos, 2);
+                $this->Cell(0, 6, '$ '.$formattedTotalActivos, 0, 1);
                 $y = $this->GetY();
-                $this->Line(155, $y - 1, 175, $y - 1); 
+                $this->Line(150, $y - 1, 180, $y - 1); 
                 $y2 = $y + 2;  // Aumenta el valor de $y en 2 mm
-                $this->Line(155, $y2 - 1, 175, $y2 - 1);
+                $this->Line(150, $y2 - 1, 180, $y2 - 1);
                 $this->Ln(15);
                 $isFirstPassive = false;  // Cambiar la bandera después de mostrar total de activos
             }
 
-            $this->Cell(145, 6, $item['nombreCuenta'], 0, 0);
-            $this->Cell(0, 6, number_format($item['totalSaldo']), 0, 1);
+            $this->Cell(130, 6, $item['nombreCuenta'], 0, 0);
+            $formattedTotalSaldo = $item['totalSaldo'] < 0 ? '(' . number_format(abs($item['totalSaldo']), 2) . ')' : number_format($item['totalSaldo'], 2);
+
+            $this->Cell(0, 6, $formattedTotalSaldo, 0, 1);
 
           
             
@@ -194,16 +200,19 @@ class PDF extends FPDF
 
     
             foreach ($item['subcuentas'] as $sub) {
-                $this->SetX(20);
-                $this->Cell(100, 6, $sub['nombreSubcuenta'], 0, 0);
-                $this->Cell(30, 6, number_format($sub['saldo'], 2), 0, 1, 'R');
+                $this->SetX(30);
+                $this->Cell(80, 6, $sub['nombreSubcuenta'], 0, 0);
+                $formattedSaldo = $sub['saldo'] < 0 ? '(' . number_format(abs($sub['saldo']), 2) . ')' : number_format($sub['saldo'], 2);
+                $this->Cell(30, 6, $formattedSaldo, 0, 1, 'R');
+               
+
 
                
             }
            
             $y = $this->GetY();
             // Dibujar la línea desde la posición X de la celda de saldo hasta el final de la página
-            $this->Line(155, $y - 1, 125, $y - 1); 
+            $this->Line(140, $y - 1, 115, $y - 1); 
             
         }
         
@@ -213,13 +222,65 @@ class PDF extends FPDF
 
         $this->SetFont('Arial', 'B', 12);
         $this->Ln(5);
-        $this->Cell(145, 6, 'Total Pasivos y patrimonio', 0, 0);
-        $this->Cell(0, 6, '$ '.number_format($totalPasivos), 0, 1);
+        $this->Cell(125, 6, 'Total Pasivos y patrimonio', 0, 0);
+        $formattedTotalPasivos = $totalPasivos < 0 ? '(' . number_format(abs($totalPasivos), 2) . ')' : number_format($totalPasivos, 2);
+        $this->Cell(0, 6, "$ " . $formattedTotalPasivos, 0, 1);
         $y = $this->GetY();
             // Dibujar la línea desde la posición X de la celda de saldo hasta el final de la página
-            $this->Line(155, $y - 1, 175, $y - 1); 
+            $this->Line(150, $y - 1, 180, $y - 1);
             $y2 = $y + 2;  // Aumenta el valor de $y en 2 mm
-                $this->Line(155, $y2 - 1, 175, $y2 - 1);
+                $this->Line(150, $y2 - 1, 180, $y2 - 1);
+
+               
+
+                $this->SetY(-105); // Ajustar la posición más arriba para tener espacio para las firmas
+    
+   
+                // Firma izquierda
+                $this->SetFont('Arial', '', 10);
+            
+                $this->SetX(15);
+                $this->Line(15, $this->GetY() + 10, 55, $this->GetY() + 10); // Longitud reducida de 60 a 40
+                $this->Ln(12); // Salto de línea para poner el texto debajo de la línea
+        
+                // Texto de firma izquierda
+                $this->SetX(15);
+                $this->Cell(40, 5, 'Firma Izquierda', 0, 0, 'C');
+                $this->Ln(5); // Salto de línea
+                $this->SetX(15);
+                $this->Cell(40, 5, 'Nombre Izquierda', 0, 0, 'C');
+        
+        
+            
+                // Firma centro
+                $this->SetY(-105); // Regresa a la posición inicial de las firmas
+                $this->SetX(90);
+        
+                // Línea para la firma centro, más pequeña y centrada
+                $this->Line(85, $this->GetY() + 10, 125, $this->GetY() + 10); // Longitud reducida
+                $this->Ln(12); // Salto de línea para poner el texto debajo de la línea
+        
+                // Texto de firma centro
+                $this->SetX(90);
+                $this->Cell(30, 5, 'Firma Centro', 0, 0, 'C');
+                $this->Ln(5); // Salto de línea
+                $this->SetX(90);
+                $this->Cell(30, 5, 'Nombre Centro', 0, 0, 'C'); // Nombre aún no establecido
+            
+                // Firma derecha
+                $this->SetY(-105); // Regresa a la posición inicial de las firmas
+                $this->SetX(160);
+        
+                // Línea para la firma derecha, más pequeña y centrada
+                $this->Line(155, $this->GetY() + 10, 195, $this->GetY() + 10); // Longitud reducida
+                $this->Ln(12); // Salto de línea para poner el texto debajo de la línea
+        
+                // Texto de firma derecha
+                $this->SetX(160);
+                $this->Cell(30, 5, 'Firma Derecha', 0, 0, 'C');
+                $this->Ln(5); // Salto de línea
+                $this->SetX(160);
+                $this->Cell(30, 5, 'Nombre Derecha', 0, 0, 'C'); // Nombre aún no establecido
     }
       
     
