@@ -35,21 +35,4 @@
 </div>
 
 
-<script>
-  $("#tipopartida").click(function(){
-        $("#render").load("load/adminTipoPartidas.php");
-    });
-</script>
 
-<!-- JavaScript to update time in real-time -->
-<script>
-    function updateTime() {
-        const now = new Date();
-        const minutes = now.getMinutes();
-        document.getElementById('time1').textContent = minutes;
-        document.getElementById('time2').textContent = minutes;
-        document.getElementById('time3').textContent = minutes;
-    }
-    setInterval(updateTime, 1000); // Update every second
-    updateTime(); // Initial call to set the time immediately
-</script>

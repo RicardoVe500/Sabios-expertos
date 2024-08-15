@@ -1,6 +1,10 @@
 
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
+<div>
+<h6 class="m-0 font-weight-bold text-primary" id="fechaHora" >Administración de Tipos de Partida</h6>
+</div>
+
     <!-- Sidebar Toggle (Topbar) -->
     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
         <i class="fa fa-bars"></i>
@@ -40,7 +44,7 @@
         </li>
 
 
-
+        
 
         <div>
             <!-- BOton de  -->
@@ -138,8 +142,7 @@
 
 </nav>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
 function updateProfile() {
     const email = document.getElementById('email_perfil').value;
@@ -176,14 +179,32 @@ function updateProfile() {
     }
 }
 
-//Hora y fecha exacta en tiempo real
-function updateTime() {
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'};
-        const now = new Date().toLocaleDateString('es-ES', options);
-        document.getElementById('current-time').textContent = now;
+function actualizarFechaHora() {
+        const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
+                       "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+        const dias = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+
+        let fechaActual = new Date();
+        let diaSemana = dias[fechaActual.getDay()];
+        let dia = fechaActual.getDate();
+        let mes = meses[fechaActual.getMonth()];
+        let anio = fechaActual.getFullYear();
+        let hora = fechaActual.getHours();
+        let minutos = fechaActual.getMinutes();
+        
+        // Asegurarse de mostrar siempre dos dígitos para los minutos
+        minutos = minutos < 10 ? '0' + minutos : minutos;
+
+        // Formato deseado: "Lunes, 14 de Julio - 14:45"
+        document.getElementById('fechaHora').innerHTML = `${diaSemana}, ${dia} de ${mes} - ${hora}:${minutos}`;
     }
 
-    setInterval(updateTime, 1000);
-    updateTime();
+    // Actualizar fecha y hora cada minuto
+    actualizarFechaHora();
+    setInterval(actualizarFechaHora, 60000);
+
+
 
 </script>
+
+

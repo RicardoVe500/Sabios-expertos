@@ -1,6 +1,8 @@
 <?php
 $numeroCuenta = $_REQUEST['numeroCuenta'] ?? 'defaultID';
 echo "<input type='hidden' id='numeroCuenta' value='$numeroCuenta'>";
+$tipoSaldoId = $_REQUEST['tipoSaldoId'] ?? 'defaultID';
+echo "<input type='hidden' id='tipoSaldoId' value='$tipoSaldoId'>";
 ?>
 
 <div class="card shadow mb-4">

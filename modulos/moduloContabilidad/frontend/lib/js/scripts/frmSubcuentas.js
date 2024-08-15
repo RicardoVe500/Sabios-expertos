@@ -55,6 +55,7 @@ $(document).ready(function(){
 
         
     
+        
         $('#tablasubcuenta').on('click', 'button.btn-deletesub', function () {
             var data = $('#tablasubcuenta').DataTable().row($(this).parents('tr')).data();
             var id = data.cuentaId;
@@ -76,7 +77,6 @@ $(document).ready(function(){
             });
         });
   
-        // Llenar el select con datos de movimientos al cargar la página
         $.ajax({
             url: "../../backend/SubCuentas/listardatos/select.php",
             type: "GET",
@@ -114,8 +114,8 @@ $(document).ready(function(){
             type: "POST",
             success: function(response){
                 const task = JSON.parse(response)
-                console.log(response)
                 $("#cuentaId").val()
+                $("#tipoSaldoId").val(task.tipoSaldoId)
                 $("#nivelCuenta").val(task.nivelCuenta)
                 $("#numeroCuenta").val(task.numeroCuenta)
                 $("#nivelCuenta").val(task.nivelCuenta)
@@ -128,11 +128,11 @@ $(document).ready(function(){
     function guardarSubcuentas(){
         const pData = {
             cuentaId: $("#cuentaId").val(),
+            tipoSaldoId : $("#tipoSaldoId").val(),
             numeroCuenta: $("#numeroCuenta").val(),
             nivelCuenta: $("#nivelCuenta").val(),
             nombreCuenta: $("#nombreCuenta").val(),
             movimientos: $("#selectsubcuentas").val(),
-            tipoSaldo: $("#selectTipoSaldo").val()
         }
         $.ajax({
             url: "../../backend/SubCuentas/add/addSubCuentas.php",
@@ -155,6 +155,7 @@ $(document).ready(function(){
         
     $('#tablasubcuenta').on('click', 'button.btn-modificarsub', function () {
         var data = $('#tablasubcuenta').DataTable().row($(this).parents('tr')).data();
+        var tipoSaldoId = $('#tipoSaldoId').val();
         var id = data.cuentaId
         let url = "../../backend/SubCuentas/listardatos/obtenerdato.php";
         $("#render").load("./load/form/SubCatalogo/Edit/frmEditCatalogo.php");
@@ -165,17 +166,9 @@ $(document).ready(function(){
         success: function(response){
             const task = JSON.parse(response)
             $("#cuentaId").val(task.cuentaId)
+            $("#tipoSaldoId").val(task.tipoSaldoId)
             $("#numeroCuenta").val(task.numeroCuenta)
             $("#editnombreCuenta").val(task.nombreCuenta)
-
-            var newOption = {
-                id: task.tipoSaldoId,
-                text: task.nombreTipo,
-                selected: true,
-                title: task.nombreTipo
-            };
-            $("#selectTipoSaldo").empty().append(new Option(newOption.text, newOption.id, true, true)).trigger('change');
-    
 
         },
     })
@@ -189,7 +182,6 @@ function editarSubcuentas(){
         numeroCuenta: $("#numeroCuenta").val(),
         nombreCuenta: $("#editnombreCuenta").val(),
         movimientos: $("#selectsubcuentas").val(),
-        tipoSaldo: $("#selectTipoSaldo").val()
 
     }
     $.ajax({
@@ -212,29 +204,3 @@ function editarSubcuentas(){
     
        
  
-
-function selectTipoSaldo(){
-    $('#selectTipoSaldo').select2({
-        ajax: {
-            url: "../../backend/SubCuentas/listardatos/selectTipoSaldo.php",
-            dataType: 'json',
-            delay: 250,
-            data: function (params) {
-                return {
-                    searchTerm: params.term // Término de búsqueda enviado al servidor
-                };
-            },
-            processResults: function (data) {
-                return {
-                    results: data.map(item => ({
-                        id: item.tipoSaldoId,
-                        text: item.nombreTipo // Aqui se concatena los campos para mostrarlos
-                    }))
-                };
-            }
-        },
-        theme: "bootstrap",
-        placeholder: 'Buscar Tipo de Saldo...',
-        allowClear: true  // se establece el limpiado del select 
-    });
-}

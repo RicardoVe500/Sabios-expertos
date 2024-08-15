@@ -12,7 +12,11 @@
 
             <div class="row">
                 <div class="col-md-6">
+                <?php
+                    $tipoSaldoId = $_REQUEST['tipoSaldoId'] ?? 'defaultID';
+                    echo "<input type='hidden' id='tipoSaldoId' name='tipoSaldoId' value='$tipoSaldoId'>";
 
+                    ?>
                     <input type="hidden" class="form-control" placeholder="id" id="cuentaId" name="cuentaId">
                     <input type="hidden" class="form-control" placeholder="numero Cuenta" id="numeroCuenta"
                         name="numeroCuenta">
@@ -34,12 +38,6 @@
                             <span class="input-group-text"><i class="fas fa-scroll"></i></span>
                         </div>
                         <select class="form-control" id="selectsubcuentas" name="selectsubcuentas">
-                        </select>
-                    </div>
-
-                    <div>
-                        <label>Tipo de Saldo:</label>
-                        <select class="form-control" id="selectTipoSaldo" name="selectTipoSaldo">
                         </select>
                     </div>
 
@@ -71,12 +69,14 @@ $(document).ready(function() {
 $("#regresarSubCatalogo").click(function() {
     // Obtener el valor de cuentaId
     var numeroCuenta = $("#numeroCuenta").val().charAt(0);
+    var tipoSaldoId = $("#tipoSaldoId").val().charAt(0);
+
     // Realizar la petición AJAX
     $.ajax({
         url: "./load/adminSubcuentas.php", // Asumiendo que este es el endpoint correcto
         type: "POST",
         data: {
-            numeroCuenta: numeroCuenta // Envía cuentaId como parte de los datos del cuerpo de la petición
+            numeroCuenta: numeroCuenta, tipoSaldoId: tipoSaldoId // Envía cuentaId como parte de los datos del cuerpo de la petición
         },
         success: function(response) {
             $("#render").html(response);

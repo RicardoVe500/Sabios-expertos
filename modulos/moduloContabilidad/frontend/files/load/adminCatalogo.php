@@ -44,6 +44,7 @@
                     <th scope="col">Numero cuenta</th>
                     <th scope="col">nivel cuenta</th>
                     <th scope="col">Movimiento</th>
+                    <th scope="col">Tipo Saldo</th>
                     <th scope="col">Accion</th>
                 </tr>
             </thead>
@@ -51,7 +52,7 @@
     </div>
 </div>
 
-
+ 
 <script src="../lib/js/scripts/frmCatalogo.js"></script>
 
 

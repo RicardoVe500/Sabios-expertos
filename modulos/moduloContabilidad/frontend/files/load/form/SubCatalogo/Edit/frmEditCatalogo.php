@@ -1,3 +1,8 @@
+<?php
+    $tipoSaldoId = $_REQUEST['tipoSaldoId'] ?? 'defaultID';
+    echo "<input type='hidden' id='tipoSaldoId' name='tipoSaldoId' value='$tipoSaldoId'>";
+?>
+
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">editar Subcuenta</h6>
@@ -34,13 +39,6 @@
                         <select class="form-control" id="selectsubcuentas" name="selectsubcuentas">
                         </select>
                     </div>
-
-                    <div>
-                        <label>Tipo de Saldo:</label>
-                        <select class="form-control" id="selectTipoSaldo" name="selectTipoSaldo">
-                        </select>
-                    </div>
-
                 </div>
             </div>
             </form>
@@ -57,8 +55,6 @@
 <script>
 $(document).ready(function(){
 
-    selectTipoSaldo()
-
     $("#editarsubcuentas").click(function() {
         editarSubcuentas()
     })
@@ -69,12 +65,14 @@ $(document).ready(function(){
 $("#regresarSub").click(function() {
     // Obtener el valor de cuentaId
     var numeroCuenta = $("#numeroCuenta").val().charAt(0);
+    var tipoSaldoId = $("#tipoSaldoId").val().charAt(0);
+
     // Realizar la petición AJAX
     $.ajax({
         url: "./load/adminSubcuentas.php", // Asumiendo que este es el endpoint correcto
         type: "POST",
         data: {
-            numeroCuenta: numeroCuenta // Envía cuentaId como parte de los datos del cuerpo de la petición
+            numeroCuenta: numeroCuenta, tipoSaldoId: tipoSaldoId // Envía cuentaId como parte de los datos del cuerpo de la petición
         },
         success: function(response) {
             $("#render").html(response);

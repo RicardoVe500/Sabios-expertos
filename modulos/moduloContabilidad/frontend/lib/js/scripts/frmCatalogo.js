@@ -92,6 +92,7 @@ function imprimirtabla(){
             {"data": "numeroCuenta"},
             {"data": "nivelCuenta" },
             {"data": "movimiento"},
+            {"data": "nombreTipo"},
             {"data": null,
                 "defaultContent": `
                     <button class='btn btn-primary btn-sm btn-sub'><i class="fas fa-layer-group"></i> SubCuentas</button>
@@ -112,7 +113,8 @@ function imprimirtabla(){
 $('#tablacatalogo').on('click', '.btn-sub', function() {
     var data = $('#tablacatalogo').DataTable().row($(this).parents('tr')).data();
     var num = data.numeroCuenta
-    $("#render").load("./load/adminSubCuentas.php", { numeroCuenta: num }, function() {
+    var tiposal = data.tipoSaldoId
+    $("#render").load("./load/adminSubCuentas.php", { numeroCuenta: num, tipoSaldoId: tiposal }, function() {
         // Este callback se ejecuta después de que la carga esté completa.
         // Aquí puedes realizar alguna inicialización si es necesario.
     });

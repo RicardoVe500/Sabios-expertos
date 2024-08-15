@@ -7,7 +7,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 class PDF extends FPDF {
-
+ 
     // Redefine el constructor para incluir el establecimiento de márgenes
     function __construct($orientation = 'P', $unit = 'mm', $size = 'A4') {
         parent::__construct($orientation, $unit, $size);
@@ -24,7 +24,7 @@ class PDF extends FPDF {
         $this->Image('../../../../../lib/img/images.png', 25, 10, 30);
         $this->SetFont('Arial','B',12);
         // Movernos a la derecha para centrar el título
-        $this->Cell(80);
+        $this->Cell(70);
         // Título
         $this->Cell(30,10,'SABIOS Y EXPERTOS',0,0,'C');
         // Salto de línea
@@ -33,14 +33,14 @@ class PDF extends FPDF {
         // Restablecer fuente para sub-títulos
         
         // Movernos a la derecha nuevamente
-        $this->Cell(80);
+        $this->Cell(70);
         // Sub-título: Departamento de contabilidad
         $this->Cell(30,10,'ESTADO DE RESULTADO AL ',0,0,'C');
         // Salto de línea
         $this->Ln(5);
 
         // Movernos a la derecha
-        $this->Cell(80);
+        $this->Cell(70);
         // Sub-título: Balance de Comprobacion
        $this->Cell(35,10,'(Expresado en Dolares de los Estados Unidos de America)',0,0,'C');
         // Salto de línea

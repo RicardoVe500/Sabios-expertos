@@ -63,13 +63,15 @@ function isNumberKey(evt) {
 }
 
 function validarEntrada(event) {
-            const campo = event.target;
-            const valor = campo.value;
-            // Permite solo letras (mayúsculas y minúsculas)
-            campo.value = valor.replace(/[^a-zA-Z]/g, '');
-        }
+    const campo = event.target;
+    const valor = campo.value;
+    // Permite solo letras (mayúsculas, minúsculas y espacio)
+    campo.value = valor.replace(/[^a-zA-Z\s]/g, '');
+}
 
-        document.getElementById('nombreCuenta').addEventListener('input', validarEntrada);
+
+document.getElementById('nombreCuenta').addEventListener('input', validarEntrada);
+
 </script>
 
 <script src="../lib/js/scripts/frmCatalogo.js"></script>

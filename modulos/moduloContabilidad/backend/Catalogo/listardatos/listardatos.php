@@ -7,14 +7,17 @@ $query = "SELECT
             movimientos.movimiento,
             catalogoCuentas.numeroCuenta,
             catalogoCuentas.nivelCuenta,
-            catalogoCuentas.nombreCuenta
+            catalogoCuentas.nombreCuenta,
+            catalogoCuentas.tipoSaldoId,
+            tipoDeSaldo.nombreTipo
             FROM 
             catalogoCuentas 
             LEFT JOIN 
             movimientos  ON catalogoCuentas.movimientoId = movimientos.movimientoId
+            LEFT JOIN 
+            tipoDeSaldo  ON catalogoCuentas.tipoSaldoId = tipoDeSaldo.tipoSaldoId
             WHERE 
-            catalogoCuentas.nivelCuenta = 1;
-          ";
+            catalogoCuentas.nivelCuenta = 1;";
 
 $result = mysqli_query($con, $query);
 
@@ -34,6 +37,9 @@ $result = mysqli_query($con, $query);
             "numeroCuenta"=>$row["numeroCuenta"],
             "nivelCuenta"=>$row["nivelCuenta"],
             "nombreCuenta"=>$row["nombreCuenta"],
+            "tipoSaldoId"=>$row["tipoSaldoId"],
+            "nombreTipo"=>$row["nombreTipo"],
+
         );
     }
 
