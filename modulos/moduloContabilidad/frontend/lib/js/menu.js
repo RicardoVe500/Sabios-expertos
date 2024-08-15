@@ -53,8 +53,7 @@ $(document).ready(function(){
     $("#estadoresultado").click(function(){
         $("#render").load("load/adminestadodecomprobacion.php");
     });
-
-    
+  
     
 
 })

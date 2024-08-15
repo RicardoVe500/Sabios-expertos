@@ -1,3 +1,10 @@
+<style>
+        .texto-justificado {
+            text-align: justify;
+            text-justify: inter-word; /* Mejora la justificación */
+            margin: 20px; /* Espacio alrededor del texto */
+        }
+    </style>
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Accesos Rápidos</h6>
@@ -5,34 +12,52 @@
     <div class="card-body">
         <div class="card-deck">
             <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Tipo de Partidas</h5>
-                    <p class="card-text">Esta categoría se utiliza para clasificar y organizar las transacciones económicas dentro de un sistema contable.</p>
-                    <button class="btn btn-success mb-3" id="tipopartida">
-                        <i class="fa fa-angle-right"></i> Ir
+                <div class="card-body ">
+                    <h5 class="card-title texto-justificado">Tipo de Partidas</h5>
+                    <p class="card-text texto-justificado">Esta categoría se utiliza para clasificar y organizar las transacciones económicas dentro del sistema contable.</p>
+                    <button class="btn btn-success texto-justificado mt-1" href="#" id="tipopartidainicio">
+                        <i class="fa fa-angle-right" ></i> Ir
                     </button>
-                    <p class="card-text mt-2"><small class="text-muted">Última vez ingresado hace <span id="time1"></span> minutos</small></p>
                 </div>
             </div>
+
             <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-                    <button class="btn btn-secondary">Go somewhere</button>
-                    <p class="card-text mt-2"><small class="text-muted">Last accessed <span id="time2"></span> mins ago</small></p>
+                <div class="card-body ">
+                    <h5 class="card-title texto-justificado">Catalogo de Ceuntas</h5>
+                    <p class="card-text texto-justificado">Este apartado conetiene la lista de las ceuntas registradas por el personal donde podemos ingresar, editar y eliminar las cuentas.</p>
+                    <button class="btn btn-success texto-justificado mt-1" href="#" id="catalogorapido">
+                        <i class="fa fa-angle-right" ></i> Ir
+                    </button>
                 </div>
             </div>
+
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
-                    <button class="btn btn-success">Go somewhere</button>
-                    <p class="card-text mt-2"><small class="text-muted">Last accessed <span id="time3"></span> mins ago</small></p>
+                    <h5 class="card-title texto-justificado">Bitacora</h5>
+                   
+                    <p class="card-text texto-justificado">Acceso rapido al reporte de bitacora donde se detalla todos los movimientos que se han generado en el sistema y el usuario responsable.</p>
+                
+                    <button class="btn btn-success texto-justificado mt-1" href="#" id="bitacorarep">
+                        <i class="fa fa-angle-right" ></i> Ir
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<script>
+    
+      $("#tipopartidainicio").click(function(){
+        $("#render").load("load/adminTipoPartidas.php");
+    });
 
+    $("#catalogorapido").click(function(){
+        $("#render").load("load/adminCatalogo.php");
+    });
 
+    $("#bitacorarep").click(function(){
+        $("#render").load("load/adminbitacora.php");
+    });
+    
+</script>
