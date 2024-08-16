@@ -105,7 +105,8 @@ function imprimirtabla(){
             "targets": -1,
             "orderable": false,
             "className": "dt-center"
-        }]
+        }],
+        order: [[1, 'asc']]
     });
     
 }

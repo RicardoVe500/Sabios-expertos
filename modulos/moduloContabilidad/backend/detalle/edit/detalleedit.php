@@ -19,7 +19,7 @@ error_reporting(E_ALL);
 
 
 
-$queryInsert = "UPDATE detalle SET fechacontable = '$fechacontable', haber = '$cargo', debe = '$abono'
+$queryInsert = "UPDATE detalle SET fechacontable = '$fechacontable', haber = '$abono', debe = '$cargo'
                 WHERE partidaId = '$partidaId'";
 
 $resultInsert = mysqli_query($con, $queryInsert);

@@ -57,9 +57,9 @@ $(document).ready(function () {
 })
 
 var partidaId = $('#partidaId').val();
+var cuentaId = $('#selectcuentas').val();
 var codigoPartida = $('#codigoPartida').val();
 var fechacontable = $('#fechacontable').val();
-
 
 function cargadatospartida() {
     $.ajax({
@@ -258,8 +258,6 @@ $('#tablaCuerpo').on('click', 'button.btn-deletecuerpo', function () {
     var id = data.partidaDetalleId
     var partidaId = data.partidaId
     var cuentaId = data.cuentaId
-console.log(cuentaId)
-
     Swal.fire({
         title: '¿Quieres eliminar este elemento?',
         text: 'Esta acción no se puede deshacer.',
@@ -276,11 +274,13 @@ console.log(cuentaId)
                     data: {cuentaId: cuentaId},
                     type: "POST",
                     success: function (response) {
+                        deletedetalle(partidaId, cuentaId)
                         Swal.fire({
                             icon: 'success',
                             title: '¡Se guardo el saldo!',
                             text: 'Los cambios se han guardado correctamente.',
                         });
+                        
                     },
                     error: function (xhr, status, error) {
                         console.log(error)
@@ -472,31 +472,18 @@ function agregarDetalle(){
         cargo: $("#debeCuerpo").val() || '0',
         abono: $("#haberCuerpo").val() || '0',
     } 
-/*     $.ajax({
+    $.ajax({
         url: "../../backend/detalle/add/detalle.php",
         data: pData,
         type: "POST",
         success: function (response) {
-            Swal.fire({
-                icon: 'success',
-                title: response.message,
-                text: response.message,
-                confirmButtonText: 'Aceptar'
-            });
         },
         error: function (xhr, status, error) {
-          
-            Swal.fire({
-                icon: 'error',
-                title: 'Error al hacer saldo',
-                text: 'No se pudo modificar la partida. Por favor, intenta de nuevo.',
-                confirmButtonText: 'Aceptar'
-            });
         }
-    }) */
+    }) 
 }
 
-/* function editDetalle(){
+ function editDetalle(){
     const pData = {
         partidaId: $("#partidaId").val(),
         cuentaId: $("#selectcuentas").val(),
@@ -509,21 +496,22 @@ function agregarDetalle(){
         data: pData,
         type: "POST",
         success: function (response) {
-            wal.fire({
-                icon: 'success',
-                title: response.message,
-                text: response.message,
-                confirmButtonText: 'Aceptar'
-            });
         },
         error: function (xhr, status, error) {
-          
-            Swal.fire({
-                icon: 'error',
-                title: 'Error al hacer saldo',
-                text: 'No se pudo modificar la partida. Por favor, intenta de nuevo.',
-                confirmButtonText: 'Aceptar'
-            });
         }
     })
-} */
+} 
+
+function deletedetalle(partidaId, cuentaId){
+    $.ajax({
+        url: "../../backend/detalle/delete/deletedetalle.php",
+        data: {partidaId: partidaId, cuentaId: cuentaId},
+        type: "POST",
+        success: function (response) {
+
+        },
+        error: function (xhr, status, error) {
+            
+        }
+    })
+} 
