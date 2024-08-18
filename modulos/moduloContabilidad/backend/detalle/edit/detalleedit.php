@@ -5,6 +5,7 @@ $usuario_sesion = $_SESSION['usuario'];
 
 
 $cuentaId = $_POST["cuentaId"];
+$detalleId = $_POST["detalleId"];
 $partidaId = $_POST["partidaId"];
 $fechacontable = $_POST["fechacontable"];
 $cargo = $_POST["cargo"] ?? 0;
@@ -19,8 +20,8 @@ error_reporting(E_ALL);
 
 
 
-$queryInsert = "UPDATE detalle SET fechacontable = '$fechacontable', haber = '$abono', debe = '$cargo'
-                WHERE partidaId = '$partidaId'";
+$queryInsert = "UPDATE detalle SET fechacontable = '$fechacontable', haber = '$abono', debe = '$cargo', cuentaId = '$cuentaId'
+                WHERE partidaId = '$partidaId' AND detalleId = '$detalleId'";
 
 $resultInsert = mysqli_query($con, $queryInsert);
 

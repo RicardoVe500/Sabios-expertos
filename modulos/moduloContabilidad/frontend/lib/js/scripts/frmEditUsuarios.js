@@ -39,17 +39,20 @@ $(document).ready(function() {
                 tbody.empty();
                 if (response.status === 'success') {
                     response.data.forEach(function(user) {
-                        var row = "<tr>" +
-                            "<td>" + user.nombre + "</td>" +
-                            "<td>" + user.apellidos + "</td>" +
-                            "<td>" + user.email + "</td>" +
-                            "<td>" + (user.nombreTipo ? user.nombreTipo : 'Sin rol asignado') + "</td>" + // Mostrar 'Sin rol asignado' si el rol es null o undefined
-                            "<td>" +
-                                "<button class='btn btn-warning btn-sm frmEditUsuario' data-usuarioid='" + user.usuarioId + "' data-nombre='" + user.nombre + "' data-apellidos='" + user.apellidos + "' data-email='" + user.email + "' data-nombreTipo='" + user.nombreTipo + "'><i class='fa fa-edit'></i> Editar</button> " +
-                                "<button class='btn btn-danger btn-sm deleteUser' data-usuarioid='" + user.usuarioId + "'><i class='fa fa-trash'></i> Eliminar   </button> " +
-                            "</td>" +
-                        "</tr>";
-                        tbody.append(row);
+                        // Verificar si el nombre no es 'admin'
+                        if (user.nombre.toLowerCase() !== 'admin') {
+                            var row = "<tr>" +
+                                "<td>" + user.nombre + "</td>" +
+                                "<td>" + user.apellidos + "</td>" +
+                                "<td>" + user.email + "</td>" +
+                                "<td>" + (user.nombreTipo ? user.nombreTipo : 'Sin rol asignado') + "</td>" +
+                                "<td>" +
+                                    "<button class='btn btn-warning btn-sm frmEditUsuario' data-usuarioid='" + user.usuarioId + "' data-nombre='" + user.nombre + "' data-apellidos='" + user.apellidos + "' data-email='" + user.email + "' data-nombreTipo='" + user.nombreTipo + "'><i class='fa fa-edit'></i> Editar</button> " +
+                                    "<button class='btn btn-danger btn-sm deleteUser' data-usuarioid='" + user.usuarioId + "'><i class='fa fa-trash'></i> Eliminar</button> " +
+                                "</td>" +
+                            "</tr>";
+                            tbody.append(row);
+                        }
                     });
                 } else {
                     Swal.fire({
@@ -69,7 +72,7 @@ $(document).ready(function() {
             }
         });
     });
-
+    
     // Eliminar usuario
     $(document).on('click', '.deleteUser', function() {
         var userId = $(this).data('usuarioid');

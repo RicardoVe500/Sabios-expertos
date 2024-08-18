@@ -71,7 +71,7 @@ class PDF extends FPDF {
         // Movernos a la derecha nuevamente
         $this->Cell(70);
         // Sub-título: Departamento de contabilidad
-        $this->Cell(30, 10, 'BALANCE COMPROBACION AL ' . $fechaFormateadaheader, 0, 0, 'C');
+        $this->Cell(30, 10, 'ESTADO DE COMPROBACION AL ' . $fechaFormateadaheader, 0, 0, 'C');
         // Salto de línea
         $this->Ln(5);
 

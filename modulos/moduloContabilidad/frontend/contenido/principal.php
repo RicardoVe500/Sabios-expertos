@@ -23,7 +23,7 @@
 
             <div class="card">
                 <div class="card-body ">
-                    <h5 class="card-title texto-justificado">Catalogo de Ceuntas</h5>
+                    <h5 class="card-title texto-justificado">Catalogo de Cuentas</h5>
                     <p class="card-text texto-justificado">Este apartado conetiene la lista de las ceuntas registradas por el personal donde podemos ingresar, editar y eliminar las cuentas.</p>
                     <button class="btn btn-success texto-justificado mt-1" href="#" id="catalogorapido">
                         <i class="fa fa-angle-right" ></i> Ir
