@@ -53,59 +53,81 @@ class PDF extends FPDF {
     }
 
     function LoadData($con, $year) {
-        $query = "SELECT cc.cuentaId, cc.nombreCuenta, 
-                  SUM(CASE WHEN YEAR(p.fechacontable) = $year THEN d.debe ELSE 0 END) as totalDebe, 
-                  SUM(CASE WHEN YEAR(p.fechacontable) = $year THEN d.haber ELSE 0 END) as totalHaber
-                  FROM catalogocuentas cc
-                  LEFT JOIN detalle d ON cc.cuentaId = d.cuentaId
-                  LEFT JOIN partidas p ON d.partidaId = p.partidaId
-                  WHERE cc.nivelCuenta = 2 
-                  GROUP BY cc.cuentaId, cc.nombreCuenta
-                  ORDER BY cc.numeroCuenta";
-        
-        $result = mysqli_query($con, $query);
+        $selecCtsMayores = mysqli_query($con, "SELECT cc.cuentaId, cc.numeroCuenta, cc.nombreCuenta, 
+        cc.cuentaDependiente, cc.nivelCuenta, cc.tipoSaldoId, ts.nombreTipo 
+        FROM catalogocuentas cc 
+        LEFT JOIN tipoDeSaldo ts ON cc.tipoSaldoId = ts.tipoSaldoId 
+        WHERE cc.nivelCuenta = 2;");
+    
         $data = [];
-
-        if ($result) {
-            while ($row = mysqli_fetch_assoc($result)) {
-                $saldo = $row['totalDebe'] - $row['totalHaber'];
+    
+        while ($cuentasMayDato = mysqli_fetch_assoc($selecCtsMayores)) {
+            $subcuentas = [];
+            $totalSaldoCuentaNivel2 = 0;
+    
+            $selectSaldos = mysqli_query($con, 
+            "SELECT cc.cuentaId, cc.nombreCuenta,
+                    SUM(d.debe) AS ttdebe,
+                    SUM(d.haber) AS tthaber,
+                    cc.nivelCuenta, cc.tipoSaldoId, cc.numeroCuenta
+                FROM catalogocuentas cc 
+                LEFT JOIN detalle d ON cc.cuentaId = d.cuentaId
+                WHERE SUBSTRING(cc.numeroCuenta, 1, 2) = $cuentasMayDato[numeroCuenta] AND
+                      YEAR(d.fechaContable) = $year
+                GROUP BY cc.cuentaId
+                ORDER BY cc.numeroCuenta;");
+    
+            while ($datasaldos = mysqli_fetch_assoc($selectSaldos)) {
+                $saldoSubcuenta = $cuentasMayDato['tipoSaldoId'] == 1 ? ($datasaldos['ttdebe'] - $datasaldos['tthaber']) : ($datasaldos['tthaber'] - $datasaldos['ttdebe']);
+    
+                if ($saldoSubcuenta != 0) {
+                    $subcuentas[] = [
+                        'nombreSubcuenta' => $datasaldos['nombreCuenta'],
+                        'nivelCuenta' => $datasaldos['nivelCuenta'],
+                        'saldo' => $saldoSubcuenta
+                    ];
+                    $totalSaldoCuentaNivel2 += $saldoSubcuenta;
+                }
+            }
+    
+            if (!empty($subcuentas)) {
                 $data[] = [
-                    'nombreCuenta' => $row['nombreCuenta'],
-                    'saldo' => $saldo
+                    'nombreCuenta' => $cuentasMayDato['nombreCuenta'],
+                    'numeroCuenta' => $cuentasMayDato['numeroCuenta'],
+                    'totalSaldo' => $totalSaldoCuentaNivel2,
+                    'tipoSaldoId' => $cuentasMayDato['tipoSaldoId'],
+                    'subcuentas' => $subcuentas
                 ];
             }
-        } else {
-            throw new Exception("Error al cargar los datos: " . mysqli_error($con));
         }
-
-        return $data;
+        return $data; 
     }
 
-    function FancyTable($dataCurrent, $dataPrevious, $previousYear, $currentYear) {
+    function FancyTable($dataCurrent, $dataPrevious) {
         // Encabezado de la tabla
         $this->SetFont('Arial', 'B', 12);
         $this->SetFillColor(169, 208, 142); // Color verde claro
         $this->Cell(85, 10, "CUENTAS", 1, 0, 'C', true);
-        $this->Cell(30, 10, $previousYear, 1, 0, 'C', true);
-        $this->Cell(30, 10, $currentYear, 1, 0, 'C', true);
+        $this->Cell(30, 10, utf8_decode("2023"), 1, 0, 'C', true);
+        $this->Cell(30, 10, utf8_decode("2024"), 1, 0, 'C', true);
         $this->Cell(30, 10, "Porcentaje", 1, 1, 'C', true);
         
         // Iterar sobre cada cuenta mayor
         foreach ($dataCurrent as $index => $item) {
-            $this->SetFont('Arial', '', 11);
+            $this->SetFont('Arial', 'B', 11);
             $this->Cell(85, 6, $item['nombreCuenta'], 1, 0);
     
             // Verificar si existe la cuenta en el año anterior
-            $saldoPrevious = isset($dataPrevious[$index]) ? $dataPrevious[$index]['saldo'] : 0;
+            $saldoPrevious = isset($dataPrevious[$index]) ? $dataPrevious[$index]['totalSaldo'] : 0;
             $formattedSaldoPrevious = $saldoPrevious < 0 ? '(' . number_format(abs($saldoPrevious), 2) . ')' : number_format($saldoPrevious, 2);
             $this->Cell(30, 6, $formattedSaldoPrevious, 1, 0, 'R');
     
             // Formatear el saldo actual
-            $formattedSaldoCurrent = $item['saldo'] < 0 ? '(' . number_format(abs($item['saldo']), 2) . ')' : number_format($item['saldo'], 2);
+            $formattedSaldoCurrent = $item['totalSaldo'] < 0 ? '(' . number_format(abs($item['totalSaldo']), 2) . ')' : number_format($item['totalSaldo'], 2);
             $this->Cell(30, 6, $formattedSaldoCurrent, 1, 0, 'R');
     
             // Calcular y mostrar el porcentaje de crecimiento
-            $difference = $item['saldo'] - $saldoPrevious;
+            $difference = $item['totalSaldo'] - $saldoPrevious;
             $percentageChange = $saldoPrevious != 0 ? ($difference / abs($saldoPrevious)) * 100 : 0;
             $formattedPercentageChange = number_format($percentageChange, 2) . '%';
             $this->Cell(30, 6, $formattedPercentageChange, 1, 1, 'R');
@@ -123,7 +145,7 @@ $previousYear = $currentYear - 1;
 $dataCurrent = $pdf->LoadData($con, $currentYear);
 $dataPrevious = $pdf->LoadData($con, $previousYear);
 
-$pdf->FancyTable($dataCurrent, $dataPrevious, $previousYear, $currentYear);
+$pdf->FancyTable($dataCurrent, $dataPrevious);
 
 $pdf->Output();
 ?>
