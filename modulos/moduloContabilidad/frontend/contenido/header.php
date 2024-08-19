@@ -196,7 +196,7 @@ function actualizarFechaHora() {
         minutos = minutos < 10 ? '0' + minutos : minutos;
 
         // Formato deseado: "Lunes, 14 de Julio - 14:45"
-        document.getElementById('fechaHora').innerHTML = `${diaSemana}, ${dia} de ${mes} - ${hora}:${minutos}`;
+        document.getElementById('fechaHora').innerHTML = `📅 ${diaSemana}, ${dia} de ${mes} - 🕙 ${hora}:${minutos}`;
     }
 
     // Actualizar fecha y hora cada minuto
