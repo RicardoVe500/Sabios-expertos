@@ -81,8 +81,6 @@
                 <a class="collapse-item" href="#" id="estadocomparativo">Estado Comparativo</a>
                 <a class="collapse-item" href="#" id="cambiopatrimonio">Cambio de Patrimonio</a>
                 <a class="collapse-item" href="#" id="bitacora">Bitacora</a>
-
-
             </div>
         </div>
     </li>

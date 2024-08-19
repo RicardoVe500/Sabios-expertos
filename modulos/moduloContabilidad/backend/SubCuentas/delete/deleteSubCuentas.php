@@ -2,6 +2,12 @@
 include("../../../../../lib/config/conect.php");
 $usuario_sesion = $_SESSION['usuario'];
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+
+
 if (isset($_POST['id'])) {
 
     $cuentaId = $_POST['id'];

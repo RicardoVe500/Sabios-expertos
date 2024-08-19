@@ -57,9 +57,11 @@ $(document).ready(function () {
 })
 
 var partidaId = $('#partidaId').val();
-var cuentaId = $('#selectcuentas').val();
 var codigoPartida = $('#codigoPartida').val();
 var fechacontable = $('#fechacontable').val();
+var cuentaId = $('#selectcuentas').val();
+
+
 
 function cargadatospartida() {
     $.ajax({
@@ -215,6 +217,8 @@ function Imprimirtablacuerpo() {
 $('#tablaCuerpo').on('click', '.btn-editarcuerpo', function () {
     var data = $('#tablaCuerpo').DataTable().row($(this).parents('tr')).data();
     var id = data.partidaDetalleId
+    var partidaId = data.partidaId
+    var cuentaId = data.cuentaId
     let url = "../../backend/Cuerpo/listardatos/obtenerdatoedit.php";
     $.ajax({
         url,
@@ -228,6 +232,7 @@ $('#tablaCuerpo').on('click', '.btn-editarcuerpo', function () {
             $("#conceptoespecifico").val(task.concepto)
             $("#debeCuerpo").val(task.cargo)
             $("#haberCuerpo").val(task.abono)
+            
 
             // Asegúrate de que select2 reconozca la opción cargada correctamente
             var newOption = {
@@ -249,6 +254,7 @@ $('#tablaCuerpo').on('click', '.btn-editarcuerpo', function () {
             $('#dato').data('mode', 'edit');
 
             $('#dato').text('Actualizar');
+            deletedetalle(partidaId, cuentaId)
         },
     })
 });
@@ -280,7 +286,7 @@ $('#tablaCuerpo').on('click', 'button.btn-deletecuerpo', function () {
                             title: '¡Se guardo el saldo!',
                             text: 'Los cambios se han guardado correctamente.',
                         });
-                        
+                        agregarSaldo()
                     },
                     error: function (xhr, status, error) {
                         console.log(error)
@@ -322,7 +328,7 @@ function editardatos() {
                 text: 'Los cambios se han guardado correctamente.',
             });
             agregarSaldo()
-            editDetalle()
+            agregarDetalle()
             $('#frmcuerpo')[0].reset(); // Resetear el formulario
             $('#selectcomprobante').val('').trigger('change');
             $('#selectcuentas').val('').trigger('change');
@@ -483,6 +489,7 @@ function agregarDetalle(){
     }) 
 }
 
+
  function editDetalle(){
     const pData = {
         partidaId: $("#partidaId").val(),
@@ -492,8 +499,8 @@ function agregarDetalle(){
         abono: $("#haberCuerpo").val() || '0',
     } 
     $.ajax({
-        url: "../../backend/detalle/edit/detalleedit.php",
-        data: pData,
+        url: "../../backend/detalle/add/detalle.php",
+        data: {pData},
         type: "POST",
         success: function (response) {
         },
