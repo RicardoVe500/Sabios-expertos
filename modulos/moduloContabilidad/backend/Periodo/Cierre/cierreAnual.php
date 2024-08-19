@@ -112,10 +112,6 @@ try {
 
 
 
-
-
-
-
 /* include("../../../../../lib/config/conect.php");
 
 if (!isset($con)) {
