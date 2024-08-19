@@ -54,6 +54,8 @@ $(document).ready(function(){
         $("#render").load("load/adminestadodecomprobacion.php");
     });
   
-    
+    $("#estadocomparativo").click(function(){
+        $("#render").load("load/adminEstadoComparativo.php");
+    });
 
 })

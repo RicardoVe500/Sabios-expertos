@@ -6,13 +6,13 @@
             </div>
             <div class="modal-body">
             <button class="btn btn-success mb-3" id="addPeriodo">
-            <i class="far fa-calendar-plus"></i> Agregar Periodo</button>
+            <i class="far fa-calendar-plus"></i> Agregar Período</button>
             <table id="tablaperiodo" class="table" style="width:100%">
             <thead>
                 <tr> 
                     <th scope="col">Mes</th>
                     <th scope="col">Año</th>
-                    <th scope="col">Accion</th>
+                    <th scope="col">Acción</th>
                 </tr>
             </thead>
         </table>
@@ -24,6 +24,3 @@
     </div>
 </div>
 <?php include("./load/form/Periodo/Add/AddPeriodo.php");?>
-
-
-

@@ -78,6 +78,7 @@
                 <a class="collapse-item" href="#" id="balancegeneral">Balance Comprobacion</a>
                 <a class="collapse-item" href="#" id="gen">Balance General</a>
                 <a class="collapse-item" href="#" id="estadoresultado">Estado de Resultado</a>
+                <a class="collapse-item" href="#" id="estadocomparativo">Estado Comparativo</a>
                 <a class="collapse-item" href="#" id="cambiopatrimonio">Cambio de Patrimonio</a>
                 <a class="collapse-item" href="#" id="bitacora">Bitacora</a>
             </div>

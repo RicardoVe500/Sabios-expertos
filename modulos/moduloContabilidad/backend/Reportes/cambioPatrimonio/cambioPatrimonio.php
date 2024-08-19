@@ -72,7 +72,6 @@ class PDF extends FPDF
         $this->Cell(0, 10, 'Pagina ' . $this->PageNo() . '/{nb}', 0, 0, 'C');
     }
 
-    // Función para formatear los números, mostrando los negativos entre paréntesis
     function formatNumber($number) {
         // Si el número es negativo, lo formatea con paréntesis
         if ($number < 0) {
@@ -84,13 +83,11 @@ class PDF extends FPDF
 
     function FancyTable($totals)
     {
-        $this->SetFont('Arial', 'B', 8.5); // Tamaño de la fuente reducido para ajustar el texto
-        $this->SetFillColor(200, 200, 200); // Color de relleno para encabezados
-    
-        // Asignar un ancho específico para cada columna
-        $w = [39, 30, 32, 40, 50]; // Ejemplo de anchos en milímetros
-    
-        // Encabezado de columnas, todo en una sola línea
+        $this->SetFont('Arial', 'B', 8.5);
+        $this->SetFillColor(200, 200, 200);
+        $w = [39, 30, 32, 40, 50]; // Ancho de columnas
+
+        // Encabezado de columnas
         $header = [
             "Concepto", 
             "Capital Social", 
@@ -98,16 +95,13 @@ class PDF extends FPDF
             "Revalorización de Activos", 
             "Total Patrimonio Neto"
         ];
-    
-        // Mostrar los encabezados
         foreach ($header as $i => $col) {
             $this->Cell($w[$i], 20, utf8_decode($col), 1, 0, 'C', true); 
         }
         $this->Ln();
-    
-        // Filas dinámicas con datos reales del query
-        $this->SetFont('Arial', '', 9); // Ajustar el tamaño de fuente de las celdas de datos
-    
+
+        $this->SetFont('Arial', '', 9); 
+
         foreach ($totals as $concept => $values) {
             $this->Cell($w[0], 8, utf8_decode($concept), 1);
             $this->Cell($w[1], 8, $this->formatNumber($values['capital_social']), 1, 0, 'R');
@@ -117,7 +111,7 @@ class PDF extends FPDF
             $this->Ln();
         }
     }
-    
+
     function LoadData($fechaInicio, $fechaFin)
     {
         $mysqli = new mysqli('localhost', 'root', '', 'tesis');
@@ -125,7 +119,7 @@ class PDF extends FPDF
             die("Conexión fallida: " . $mysqli->connect_error);
         }
 
-        // Obtener datos para cada sección
+        // Query para obtener los movimientos relevantes
         $query = "SELECT pd.cargo, pd.abono, cc.nombreCuenta, p.fechacontable
                   FROM partidaDetalle pd
                   JOIN partidas p ON p.partidaId = pd.partidaId
@@ -175,7 +169,6 @@ class PDF extends FPDF
     }
 }
 
-// Generar PDF
 $pdf = new PDF($fechaInicioFormatted, $fechaFinFormatted, $anio);
 $pdf->AliasNbPages();
 $pdf->AddPage();

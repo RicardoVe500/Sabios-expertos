@@ -3,7 +3,7 @@
                                     <h6 class="m-0 font-weight-bold text-primary">Administración de Usuarios</h6>
                                 </div>
                                 <div class="card-body">
-                                    <button class="btn btn-primary mb-3" id="frmAddUsuario">
+                                    <button class="btn btn-success mb-3" id="frmAddUsuario">
                                         <i class="fa fa-plus"></i> Agregar Usuario
                                     </button>
                                      <!--  <button class="btn btn-warning mb-3" id="frmEditUsuario">
