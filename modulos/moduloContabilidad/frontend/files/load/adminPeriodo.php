@@ -1,3 +1,4 @@
+
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Cierres de los periodos</h6>
@@ -29,32 +30,16 @@
     
 $(document).ready(function() {
 
-    $('#tablaperiodocierre').DataTable({
-    "ajax": "../../backend/Periodo/listardatos/listardatos.php",
-    "columns": [
-        { "data": "mes" },
-        { "data": "anio" },
-        {
-            "data": "estadoId", 
-            "render": function(data, type, row) {
-                if (data != 4) {
-                    return `<button class="btn btn-warning btn-sm btn-diario"><i class="fas fa-lock"></i> Cierre Diario</button>
-                            <button class="btn btn-danger btn-sm btn-cerrarPeriodo"><i class="fas fa-lock"></i> Cerrar Mes</button>`;
 
-                } else {
-                    // Aquí puedes definir otro botón u omitirlo si no necesitas otro botón
-                    return '<button class="btn btn-success btn-sm btn-abrirPeriodo"><i class="fas fa-unlock"></i> Abrir</button>';
-                }
-            }
-        }
-    ],
-    "columnDefs": [{
-        "targets": -1,
-        "orderable": false,
-        "className": "dt-center"
-    }]
+$('.btn-selectperiodo').on('click', function () {
+    $(document).ready(function () {
+        
+        imprimirtablacierres()
+
+    })
 });
 
+imprimirtablacierres()
 
 
     $("#frmAddPeriodo").click(function() {
@@ -63,6 +48,37 @@ $(document).ready(function() {
 
    
 })
+
+function imprimirtablacierres() {
+    if ($.fn.DataTable.isDataTable('#tablaperiodocierre')) { // comprueba si hay una instancia anterior
+        $('#tablaperiodocierre').DataTable().destroy(); // Se destruye la instancia anterior
+    }
+$('#tablaperiodocierre').DataTable({
+"ajax": "../../backend/Periodo/listardatos/listardatotabla.php",
+"columns": [
+    { "data": "mes" },
+    { "data": "anio" },
+    {
+        "data": "estadoId", 
+        "render": function(data, type, row) {
+            if (data != 4) {
+                return `<button class="btn btn-warning btn-sm btn-diario"><i class="fas fa-lock"></i> Cierre Diario</button>
+                        <button class="btn btn-danger btn-sm btn-cerrarPeriodo"><i class="fas fa-lock"></i> Cerrar Mes</button>`;
+
+            } else {
+                // Aquí puedes definir otro botón u omitirlo si no necesitas otro botón
+                return '<button class="btn btn-success btn-sm btn-abrirPeriodo"><i class="fas fa-unlock"></i> Abrir</button>';
+            }
+        }
+    }
+],
+"columnDefs": [{
+    "targets": -1,
+    "orderable": false,
+    "className": "dt-center"
+}]
+});
+}
 
 $('#tablaperiodocierre').on('click', '.btn-diario', function () {
     $("#render").load("load/form/Periodo/diario/diario.php");

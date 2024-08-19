@@ -286,7 +286,7 @@ $('#tablaCuerpo').on('click', 'button.btn-deletecuerpo', function () {
                             title: '¡Se guardo el saldo!',
                             text: 'Los cambios se han guardado correctamente.',
                         });
-                        
+                        agregarSaldo()
                     },
                     error: function (xhr, status, error) {
                         console.log(error)
