@@ -1,6 +1,12 @@
 <?php
 include("../../../../../lib/config/conect.php");
 
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+
 if (!isset($con)) {
     die(json_encode(['success' => false, 'message' => 'Error al conectar con la base de datos.']));
 }

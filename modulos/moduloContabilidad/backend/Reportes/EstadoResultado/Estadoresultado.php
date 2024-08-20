@@ -1,3 +1,4 @@
+
 <?php
 include("../../../../../lib/config/conect.php");
 require_once("../../../../../lib/fpdf/fpdf.php"); // Asegúrate de ajustar la ruta al archivo FPDF
@@ -441,7 +442,7 @@ class PDF extends FPDF {
         // Calcular y mostrar la diferencia entre el total bruto y el total operativ
     
          // Calcular la diferencia entre el total bruto y el total operativo
-         $diferencia = $totalBruto - $operationalResult['totalOperativo'];
+         $diferencia =   $operationalResult['totalOperativo'] - $totalBruto;
          $this->Ln(10);
          $this->SetFont('Arial', 'B', 12);
          
@@ -585,6 +586,38 @@ class PDF extends FPDF {
 
     }
 
+    function savePDF() {
+        // Obtener mes y año desde la fecha contable
+        $fechacontable = $_POST['resultadobalance'];
+        list($mes, $anio) = explode('/', $fechacontable);
+    
+        if ($mes == '12') {
+            $nombreCarpeta = "/$anio"; // Nombre de la carpeta basado en el año actual
+            $rutaCarpeta = $_SERVER['DOCUMENT_ROOT'] . $nombreCarpeta; // Ruta completa en la raíz del disco
+    
+            // Verificar si la carpeta ya existe, si no, crearla
+            if (!file_exists($rutaCarpeta)) {
+                mkdir($rutaCarpeta, 0777, true); // Crear la carpeta con permisos de escritura
+            }
+    
+            // Especificar la ruta del archivo PDF dentro de la nueva carpeta
+            $rutaArchivo = $rutaCarpeta . '/archivo.pdf';
+    
+            // Verificar si el archivo PDF ya existe y eliminarlo si es así
+            if (file_exists($rutaArchivo)) {
+                unlink($rutaArchivo); // Eliminar el archivo existente
+            }
+    
+            // Guardar el nuevo PDF en la carpeta especificada
+            $this->Output('F', $rutaArchivo); // 'F' significa que se guarda el archivo en el servidor
+            echo "PDF guardado en: $rutaArchivo";
+        } else {
+            // Si no es diciembre, guardar en una ruta predeterminada
+            $this->Output();
+        }
+    }
+    
+
     
     
     
@@ -597,27 +630,19 @@ $pdf->AliasNbPages();
 
 $pdf->AddPage();
 
-
 // Conexión a la base de datos
 $data = $pdf->LoadData($con);
-
-// Calcula el total bruto
 $totalBruto = $pdf->calculateTotalBruto($data);
-
-// Preparar el resultado para FancyTable
 $result = ['data' => $data, 'totalBruto' => $totalBruto];
 
 $dataOperativa = $pdf->LoadData2($con);
 $totalOperativo = $pdf->calculateTotalOperativo($dataOperativa);
 $operationalResult = ['data' => $dataOperativa, 'totalOperativo' => $totalOperativo];
 
-// Imprime la tabla con ambos conjuntos de datos
 $pdf->FancyTable($result, $operationalResult);
+
 // Cierra la conexión a la base de datos
 
-
-
-// Salida del PDF
-$pdf->Output();
-
+// Salida del PDF adaptada para manejar la lógica de archivo basada en el mes
+$pdf->savePDF();
 ?>

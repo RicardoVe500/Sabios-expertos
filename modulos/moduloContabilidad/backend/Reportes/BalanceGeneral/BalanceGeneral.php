@@ -289,54 +289,6 @@ class PDF extends FPDF
 
 
 
-        $this->SetY(-125); // Ajustar la posición más arriba para tener espacio para las firmas
-    
-   
-        // Firma izquierda
-        $this->SetFont('Arial', '', 10);
-    
-        $this->SetX(15);
-        $this->Line(15, $this->GetY() + 10, 55, $this->GetY() + 10); // Longitud reducida de 60 a 40
-        $this->Ln(12); // Salto de línea para poner el texto debajo de la línea
-
-        // Texto de firma izquierda
-        $this->SetX(15);
-        $this->Cell(40, 5, 'Firma Izquierda', 0, 0, 'C');
-        $this->Ln(5); // Salto de línea
-        $this->SetX(15);
-        $this->Cell(40, 5, 'Nombre Izquierda', 0, 0, 'C');
-
-
-    
-        // Firma centro
-        $this->SetY(-125); // Regresa a la posición inicial de las firmas
-        $this->SetX(90);
-
-        // Línea para la firma centro, más pequeña y centrada
-        $this->Line(85, $this->GetY() + 10, 125, $this->GetY() + 10); // Longitud reducida
-        $this->Ln(12); // Salto de línea para poner el texto debajo de la línea
-
-        // Texto de firma centro
-        $this->SetX(90);
-        $this->Cell(30, 5, 'Firma Centro', 0, 0, 'C');
-        $this->Ln(5); // Salto de línea
-        $this->SetX(90);
-        $this->Cell(30, 5, 'Nombre Centro', 0, 0, 'C'); // Nombre aún no establecido
-    
-        // Firma derecha
-        $this->SetY(-125); // Regresa a la posición inicial de las firmas
-        $this->SetX(160);
-
-        // Línea para la firma derecha, más pequeña y centrada
-        $this->Line(155, $this->GetY() + 10, 195, $this->GetY() + 10); // Longitud reducida
-        $this->Ln(12); // Salto de línea para poner el texto debajo de la línea
-
-        // Texto de firma derecha
-        $this->SetX(160);
-        $this->Cell(30, 5, 'Firma Derecha', 0, 0, 'C');
-        $this->Ln(5); // Salto de línea
-        $this->SetX(160);
-        $this->Cell(30, 5, 'Nombre Derecha', 0, 0, 'C'); // Nombre aún no establecido
     
     }
        

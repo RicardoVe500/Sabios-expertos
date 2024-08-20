@@ -231,9 +231,9 @@ class PDF extends FPDF
             $y2 = $y + 2;  // Aumenta el valor de $y en 2 mm
                 $this->Line(150, $y2 - 1, 180, $y2 - 1);
 
-               
+            
 
-                $this->SetY(-105); // Ajustar la posición más arriba para tener espacio para las firmas
+                $this->SetY(-80); // Ajustar la posición más arriba para tener espacio para las firmas
     
    
                 // Firma izquierda
@@ -253,7 +253,7 @@ class PDF extends FPDF
         
             
                 // Firma centro
-                $this->SetY(-105); // Regresa a la posición inicial de las firmas
+                $this->SetY(-80); // Regresa a la posición inicial de las firmas
                 $this->SetX(90);
         
                 // Línea para la firma centro, más pequeña y centrada
@@ -268,7 +268,7 @@ class PDF extends FPDF
                 $this->Cell(30, 5, 'Nombre Centro', 0, 0, 'C'); // Nombre aún no establecido
             
                 // Firma derecha
-                $this->SetY(-105); // Regresa a la posición inicial de las firmas
+                $this->SetY(-80); // Regresa a la posición inicial de las firmas
                 $this->SetX(160);
         
                 // Línea para la firma derecha, más pequeña y centrada

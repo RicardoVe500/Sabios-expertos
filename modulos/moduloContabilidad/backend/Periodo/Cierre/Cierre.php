@@ -1,7 +1,9 @@
 <?php
 include("../../../../../lib/config/conect.php");
 
-
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 $usuario_sesion = $_SESSION['usuario'];
 
@@ -10,16 +12,16 @@ if (isset($_POST["id"])) {
     $comprobacion = 3;
     $estadoId = 4;
     $mes = $_SESSION['periodo']['mes']; 
-    $anio = substr($_SESSION['periodo']['anio'], -2);
+    $anio = $_SESSION['periodo']['anio'];
 
 
 
     // Formato esperado del código de partida, por ejemplo: 0724...
-    $codigoPartida = $mes . $anio; 
+    $codigoPartida = $anio . '-' . $mes;
 
-
+ 
     // Verificar el estado de todas las partidas que comiencen con el código especificado
-    $checkQuery = "SELECT COUNT(*) as total FROM partidas WHERE codigopartida LIKE '$codigoPartida%' AND estadoId != $comprobacion";
+    $checkQuery = "SELECT COUNT(*) as total FROM partidas WHERE fechacontable LIKE '$codigoPartida%' AND estadoId != $comprobacion";
     $checkResult = mysqli_query($con, $checkQuery);
     $row = mysqli_fetch_assoc($checkResult);
 

@@ -29,7 +29,7 @@ class PDF extends FPDF {
         $this->SetFont('Arial','B',12);
         
         // Sub-título
-        $this->Cell(0, 10, utf8_decode('COMPARATIVO ESTADOS FINANCIEROS - ESTADO DE RESULTADOS'), 0, 1, 'C');
+        $this->Cell(0, 10, 'COMPARATIVO ESTADOS FINANCIEROS - ESTADO DE RESULTADOS', 0, 1, 'C');
     
         // Sub-título: Años comparativos
         $currentYear = date('Y'); // Año actual
@@ -37,7 +37,7 @@ class PDF extends FPDF {
         $this->Cell(0, 10, "Comparativo $previousYear vs $currentYear", 0, 1, 'C');
     
         // Sub-título: Expresado en Dólares
-        $this->Cell(0, 10, utf8_decode('(Expresado en Dólares de los Estados Unidos de América)'), 0, 1, 'C');
+        $this->Cell(0, 10, '(Expresado en Dólares de los Estados Unidos de America)', 0, 1, 'C');
         
         // Salto de línea adicional si es necesario
         $this->Ln(15);
@@ -108,8 +108,8 @@ class PDF extends FPDF {
         $this->SetFont('Arial', 'B', 12);
         $this->SetFillColor(169, 208, 142); // Color verde claro
         $this->Cell(85, 10, "CUENTAS", 1, 0, 'C', true);
-        $this->Cell(30, 10, utf8_decode("2023"), 1, 0, 'C', true);
-        $this->Cell(30, 10, utf8_decode("2024"), 1, 0, 'C', true);
+        $this->Cell(30, 10, "2023", 1, 0, 'C', true);
+        $this->Cell(30, 10, "2024", 1, 0, 'C', true);
         $this->Cell(30, 10, "Porcentaje", 1, 1, 'C', true);
         
         // Iterar sobre cada cuenta mayor

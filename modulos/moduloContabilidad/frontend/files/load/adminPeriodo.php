@@ -1,4 +1,4 @@
-
+  
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Cierres de los periodos</h6>
@@ -73,7 +73,7 @@ $('#tablaperiodocierre').DataTable({
 
             } else {
                 // Aquí puedes definir otro botón u omitirlo si no necesitas otro botón
-                return '<button class="btn btn-success btn-sm btn-abrirPeriodo"><i class="fas fa-unlock"></i> Abrir</button>';
+                return '<button class="btn btn-danger btn-sm btn-abrirPeriodo"><i class="fas fa-lock"></i> Cerrado</button>';
             }
         }
     }
@@ -89,13 +89,15 @@ $('#tablaperiodocierre').DataTable({
 
 
     $('#tablaperiodocierre').on('click', '.btn-diario', function () {
-        $("#render").load("load/form/Periodo/diario/diario.php");
+        var data = $('#tablaperiodocierre').DataTable().row($(this).parents('tr')).data();
+        var periodoId = data.periodoId;
+        $("#render").load("load/form/Periodo/diario/diario.php", { periodoId: periodoId }, function() {
+        });
     });
 
     $('#tablaperiodocierre').on('click', '.btn-cerrarPeriodo', function () {
         var data = $('#tablaperiodocierre').DataTable().row($(this).parents('tr')).data();
         var id = data.periodoId;
-
         Swal.fire({
             title: '¿Estás seguro?',
             text: "Este mes se cerrará y no podrá ser modificado.",
@@ -120,8 +122,7 @@ $('#tablaperiodocierre').DataTable({
                                 confirmButtonText: 'Aceptar'
                             }).then(() => {
                                 // Actualiza el botón del mes cerrado manualmente
-                                var rowNode = $('#tablaperiodocierre').DataTable().row($(this).parents('tr')).node();
-                                $(rowNode).find('.btn-cerrarPeriodo').replaceWith('<button class="btn btn-danger btn-sm btn-abrirPeriodo"><i class="fas fa-lock"></i> Cerrado</button>');
+                                $('#tablaperiodocierre').DataTable().ajax.reload();
                             });
                         } else {
                             Swal.fire({
@@ -145,10 +146,22 @@ $('#tablaperiodocierre').DataTable({
         });
     });
 
-    $('#btn-cierre-anual').on('click', function () {
-        var data = $('#tablaperiodocierre').DataTable().row(0).data(); // Obtener el año de la primera fila o ajustar según tu necesidad
-        var anio = data.anio; // Obtener el año dinámicamente desde la tabla
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+    $('#btn-cierre-anual').on('click', function () {
+       
         Swal.fire({
             title: '¿Estás seguro?',
             text: "Esta acción realizará el cierre anual y no podrá revertirse.",
@@ -159,11 +172,9 @@ $('#tablaperiodocierre').DataTable({
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: "../../backend/Periodo/Cierre/cierreAnual.php",
+                    url: "../../backend/cierreanual/cierreanual.php",
                     type: "POST",
-                    data: { periodoId: anio }, // Usar el año dinámico
                     success: function(response) {
-                        const task = JSON.parse(response);
                         if (task.success) {
                             Swal.fire({
                                 icon: 'success',
@@ -171,6 +182,8 @@ $('#tablaperiodocierre').DataTable({
                                 text: task.message,
                                 confirmButtonText: 'Aceptar'
                             });
+
+                            
                         } else {
                             Swal.fire({
                                 icon: 'error',
@@ -193,5 +206,5 @@ $('#tablaperiodocierre').DataTable({
         });
     });
 
-});
+
 </script>

@@ -94,6 +94,7 @@ $(document).ready(function() {
     });
         
     })
+    
     if (typeof estadoId !== 'undefined' && estadoId === 4) {
         $('#frmAddPartidas').hide();
     }

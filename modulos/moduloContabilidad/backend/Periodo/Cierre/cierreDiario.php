@@ -1,6 +1,10 @@
 <?php
-
+ 
 include("../../../../../lib/config/conect.php");
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 $usuario_sesion = $_SESSION['usuario'];
 
