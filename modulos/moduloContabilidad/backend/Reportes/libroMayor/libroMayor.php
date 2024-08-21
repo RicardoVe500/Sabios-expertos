@@ -2,7 +2,7 @@
 include("../../../../../lib/config/conect.php");
 require_once("../../../../../lib/fpdf/fpdf.php"); // Asegúrate de ajustar la ruta al archivo FPDF
 
-
+ 
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -21,8 +21,42 @@ class PDF extends FPDF
     function Header()
     { 
 
-        $fechaInicio = $_POST['fechadesdemayor'];
-        $fechaFin = $_POST['fechahastamayor'];
+        $fechacontable = $_POST['libromayor'];
+    
+        // Crear un objeto DateTime desde el formato mes/año
+        $date = DateTime::createFromFormat('m/Y', $fechacontable);
+    
+        // Obtener el último día del mes
+        $ultimoDiaMes = $date->format('t'); // 't' da el último día del mes
+    
+        // Formatear la fecha para que aparezca como 'June 2024'
+        $fechaFormateada = $date->format('F Y');
+    
+        // Crear un array de traducción de meses de inglés a español
+        $meses = [
+            'January' => 'ENERO',
+            'February' => 'FEBRERO',
+            'March' => 'MARZO',
+            'April' => 'ABRIL',
+            'May' => 'MAYO',
+            'June' => 'JUNIO',
+            'July' => 'JULIO',
+            'August' => 'AGOSTO',
+            'September' => 'SEPTIEMBRE',
+            'October' => 'OCTUBRE',
+            'November' => 'NOVIEMBRE',
+            'December' => 'DICIEMBRE'
+        ];
+    
+        // Obtener el nombre del mes en inglés
+        $mesIngles = $date->format('F');
+    
+        // Reemplazar el mes en inglés por el mes en español
+        $mesEspanol = $meses[$mesIngles];
+        $fechaFormateada = str_replace($mesIngles, $mesEspanol, $fechaFormateada);
+    
+        // Formatear la fecha final como "Último día del mes Mes de Año"
+        $fechaFormateadaheader = $ultimoDiaMes . ' DE ' . $fechaFormateada;
 
         
         // Imagen de encabezado
@@ -43,7 +77,7 @@ class PDF extends FPDF
         $this->Ln(5);
         $this->Cell(70);
         // Sub-título: Catálogo de Cuentas
-        $this->Cell(30, 10, 'Desde: '.$fechaInicio.' Hasta: '. $fechaFin , 0, 0, 'C');
+        $this->Cell(30, 10, 'LIBRO DIARIO AL ' . $fechaFormateadaheader, 0, 0, 'C');
 
         $this->Ln(5);
     
@@ -73,8 +107,15 @@ class PDF extends FPDF
     // Cargar datos
     function LoadData($con) {
 
-        $fechaInicio = mysqli_real_escape_string($con, $_POST['fechadesdemayor']);
-        $fechaFin = mysqli_real_escape_string($con, $_POST['fechahastamayor']);
+        $anioActual = date("Y");
+        $fechaCompleta = $anioActual . "-01-01";
+        $fechacontable = $_POST['libromayor'];
+    
+    
+        list($mes, $anio) = explode('/', $fechacontable);
+        $ultimoDia = cal_days_in_month(CAL_GREGORIAN, $mes, $anio);
+        $fechaFormateada = $anio . '-' . $mes . '-' . $ultimoDia;
+    
 
 
         $query = "SELECT p.codigoPartida, p.fechacontable, pd.cargo, pd.abono, 
@@ -83,7 +124,7 @@ class PDF extends FPDF
         JOIN partidaDetalle pd ON p.partidaId = pd.partidaId 
         JOIN catalogocuentas cc ON pd.cuentaId = cc.cuentaId
         JOIN saldo s ON cc.cuentaId = s.cuentaId
-        WHERE p.fechacontable BETWEEN '$fechaInicio' AND '$fechaFin'
+        WHERE p.fechaContable BETWEEN '$fechaCompleta' AND '$fechaFormateada'
         ORDER BY cc.numeroCuenta;";
     
         $result = mysqli_query($con, $query);

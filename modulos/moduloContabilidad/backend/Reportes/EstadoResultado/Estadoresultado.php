@@ -94,9 +94,24 @@ class PDF extends FPDF {
         $this->Ln(15);
     }
 
+    
+
     // Pie de página
     function Footer()
     {
+        $this->SetY(-30); // Posiciona a 30 mm del final de la página
+        $this->SetFont('Arial', 'I', 10);
+
+        // Firma a la izquierda
+        $this->Cell(60, 10, 'Firma Contador', 0, 0, 'C');
+
+        // Firma al centro
+        $this->SetX($this->w / 2 - 30); // Ajusta la posición x al centro
+        $this->Cell(60, 10, 'Firma Supervisor', 0, 0, 'C');
+
+        // Firma a la derecha
+        $this->SetX($this->w - 90); // Ajusta la posición x a la derecha
+        $this->Cell(60, 10, 'Firma Director', 0, 0, 'C');
         // Posición: a 1,5 cm del final
         $this->SetY(-15);
         // Arial italic 8
@@ -104,6 +119,8 @@ class PDF extends FPDF {
         // Número de página
         $this->Cell(0,10,'Pagina '.$this->PageNo().'/{nb}',0,0,'C');
     }
+
+    
 
     function LoadData($con) {
 
@@ -185,25 +202,26 @@ class PDF extends FPDF {
     
     
     function calculateTotalBruto($data) {
-        // Ordenamos el arreglo $data basado en numeroCuenta de forma descendente
-        usort($data, function($a, $b) {
-            return strcmp($b['numeroCuenta'], $a['numeroCuenta']);
-        });
+        $totalIngresos = 0;
+        $totalGastos = 0;
     
-        $totalBruto = 0;
-        $primerValor = true;
-    
+        // Recorre los datos para sumar ingresos y gastos por separado basándose en el tipo de saldo
         foreach ($data as $item) {
-            if ($primerValor) {
-                $totalBruto = $item['totalSaldo'];
-                $primerValor = false;
-            } else {
-                $totalBruto -= $item['totalSaldo'];
+            if ($item['tipoSaldoId'] == 1) { // Deudora podría implicar gastos o ingresos dependiendo de la naturaleza de la cuenta
+                // Suponemos que las cuentas de ingresos deudoras son ingresos
+                $totalIngresos += $item['totalSaldo'];
+            } elseif ($item['tipoSaldoId'] == 2) { // Acreedora podría implicar ingresos o gastos
+                // Suponemos que las cuentas de gastos acreedoras son gastos
+                $totalGastos += $item['totalSaldo'];
             }
         }
+    
+        // Calcula el total bruto como la diferencia de ingresos y gastos
+        $totalBruto = $totalGastos - $totalIngresos;
         
         return $totalBruto;
     }
+
 
     function LoadData2($con) {
 
@@ -225,7 +243,7 @@ class PDF extends FPDF {
         WHERE cc.nivelCuenta = 2;");
     
         $data2 = [];
-        $totalBruto = 0;  // Inicializar el total bruto
+        //$totalBruto = 0;  // Inicializar el total bruto
     
         while ($cuentasMayDato = mysqli_fetch_assoc($selecCtsMayores)) {
             $subcuentas = [];
@@ -442,7 +460,7 @@ class PDF extends FPDF {
         // Calcular y mostrar la diferencia entre el total bruto y el total operativ
     
          // Calcular la diferencia entre el total bruto y el total operativo
-         $diferencia =   $operationalResult['totalOperativo'] - $totalBruto;
+         $diferencia =   $totalBruto - $operationalResult['totalOperativo'] ;
          $this->Ln(10);
          $this->SetFont('Arial', 'B', 12);
          
@@ -526,62 +544,12 @@ class PDF extends FPDF {
             $final = $this->GetY();
             $this->Line(170, $final - 1, 195, $final - 1);
 
-            
+           
 
          }
         
         }
-     
- 
-                $this->SetY(-50); // Ajustar la posición más arriba para tener espacio para las firmas
-    
-   
-                // Firma izquierda
-                $this->SetFont('Arial', '', 10);
             
-                $this->SetX(15);
-                $this->Line(25, $this->GetY() + 10, 65, $this->GetY() + 10); // Longitud reducida de 60 a 40
-                $this->Ln(12); // Salto de línea para poner el texto debajo de la línea
-        
-                // Texto de firma izquierda
-                $this->SetX(25);
-                $this->Cell(40, 5, 'Firma Izquierda', 0, 0, 'C');
-                $this->Ln(5); // Salto de línea
-                $this->SetX(25);
-                $this->Cell(40, 5, 'Nombre Izquierda', 0, 0, 'C');
-        
-        
-            
-                // Firma centro
-                $this->SetY(-50); // Regresa a la posición inicial de las firmas
-                $this->SetX(90);
-        
-                // Línea para la firma centro, más pequeña y centrada
-                $this->Line(90, $this->GetY() + 10, 130, $this->GetY() + 10); // Longitud reducida
-                $this->Ln(12); // Salto de línea para poner el texto debajo de la línea
-        
-                // Texto de firma centro
-                $this->SetX(95);
-                $this->Cell(30, 5, 'Firma Centro', 0, 0, 'C');
-                $this->Ln(5); // Salto de línea
-                $this->SetX(95);
-                $this->Cell(30, 5, 'Nombre Centro', 0, 0, 'C'); // Nombre aún no establecido
-            
-                // Firma derecha
-                $this->SetY(-50); // Regresa a la posición inicial de las firmas
-                $this->SetX(160);
-        
-                // Línea para la firma derecha, más pequeña y centrada
-                $this->Line(155, $this->GetY() + 10, 195, $this->GetY() + 10); // Longitud reducida
-                $this->Ln(12); // Salto de línea para poner el texto debajo de la línea
-        
-                // Texto de firma derecha
-                $this->SetX(160);
-                $this->Cell(30, 5, 'Firma Derecha', 0, 0, 'C');
-                $this->Ln(5); // Salto de línea
-                $this->SetX(160);
-                $this->Cell(30, 5, 'Nombre Derecha', 0, 0, 'C'); // Nombre aún no establecido
-
 
 
     }

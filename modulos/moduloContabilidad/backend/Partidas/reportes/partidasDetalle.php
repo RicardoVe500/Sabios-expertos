@@ -9,7 +9,7 @@ $codigoPartida = $_GET["codigoPartida"];
 // Consulta a la base de datos
 $query = "SELECT pd.partidaDetalleId, p.partidaId, p.codigoPartida, tc.nombreComprobante,
 cc.numeroCuenta, cc.nombreCuenta, p.debe, p.haber, pd.cargo, pd.abono, pd.saldo,
-pd.numeroComprobante, pd.fechaComprobante, pd.concepto
+pd.numeroComprobante, pd.fechaComprobante, pd.concepto, p.fechacontable
 FROM partidaDetalle pd
 LEFT JOIN partidas p ON pd.partidaId = p.partidaId
 LEFT JOIN catalogocuentas cc ON pd.cuentaId = cc.cuentaId
@@ -21,6 +21,11 @@ $result = mysqli_query($con, $query);
 if (!$result) {
     die("Error en la consulta: " . mysqli_error($con));
 }
+
+// Obtener la fecha contable una sola vez
+$row = mysqli_fetch_assoc($result); // Asumimos que todas las entradas tienen la misma fecha contable
+$fechaContable = $row['fechacontable'];
+mysqli_data_seek($result, 0); // Reiniciar el puntero de resultados para el bucle while
 
 class PDF extends FPDF {
     protected $codigoPartida;  // Variable para almacenar el código de partida
@@ -35,12 +40,12 @@ class PDF extends FPDF {
         $this->SetFont('Arial', 'B', 11);
         $this->SetY(10);
         $this->Cell(190, 5, 'SABIOS Y EXPERTOS', 0, 1, 'C');
-        $this->SetFont('Arial', '', 10);
-        $this->Cell(190, 5, 'Unidad de Contabilidad', 0, 1, 'C');
         $this->Cell(190, 5, 'Partida de Libro Diarios', 0, 1, 'C');
         $this->Cell(190, 5, utf8_decode('Código de partida: '). $this->codigoPartida, 0, 1, 'C');
-        $this->Cell(190, 5, 'Fecha de Impresion: ' . date('d-m-Y H:i:s'), 0, 1, 'C');
-        $this->Ln(10);
+        $this->Cell(190, 5, 'Fecha Del Proceso: ' . $GLOBALS['fechaContable'], 0, 1, 'C');
+        $this->Cell(190, 5, '(Expresado en Dolares de los Estados Unidos de America)', 0, 1, 'C');
+
+        $this->Ln(15);
     }
 
     function Footer() {
@@ -48,30 +53,42 @@ class PDF extends FPDF {
         $this->SetFont('Arial', 'I', 8);
         $this->Cell(0, 10, 'Página ' . $this->PageNo() . '/{nb}', 0, 0, 'C');
     }
+
+    function AddTableHeaders() {
+        $this->SetFont('Arial', 'B', 10);
+        $this->Cell(20, 6, 'No. Cuenta', 0, 0, 'C');
+        $this->Cell(49, 6, 'Nombre Cuenta', 0, 0, 'C');
+        $this->Cell(70, 6, 'Concepto', 0, 0, 'C');
+        $this->Cell(20, 6, 'Cargo', 0, 0, 'C');
+        $this->Cell(32, 6, 'Abono', 0, 0, 'C');
+        $this->Ln();
+    }
 }
 
 // Inicialización del PDF
 $pdf = new PDF($codigoPartida);
 $pdf->AliasNbPages();
 $pdf->AddPage();
+$pdf->AddTableHeaders();
 $pdf->Line(10, $pdf->GetY(), 200, $pdf->GetY());
+
+
 
 $pdf->SetFont('Arial', '', 10);
 $debe = 0;
 $haber = 0;
 $debeHaberSet = false;
 
-
-
 while ($row = mysqli_fetch_assoc($result)) {
     if (!$debeHaberSet) {
         $debe = $row['debe'];
         $haber = $row['haber'];
-        $debeHaberSet = true;  
+        $debeHaberSet = true;
     }
-    $pdf->Cell(60, 6, $row['numeroCuenta'], 0); 
-    $pdf->Cell(95, 6, $row['nombreCuenta'], 0);
-    $pdf->Cell(20, 6, floatval($row['cargo']) == 0.00 ? '-' : $row['cargo'], 0, 0, 'C');
+    $pdf->Cell(30, 6, $row['numeroCuenta'], 0); 
+    $pdf->Cell(65, 6, $row['nombreCuenta'], 0);
+    $pdf->Cell(40, 6, $row['concepto'], 0);
+    $pdf->Cell(30, 6, floatval($row['cargo']) == 0.00 ? '-' : $row['cargo'], 0, 0, 'C');
     $pdf->Cell(20, 6, floatval($row['abono']) == 0.00 ? '-' : $row['abono'], 0, 0, 'C');
     $pdf->Ln(); 
 }
@@ -79,9 +96,9 @@ while ($row = mysqli_fetch_assoc($result)) {
 // Footer de totales
 $pdf->Line(10, $pdf->GetY(), 200, $pdf->GetY());
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->SetX(165); 
-$pdf->Cell(20, 6, $debe, 0, 0, 'C');
-$pdf->Cell(20, 6, $haber, 0, 0, 'C');
+$pdf->SetX(155); 
+$pdf->Cell(10, 6, $debe, 0, 0, 'C');
+$pdf->Cell(40, 6, $haber, 0, 0, 'C');
 $pdf->Ln(40);
 
 // Sección de firmas

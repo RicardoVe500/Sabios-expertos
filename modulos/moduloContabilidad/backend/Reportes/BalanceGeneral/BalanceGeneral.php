@@ -89,6 +89,19 @@ class PDF extends FPDF
     // Pie de página
     function Footer()
     {
+        $this->SetY(-30); // Posiciona a 30 mm del final de la página
+        $this->SetFont('Arial', 'I', 10);
+
+        // Firma a la izquierda
+        $this->Cell(60, 10, 'Firma Contador', 0, 0, 'C');
+
+        // Firma al centro
+        $this->SetX($this->w / 2 - 30); // Ajusta la posición x al centro
+        $this->Cell(60, 10, 'Firma Supervisor', 0, 0, 'C');
+
+        // Firma a la derecha
+        $this->SetX($this->w - 90); // Ajusta la posición x a la derecha
+        $this->Cell(60, 10, 'Firma Director', 0, 0, 'C');
         // Posición: a 1,5 cm del final
         $this->SetY(-15);
         // Arial italic 8
