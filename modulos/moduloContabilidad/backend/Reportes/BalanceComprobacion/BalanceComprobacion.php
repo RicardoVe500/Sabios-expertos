@@ -9,6 +9,7 @@ class PDF extends FPDF
         parent::__construct($orientation, $unit, $size);
         // Establece los márgenes (izquierdo, superior, derecho)
         $this->SetMargins(25, 20, 25);
+        $this->SetAutoPageBreak(true, 50);
     }
     // Encabezado de página
     function Header()
@@ -183,9 +184,14 @@ class PDF extends FPDF
 
         $isFirstPassive = true;
     
-    
+        if ($this->GetY() + 10 > $this->PageBreakTrigger) {
+            $this->AddPage();
+        }
+
         foreach ($data as $item) {
-         
+            if ($this->GetY() + 10 > $this->PageBreakTrigger) {
+                $this->AddPage();
+            }
             $this->SetFont('Arial', 'B', 12);
             $this->Ln(5);
             //Para escribir el total de activo
@@ -201,7 +207,9 @@ class PDF extends FPDF
                 $this->Ln(15);
                 $isFirstPassive = false;  // Cambiar la bandera después de mostrar total de activos
             }
-
+            if ($this->GetY() + 10 > $this->PageBreakTrigger) {
+                $this->AddPage();
+            }
             $this->Cell(130, 6, $item['nombreCuenta'], 0, 0);
             $formattedTotalSaldo = $item['totalSaldo'] < 0 ? '(' . number_format(abs($item['totalSaldo']), 2) . ')' : number_format($item['totalSaldo'], 2);
 
@@ -210,8 +218,7 @@ class PDF extends FPDF
           
             
             $this->SetFont('Arial', '', 11);
-
-    
+         
             foreach ($item['subcuentas'] as $sub) {
                 $this->SetX(30);
                 $this->Cell(80, 6, $sub['nombreSubcuenta'], 0, 0);
@@ -232,7 +239,9 @@ class PDF extends FPDF
         // Agregar los totales de Activos y Pasivos
  
       
-
+        if ($this->GetY() + 10 > $this->PageBreakTrigger) {
+            $this->AddPage();
+        }
         $this->SetFont('Arial', 'B', 12);
         $this->Ln(5);
         $this->Cell(125, 6, 'Total Pasivos y patrimonio', 0, 0);

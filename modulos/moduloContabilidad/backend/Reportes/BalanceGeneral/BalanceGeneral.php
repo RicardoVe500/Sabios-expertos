@@ -13,6 +13,8 @@ class PDF extends FPDF
         parent::__construct($orientation, $unit, $size);
         // Establece los márgenes (izquierdo, superior, derecho)
         $this->SetMargins(25, 20, 25);
+
+        $this->SetAutoPageBreak(true, 50);
     }
 
     // Encabezado de página
@@ -111,7 +113,7 @@ class PDF extends FPDF
     }
 
     function LoadData($con) {
-
+    
         $anioActual = date("Y");
         $fechaCompleta = $anioActual . "-01-01";
         $fechacontable = $_POST['monthYearPickerbalance'];
@@ -201,29 +203,43 @@ class PDF extends FPDF
         $this->SetFont('Arial', 'B', 12);
         $this->Cell(155, 0, 'ACTIVOS', 0, 0, 'C');
         $this->Ln(5);
+
+        if ($this->GetY() + 10 > $this->PageBreakTrigger) {
+            $this->AddPage();
+        }
     
         foreach ($data as $item) {
             if ($item['tipoSaldoId'] == 1) { // Activos
                 $this->SetFont('Arial', 'B', 12);
                 $this->Cell(135, 6, $item['nombreCuenta'], 0, 0);
-                $this->Cell(0, 6, number_format($item['totalSaldo']), 0, 1, 'C');
+                $formatoSaldocuentotalactivos = $item['totalSaldo'] < 0 ? '(' . number_format(abs($item['totalSaldo']), 2) . ')' : number_format($item['totalSaldo'], 2);
+
+                $this->Cell(0, 6, $formatoSaldocuentotalactivos, 0, 1, 'C');
     
                 // Imprimir subcuentas de Activos con niveles de indentación
                 $this->SetFont('Arial', '', 11);
+
+                if ($this->GetY() + 10 > $this->PageBreakTrigger) {
+                    $this->AddPage();
+                }
+
                 foreach ($item['subcuentas'] as $sub) {
                     $indent = 30; // Espacio base para las subcuentas
                     if ($sub['nivel'] == 3) {
                         
                         $this->SetX($indent);
                         $this->Cell(90, 6, $sub['nombreSubcuenta'], 0, 0);
-                        $this->Cell(40, 6, number_format($sub['saldo'], 2), 0, 1, 'R');
+                        $formatoSaldosubactivos = $sub['saldo'] < 0 ? '(' . number_format(abs($sub['saldo']), 2) . ')' : number_format($sub['saldo'], 2);
+                        $this->Cell(40, 6, $formatoSaldosubactivos, 0, 1, 'R');
                         
 
                     } elseif ($sub['nivel'] > 3) {
 
                         $this->SetX($indent + 10); // Doble sangría para niveles mayores a 3
                         $this->Cell(90, 6, $sub['nombreSubcuenta'], 0, 0);
-                        $this->Cell(5, 6, number_format($sub['saldo'], 2), 0, 1, 'R');
+                        $formatoSaldosubactivossub = $sub['saldo'] < 0 ? '(' . number_format(abs($sub['saldo']), 2) . ')' : number_format($sub['saldo'], 2);
+
+                        $this->Cell(5, 6, $formatoSaldosubactivossub, 0, 1, 'R');
                         
 
                     }
@@ -254,30 +270,50 @@ class PDF extends FPDF
         $this->Cell(155, 0, 'PASIVOS', 0, 0, 'C');
         $this->Ln(5);
     
+        if ($this->GetY() + 10 > $this->PageBreakTrigger) {
+            $this->AddPage();
+        }
+
         foreach ($data as $item) {
             if ($item['tipoSaldoId'] == 2) { // Pasivos
                 $this->SetFont('Arial', 'B', 12);
                 $this->Cell(130, 6, $item['nombreCuenta'], 0, 0);
-                $this->Cell(0, 6, number_format($item['totalSaldo']), 0, 1, 'C');
+                $formatoSaldocuentotal = $item['totalSaldo'] < 0 ? '(' . number_format(abs($item['totalSaldo']), 2) . ')' : number_format($item['totalSaldo'], 2);
+
+                $this->Cell(0, 6, $formatoSaldocuentotal, 0, 1, 'C');
     
                 // Imprimir subcuentas de Pasivos con niveles de indentación
                 $this->SetFont('Arial', '', 11);
+
+                if ($this->GetY() + 10 > $this->PageBreakTrigger) {
+                    $this->AddPage();
+                }
+
                 foreach ($item['subcuentas'] as $sub) {
                     $indent = 30; // Espacio base para las subcuentas
                     if ($sub['nivel'] == 3) {
 
                         $this->SetX($indent);
                         $this->Cell(90, 6, $sub['nombreSubcuenta'], 0, 0);
-                        $this->Cell(40, 6, number_format($sub['saldo'], 2), 0, 1, 'R');
+                        $formatoSaldocuentamax = $sub['saldo'] < 0 ? '(' . number_format(abs($sub['saldo']), 2) . ')' : number_format($sub['saldo'], 2);
+                        $this->Cell(40, 6,  $formatoSaldocuentamax, 0, 1, 'R');
 
                     } elseif ($sub['nivel'] > 3) {
 
+                        if ($this->GetY() + 10 > $this->PageBreakTrigger) {
+                            $this->AddPage();
+                        }
+
                     $this->SetX($indent + 10); // Doble sangría para niveles mayores a 3
                     $this->Cell(90, 6, $sub['nombreSubcuenta'], 0, 0);
-                    $this->Cell(5, 6, number_format($sub['saldo'], 2), 0, 1, 'R');
+                    //$this->Cell(5, 6, number_format($sub['saldo'], 2), 0, 1, 'R');
+                    $formatoSaldoSub = $sub['saldo'] < 0 ? '(' . number_format(abs($sub['saldo']), 2) . ')' : number_format($sub['saldo'], 2);
+                     //$this->Cell(0, 6, "$ " . $formatoSaldoSub, 0, 1);
+                    $this->Cell(5, 6, $formatoSaldoSub, 0, 1, 'R');
 
                     }
-                    
+        
+        
                     
                 }
 
@@ -289,7 +325,9 @@ class PDF extends FPDF
 
             }
         }
-    
+        if ($this->GetY() + 10 > $this->PageBreakTrigger) {
+            $this->AddPage();
+        }
         // Impresión del total de pasivos
         $this->Ln(10);
         $this->SetFont('Arial', 'B', 12);

@@ -14,6 +14,7 @@ class PDF extends FPDF {
         parent::__construct($orientation, $unit, $size);
         // Establece los márgenes (izquierdo, superior, derecho)
         $this->SetMargins(25, 20, 25);
+        $this->SetAutoPageBreak(true, 50);
     }
 
 
@@ -331,6 +332,10 @@ class PDF extends FPDF {
         usort($data, function($a, $b) {
             return $b['tipoSaldoId'] - $a['tipoSaldoId'];
         });
+
+        if ($this->GetY() + 10 > $this->PageBreakTrigger) {
+            $this->AddPage();
+        }
     
         // Iterar sobre cada cuenta mayor
         foreach ($data as $item) {
@@ -340,6 +345,10 @@ class PDF extends FPDF {
             // Formatear y mostrar el saldo de la cuenta mayor
             $formattedTotalSaldo = $item['totalSaldo'] < 0 ? '(' . number_format(abs($item['totalSaldo']), 2) . ')' : number_format($item['totalSaldo'], 2);
             $this->Cell(0, 6, $formattedTotalSaldo, 0, 1);
+
+            if ($this->GetY() + 10 > $this->PageBreakTrigger) {
+                $this->AddPage();
+            }
     
             // Iterar sobre las subcuentas
             foreach ($item['subcuentas'] as $sub) {
@@ -363,6 +372,9 @@ class PDF extends FPDF {
                 }
             }
             
+        }
+        if ($this->GetY() + 10 > $this->PageBreakTrigger) {
+            $this->AddPage();
         }
         $y1 = $this->GetY();
         $this->Line(120, $y1 - 1, 140, $y1 - 1);
@@ -389,9 +401,14 @@ class PDF extends FPDF {
             $this->Ln(5);
             $this->SetFont('Arial', 'B', 11);
             $this->Cell(0, 10, "Resultados Operativos", 0, 1, 'C');
-            
+
+          
+
             // Procesar y mostrar los datos operativos
             foreach ($operationalResult['data'] as $item) {
+                if ($this->GetY() + 10 > $this->PageBreakTrigger) {
+                    $this->AddPage();
+                }
                 $this->SetFont('Arial', 'B', 11);
     
                 // Extraer el primer dígito de numeroCatalogo
@@ -408,8 +425,9 @@ class PDF extends FPDF {
                     default:
                         $nombreCuentaModificado = $item['nombreCuenta']; // Sin modificación
                 }
+
             
-                // Imprimir el nombre de la cuenta modificado
+                 // Imprimir el nombre de la cuenta modificado
                 $this->Cell(150, 6, $nombreCuentaModificado, 0, 0);
                 
                 // Formatear y imprimir el total de saldo
@@ -418,6 +436,9 @@ class PDF extends FPDF {
             
                 // Procesar y mostrar las subcuentas con configuraciones basadas en el nivel
                 foreach ($item['subcuentas'] as $sub) {
+                    if ($this->GetY() + 10 > $this->PageBreakTrigger) {
+                        $this->AddPage();
+                    }
                     $nivel = $sub['nivelCuenta'];
                     if ($nivel == 3) {
                         $indent = 25;  // Espacio base para las subcuentas nivel 3
@@ -439,6 +460,9 @@ class PDF extends FPDF {
                    
                 }
             } 
+            if ($this->GetY() + 10 > $this->PageBreakTrigger) {
+                $this->AddPage();
+            }
             $yopera = $this->GetY();
             $this->Line(147, $yopera - 6.5, 167, $yopera - 6.5);
 
@@ -466,6 +490,9 @@ class PDF extends FPDF {
          
          // Comprobar si la diferencia es negativa o positiva y mostrar el mensaje apropiado
          if ($diferencia < 0) {
+            if ($this->GetY() + 10 > $this->PageBreakTrigger) {
+                $this->AddPage();
+            }
             $this->Ln(3);
             $this->SetFont('Arial', 'B', 11);
             $formattedDiferencia = $diferencia < 0 ? '(' . number_format(abs($diferencia), 2) . ')' : number_format($diferencia, 2);
@@ -506,6 +533,9 @@ class PDF extends FPDF {
 
     
          } else {
+            if ($this->GetY() + 10 > $this->PageBreakTrigger) {
+                $this->AddPage();
+            }
             $this->Ln(3);
             $this->SetFont('Arial', 'B', 11);
             $formattedDiferencia = $diferencia < 0 ? '(' . number_format(abs($diferencia), 2) . ')' : number_format($diferencia, 2);
