@@ -36,8 +36,24 @@ if (mysqli_num_rows($resultadoVerificacion) > 0) {
             "fechaHoraActual" => $fechaHoraActual,
         ]
     ];
+    
     $jsonDatos = json_encode($datos);
-    // Resto de código para manejar bitácora...
+    
+    $queryBitacora = "SELECT bitacoraId, detalle FROM bitacora WHERE fecha = '$fechajson'";
+    $resultBitacora = mysqli_query($con, $queryBitacora);
+    if ($row = mysqli_fetch_assoc($resultBitacora)) {
+        // Actualiza el registro existente
+        $datosExistentes = json_decode($row["detalle"], true);
+        $datosExistentes[] = $datos;
+        $jsonDatos = json_encode($datosExistentes);
+        $updateQuery = "UPDATE bitacora SET detalle = '$jsonDatos' WHERE bitacoraId = {$row['bitacoraId']}";
+        mysqli_query($con, $updateQuery);
+    } else {
+        // Crea un nuevo registro en la bitácora
+        $insertQuery = "INSERT INTO bitacora(fecha, detalle) VALUES ('$fechajson', '$jsonDatos')";
+        mysqli_query($con, $insertQuery);
+
+  } 
 }
 
 ?>

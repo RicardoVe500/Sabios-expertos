@@ -20,15 +20,12 @@ class PDF extends FPDF {
     function Header() {
         $this->Image('../../../../../lib/img/images.png', 10, 3, 30);
         $this->SetFont('Arial', 'B', 11);
-        $this->SetY(10);
-        $this->Cell(190, 5, 'SABIOS Y EXPERTOS', 0, 1, 'C');
+        $this->Cell(190, 10, 'SABIOS Y EXPERTOS', 0, 1, 'C');
         $this->SetFont('Arial', '', 10);
-        $this->Cell(190, 5, 'Unidad de Contabilidad', 0, 1, 'C');
-        $this->Cell(190, 5, 'Reporte de Bitacora', 0, 1, 'C');
-        $this->Cell(190, 5, 'Desde: ' . '2024-07-01'.' Hasta: '.'2024-07-17', 0, 1, 'C');
+        $this->Cell(190, 10, 'Reporte de Bitacora del Sistema', 0, 1, 'C');
+        $this->Cell(190, 10, 'Reporte de Bitacora desde: ' . $_POST['fechadesde'] . ' hasta: ' . $_POST['fechahasta'], 0, 1, 'C');
         $date = date('d-m-Y H:i:s');
-        $this->Cell(190,5,'Fecha de impresion: ' . $date,0,0,'C');
-        $this->Ln(10);
+        $this->Ln(5);
     }
 
     function Footer() {
@@ -44,38 +41,53 @@ class PDF extends FPDF {
     
     function FormatArray($arr, $indent = '') {
         $formattedText = '';
-        if (is_array($arr)) {
-            foreach ($arr as $key => $value) {
-                if (is_array($value)) {
-                    $formattedText .= $indent . ucfirst($key) . ":\n";
-                    $formattedText .= $this->FormatArray($value, $indent . '  ');
-                } else {
-                    $formattedText .= $indent . ucfirst($key) . ': ' . $value . "\n";
-                }
+        foreach ($arr as $key => $value) {
+            if (is_array($value)) {
+                $formattedText .= $indent . ucfirst($key) . ":\n";
+                $formattedText .= $this->FormatArray($value, $indent . '  ');
+            } else {
+                $formattedText .= $indent . ucfirst($key) . ': ' . $value . "\n";
             }
-        } else {
-            $formattedText = $indent . 'Información no disponible' . "\n";
         }
         return $formattedText;
     }
     
+    function ImprovedTable($header, $data) {
+        // Colors, line width and bold font
+        $this->SetFillColor(220, 220, 220);
+        $this->SetTextColor(0);
+        $this->SetDrawColor(50, 50, 100);
+        $this->SetLineWidth(.3);
+        $this->SetFont('', 'B');
+        foreach($header as $col) {
+            $this->Cell($col[1], 7, $col[0], 1, 0, 'C', true);
+        }
+        $this->Ln();
+
+        // Data
+        $this->SetFillColor(245, 245, 245);
+        $this->SetTextColor(0);
+        $this->SetFont('');
+        $fill = false;
+
+        foreach($data as $row) {
+            $this->Cell(40, 10, $row['fecha'], 'LR', 0, 'C', $fill);
+            $detailText = $this->PrintJSON($row['detalle']); 
+            $this->MultiCell(150, 10, $detailText, 'LR', 'L', $fill);
+            $fill = !$fill;
+            $this->Ln();
+        }
+        $this->Cell(190, 0, '', 'T');
+    }
 }
 
 $pdf = new PDF();
 $pdf->AddPage();
 $pdf->SetFont('Arial', '', 10);
 
-// Headers
-$pdf->Cell(40, 10, 'Fecha', 1);
-$pdf->Cell(150, 10, 'Detalle', 1);
-$pdf->Ln();
-
-// Data loading
-foreach ($data as $row) {
-    $pdf->Cell(40, 10, $row['fecha'], 0, 0);
-    $detailText = $pdf->PrintJSON($row['detalle']); 
-    $pdf->MultiCell(150, 10, $detailText, 1);
-}
+// Prepare headers and data
+$header = [['Fecha', 40], ['Detalle', 150]];
+$pdf->ImprovedTable($header, $data);
 
 $pdf->Output();
 ?>

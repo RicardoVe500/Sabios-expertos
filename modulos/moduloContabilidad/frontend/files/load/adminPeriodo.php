@@ -25,8 +25,8 @@
 
         <!-- Aquí se agrega el botón de Cierre Anual -->
         <div class="mt-4 text-center">
-            <button class="btn btn-danger btn-lg" id="btn-cierre-anual">
-                <i class="fas fa-calendar-check"></i> Cierre Anual
+            <button class="btn btn-danger btn-lg" id="btn-cierre-anual" style="display: none;">
+                <i class="fas fa-calendar-check" ></i> Cierre Anual
             </button>
         </div>
     </div>
@@ -35,6 +35,17 @@
 
 <script>
 $(document).ready(function() {
+
+ // Capturar el mes actual del sistema
+    var fechaActual = new Date();
+    var mesActual = fechaActual.getMonth() + 1; // getMonth() devuelve un valor entre 0 y 11, por eso se suma 1
+
+    // Verificar si el mes es diciembre (12)
+    if (mesActual === 12) {
+        document.getElementById("btn-cierre-anual").style.display = "block";
+    } else {
+        document.getElementById("btn-cierre-anual").style.display = "none";
+    }
 
 
 $('.btn-selectperiodo').on('click', function () {
